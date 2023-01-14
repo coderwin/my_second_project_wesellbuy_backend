@@ -1,0 +1,52 @@
+
+# local 개발 환경
+spring:
+  profiles:
+    active: local
+
+  error:
+    whitelabel.enabled: false # 오류 페이지 사용 여부
+
+    include-:
+      exception: false #exception 포함 여부
+      message: never # message 포함 여부
+      stacktrace: never #trace 포함 여부
+      binding-errors: never # errors 포함 여부
+
+  datasource:
+    # H2
+    url: jdbc:h2:tcp://localhost/~/wesellbuy
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+    # msql
+#    url: jdbc:mysql://localhost:3306/wesellbuy?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+#    username:
+#    password:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+#        show_sql: true # System.out sql 실힝
+        format_sql: true # sql 모양을 예쁘게 출력
+        highlight_sql: true # 쿼리에 색을 넣는다
+
+        default_batch_fetch_size: 1000 # 페이징 처리 가능하게(엔티티 컬렉션 페치 조인시)
+
+      open-in-view: true #지연 로딩 view, conrollerRkwl 가능(true)/불가능(false)
+
+logging.level:
+  org.hibernate:
+    SQL: debug # logger를 통해 하이버네이트 실행 sql 확인
+#    type: trace # sql 파라미터 값을 확인 가능
+
+# 서비스 환경
+---
+#spring:
+#  profiles:
+#    active: service
+
