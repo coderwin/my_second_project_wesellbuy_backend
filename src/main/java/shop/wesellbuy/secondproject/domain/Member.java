@@ -1,16 +1,15 @@
 package shop.wesellbuy.secondproject.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
-import shop.wesellbuy.secondproject.Recommendation;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.domain.member.Address;
 import shop.wesellbuy.secondproject.domain.member.MemberStatus;
 import shop.wesellbuy.secondproject.domain.member.Phone;
 import shop.wesellbuy.secondproject.domain.member.SelfPicture;
+import shop.wesellbuy.secondproject.domain.reply.CustomerServiceReply;
+import shop.wesellbuy.secondproject.domain.reply.ItemReply;
+import shop.wesellbuy.secondproject.domain.reply.RecommendationReply;
 import shop.wesellbuy.secondproject.web.member.MemberForm;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class Member extends BaseDateColumnEntity {
     private Phone phones; // 휴대전화 + 집전화
     @Embedded
     private Address address; // 주소
-    @Enumerated
+    @Enumerated(value = EnumType.STRING)
     private MemberStatus status; // 상태가 탈퇴면 lastModifiedDate의 시간이 탈퇴 날짜이다.
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -58,6 +57,15 @@ public class Member extends BaseDateColumnEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Recommendation> recommendationList = new ArrayList<>(); // 회원 등록 추천합니다 모음
+
+    @OneToMany(mappedBy = "member")
+    private List<CustomerServiceReply> customerServiceReplyList = new ArrayList<>(); // 고객지원 댓글 모음
+
+    @OneToMany(mappedBy = "member")
+    private List<ItemReply> ItemReplyList = new ArrayList<>(); // 상품 댓글 모음
+
+    @OneToMany(mappedBy = "member")
+    private List<RecommendationReply> recommendationReplyList = new ArrayList<>(); // 추천합니다 댓글 모음
 
     protected Member() {
     }

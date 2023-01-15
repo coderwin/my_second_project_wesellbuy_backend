@@ -1,5 +1,7 @@
 package shop.wesellbuy.secondproject.domain.order;
 
+import jakarta.persistence.Enumerated;
+
 /**
  * 주문 상태 정보
  * writer : 이호진

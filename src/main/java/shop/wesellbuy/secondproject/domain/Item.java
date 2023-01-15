@@ -2,8 +2,11 @@ package shop.wesellbuy.secondproject.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.domain.item.ItemPicture;
+import shop.wesellbuy.secondproject.domain.likes.ItemLikes;
+import shop.wesellbuy.secondproject.domain.reply.ItemReply;
 import shop.wesellbuy.secondproject.web.item.ItemForm;
 
 import java.util.ArrayList;
@@ -29,16 +32,23 @@ public class Item extends BaseDateColumnEntity {
     private Integer stock; // 제고 수량
     private Integer price; // 가격
     private String content; // 설명
+    @ColumnDefault("0")
+    private Integer hits; // 조회수
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.PERSIST) // 생명주기가 같다
     private List<ItemPicture> itemPictureList = new ArrayList<>(); // 상품 이미지 모음
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_num")
-    private Member member;
+    private Member member; // 등록 회원
+
+    @OneToMany(mappedBy = "item")
+    private List<ItemReply> itemReplyList = new ArrayList<>(); // 댓글 모음
+
+    @OneToMany(mappedBy = "item")
+    private List<ItemLikes> itemLikesList = new ArrayList<>(); // 좋아요 모음
 
     // ** setter ** //
-
 
     public void addStock(Integer stock) {
         this.stock = stock;
@@ -86,5 +96,14 @@ public class Item extends BaseDateColumnEntity {
      * 상품주문이 있으면 해당 item 제고량 빼주기
      */
     public void removeStock() {
+    }
+
+    /**
+     * 조회수 default 정하기
+     * - 조회수의 기본값을 db에 저장한다.
+     */
+    @PrePersist
+    public void prePersistHits() {
+        this.hits = this.hits == null ? 0 : this.hits;
     }
 }

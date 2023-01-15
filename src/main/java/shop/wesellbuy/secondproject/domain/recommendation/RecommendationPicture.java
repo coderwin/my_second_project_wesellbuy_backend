@@ -2,7 +2,7 @@ package shop.wesellbuy.secondproject.domain.recommendation;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import shop.wesellbuy.secondproject.Recommendation;
+import shop.wesellbuy.secondproject.domain.Recommendation;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 
 @Entity

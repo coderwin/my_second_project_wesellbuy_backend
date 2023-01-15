@@ -1,13 +1,13 @@
-package shop.wesellbuy.secondproject;
+package shop.wesellbuy.secondproject.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.domain.recommendation.RecommendationPicture;
+import shop.wesellbuy.secondproject.domain.reply.RecommendationReply;
 import shop.wesellbuy.secondproject.web.recommendation.RecommendationForm;
 
 import java.util.ArrayList;
@@ -40,6 +40,9 @@ public class Recommendation extends BaseDateColumnEntity {
 
     @OneToMany(mappedBy = "recommendation", cascade = CascadeType.PERSIST) // 생명주기 같다
     private List<RecommendationPicture> recommendationPictureList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "recommendation")
+    private List<RecommendationReply> recommendationReplyList = new ArrayList<>(); // 댓글 모음
 
     // ** setter ** //
     public void addItemName(String itemName) {

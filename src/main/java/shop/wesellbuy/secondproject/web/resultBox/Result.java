@@ -4,6 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * 클라이언트 응답 data
+ * writer : 이호진
+ * init : 2023.01.15
+ * updated by writer :
+ * update :
+ * description : 클라이언트에게서 보낼 데이터를 담아둔다.
+ */
 @ToString
 @Getter
 @AllArgsConstructor
