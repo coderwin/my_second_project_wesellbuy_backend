@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.domain.recommendation.RecommendationPicture;
 import shop.wesellbuy.secondproject.domain.reply.RecommendationReply;
@@ -28,11 +29,13 @@ import java.util.List;
 public class Recommendation extends BaseDateColumnEntity {
 
     @Id @GeneratedValue
-    @Column(name = "customerService_num")
+    @Column(name = "recommendation_num")
     private Integer num;
     private String ItemName; // 추천받은 상품 이름
     private String sellerId; // 추천받은 판매자 이름
     private String content; // 추천 이유
+    @ColumnDefault("0")
+    private Integer hits; // 조회수
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_num")
@@ -84,6 +87,17 @@ public class Recommendation extends BaseDateColumnEntity {
                 .forEach((rp) -> rp.getRecommendation().addRecommendationPicture(rp));
 
         return recommendation;
+    }
+
+    // ** 비즈니스(서비스) 로직(메서드) ** //
+
+    /**
+     * 조회수 default 정하기
+     * - 조회수의 기본값을 db에 저장한다.
+     */
+    @PrePersist
+    public void prePersistHits() {
+        this.hits = this.hits == null ? 0 : this.hits;
     }
 
 }

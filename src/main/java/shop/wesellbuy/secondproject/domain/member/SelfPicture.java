@@ -24,7 +24,8 @@ public class SelfPicture extends BaseDateColumnEntity {
     private String originalFileName; // 원본 파일 이름
     private String storedFileName; // DB에 저장된 파일 이름
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "selfPicture")
+    // cascade => 그림 수정시에도 member가 persist 되어야한다.
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "selfPicture", cascade = CascadeType.ALL)
     private Member member; // 회원 번호
 
     // ** setter ** //

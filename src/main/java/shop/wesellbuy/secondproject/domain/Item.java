@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.domain.item.ItemPicture;
+import shop.wesellbuy.secondproject.domain.item.ItemStatus;
 import shop.wesellbuy.secondproject.domain.likes.ItemLikes;
 import shop.wesellbuy.secondproject.domain.reply.ItemReply;
 import shop.wesellbuy.secondproject.web.item.ItemForm;
@@ -19,6 +20,8 @@ import java.util.List;
  * updated by writer :
  * update :
  * description : 회원이 입력한  상품 정보를 정의한다.
+ *
+ * comment : '할인률'도 생각해보자
  */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -34,6 +37,8 @@ public class Item extends BaseDateColumnEntity {
     private String content; // 설명
     @ColumnDefault("0")
     private Integer hits; // 조회수
+    @Enumerated(value = EnumType.STRING)
+    private ItemStatus status; // 상품 등록 상태(REGISTER/DELETE)
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.PERSIST) // 생명주기가 같다
     private List<ItemPicture> itemPictureList = new ArrayList<>(); // 상품 이미지 모음
@@ -62,6 +67,10 @@ public class Item extends BaseDateColumnEntity {
         this.content = content;
     }
 
+    public void addStatus(ItemStatus status) {
+        this.status = status;
+    }
+
     // ** 연관관계 메서드 ** //
     // Member
     public void addMember(Member member) {
@@ -83,6 +92,7 @@ public class Item extends BaseDateColumnEntity {
         item.addStock(itemForm.getStock());
         item.addPrice(itemForm.getPrice());
         item.addContent(itemForm.getContent());
+        item.addStatus(ItemStatus.R);
         item.addMember(member);
         // 각각의 itemPicture에 item 등록
         itemForm.getItemPictureList().forEach((ip) -> item.addItemPictures(ip));

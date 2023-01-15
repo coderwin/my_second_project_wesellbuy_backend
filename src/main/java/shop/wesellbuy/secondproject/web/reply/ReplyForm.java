@@ -12,5 +12,5 @@ import lombok.Getter;
  */
 @Getter
 public class ReplyForm {
-    private String comment; // 내용
+    private String content; // 내용
 }

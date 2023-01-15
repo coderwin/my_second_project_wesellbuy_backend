@@ -23,7 +23,7 @@ public class CustomerServiceReply extends BaseDateColumnEntity {
     @Id @GeneratedValue
     @Column(name = "customerServiceReply_num")
     private Integer num; // 댓글 번호
-    private String comment; // 내용
+    private String content; // 내용
     @Enumerated(value = EnumType.STRING)
     private ReplyStatus status; // 게시판 댓글 상태[REGISTER/DELETE]
 
@@ -36,8 +36,8 @@ public class CustomerServiceReply extends BaseDateColumnEntity {
     private CustomerService customerService;
 
     // ** setter ** //
-    public void addComment(String comment) {
-        this.comment = comment;
+    public void addContent(String content) {
+        this.content = content;
     }
 
     public void addStatus(ReplyStatus status) {
@@ -62,7 +62,7 @@ public class CustomerServiceReply extends BaseDateColumnEntity {
 
         CustomerServiceReply customerServiceReply = new CustomerServiceReply();
 
-        customerServiceReply.addComment(replyForm.getComment());
+        customerServiceReply.addContent(replyForm.getContent());
         customerServiceReply.addStatus(ReplyStatus.R);
         customerServiceReply.addMember(member);
         customerServiceReply.addCustomerService(customerService);

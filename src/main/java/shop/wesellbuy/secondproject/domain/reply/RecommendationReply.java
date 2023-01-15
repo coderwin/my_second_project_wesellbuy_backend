@@ -6,6 +6,7 @@ import shop.wesellbuy.secondproject.domain.CustomerService;
 import shop.wesellbuy.secondproject.domain.Item;
 import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.Recommendation;
+import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.web.reply.ReplyForm;
 
 /**
@@ -18,13 +19,13 @@ import shop.wesellbuy.secondproject.web.reply.ReplyForm;
  */
 @Entity
 @Getter
-public class RecommendationReply {
+public class RecommendationReply extends BaseDateColumnEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "recommendationReply_num")
     private Integer num; // 댓글 번호
-    private String comment; // 내용
+    private String content; // 내용
     @Enumerated(value = EnumType.STRING)
     private ReplyStatus status; // 게시판 댓글 상태[REGISTER/DELETE]
 
@@ -37,8 +38,8 @@ public class RecommendationReply {
     private Recommendation recommendation;
 
     // ** setter ** //
-    public void addComment(String comment) {
-        this.comment = comment;
+    public void addContent(String content) {
+        this.content = content;
     }
 
     public void addStatus(ReplyStatus status) {
@@ -63,7 +64,7 @@ public class RecommendationReply {
 
         RecommendationReply recommendationReply = new RecommendationReply();
 
-        recommendationReply.addComment(replyForm.getComment());
+        recommendationReply.addContent(replyForm.getContent());
         recommendationReply.addStatus(ReplyStatus.R);
         recommendationReply.addMember(member);
         recommendationReply.addRecommendation(Recommendation);

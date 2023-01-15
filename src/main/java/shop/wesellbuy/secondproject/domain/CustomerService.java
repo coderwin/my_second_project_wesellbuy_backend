@@ -31,8 +31,6 @@ public class CustomerService extends BaseDateColumnEntity {
     private Integer num;
     private String reportedId; // 신고된 회원 아이디
     private String content; // 신고 내용
-    @ColumnDefault("0")
-    private Integer hits; // 조회수
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_num")
@@ -48,14 +46,5 @@ public class CustomerService extends BaseDateColumnEntity {
     }
 
     // ** 비즈니스(서비스) 로직(메서드) ** //
-
-    /**
-     * 조회수 default 정하기
-     * - 조회수의 기본값을 db에 저장한다.
-     */
-    @PrePersist
-    public void prePersistHits() {
-        this.hits = this.hits == null ? 0 : this.hits;
-    }
 
 }

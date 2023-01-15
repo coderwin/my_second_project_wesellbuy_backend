@@ -22,6 +22,9 @@ import java.util.List;
  * updated by writer :
  * update :
  * description : 회원 정보를 정의한다.
+ *
+ * comment : selfPicture의 생명주기를 다시 생각해보기(about create and update)
+ *           joinColumn 위치 생각해보기(member or self_picture)
  */
 @Entity
 @Getter

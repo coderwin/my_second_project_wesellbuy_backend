@@ -24,7 +24,7 @@ public class ItemReply extends BaseDateColumnEntity {
     @GeneratedValue
     @Column(name = "itemReply_num")
     private Integer num; // 댓글 번호
-    private String comment; // 내용
+    private String content; // 내용
     @Enumerated(value = EnumType.STRING)
     private ReplyStatus status; // 게시판 댓글 상태[REGISTER/DELETE]
 
@@ -37,8 +37,8 @@ public class ItemReply extends BaseDateColumnEntity {
     private Item item;
 
     // ** setter ** //
-    public void addComment(String comment) {
-        this.comment = comment;
+    public void addContent(String content) {
+        this.content = content;
     }
 
     // ** 연관관계 메서드 ** //
@@ -64,7 +64,7 @@ public class ItemReply extends BaseDateColumnEntity {
 
         ItemReply itemReply = new ItemReply();
 
-        itemReply.addComment(replyForm.getComment());
+        itemReply.addContent(replyForm.getContent());
         itemReply.addStatus(ReplyStatus.R);
         itemReply.addMember(member);
         itemReply.addItem(Item);

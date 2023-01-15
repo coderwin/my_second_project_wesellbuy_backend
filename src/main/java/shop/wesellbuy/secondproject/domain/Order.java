@@ -21,9 +21,8 @@ import java.util.List;
  * description : 회원 주문정보를 정의한다.
  */
 @Entity
+@Table(name = "orders")
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends BaseDateColumnEntity {
 
     @Id @GeneratedValue

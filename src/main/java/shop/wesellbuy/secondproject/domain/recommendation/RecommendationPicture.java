@@ -11,7 +11,7 @@ public class RecommendationPicture extends BaseDateColumnEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "itemPicture_id")
+    @Column(name = "RecommendationPicture_id")
     private Integer num; // 이미지 번호
     private String originalFileName; // 원본 파일 이름
     private String storedFileName; // DB에 저장된 파일 이름
