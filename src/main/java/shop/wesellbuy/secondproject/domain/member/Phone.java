@@ -1,8 +1,10 @@
 package shop.wesellbuy.secondproject.domain.member;
 
 import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 회원 전화번호
@@ -15,6 +17,7 @@ import lombok.Getter;
 @Embeddable
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Phone {
 
     private String selfPhone; // 휴대전화(필수)

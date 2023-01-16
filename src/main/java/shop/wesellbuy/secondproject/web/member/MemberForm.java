@@ -3,6 +3,7 @@ package shop.wesellbuy.secondproject.web.member;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import shop.wesellbuy.secondproject.domain.member.Address;
@@ -18,6 +19,7 @@ import shop.wesellbuy.secondproject.domain.member.SelfPicture;
  * description : 클라이언트에게서 받은 회원 정보를 담아둔다.
  */
 @Getter @Setter
+@AllArgsConstructor
 public class MemberForm {
 
     private String name; // 이름

@@ -1,8 +1,7 @@
 package shop.wesellbuy.secondproject.domain.member;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 
@@ -29,9 +28,27 @@ public class SelfPicture extends BaseDateColumnEntity {
     private Member member; // 회원 번호
 
     // ** setter ** //
+
+    public void addOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
+    }
+
+    public void addStoredFileName(String storedFileName) {
+        this.storedFileName = storedFileName;
+    }
+
     public void addMember(Member member) {
         this.member = member;
     }
 
+    // ** 생성 메서드 ** //
+    public static SelfPicture createSelfPicture(String originalFileName, String storedFileName) {
+        SelfPicture selfPicture = new SelfPicture();
+
+        selfPicture.addOriginalFileName(originalFileName);
+        selfPicture.addStoredFileName(storedFileName);
+
+        return selfPicture;
+    }
 
 }

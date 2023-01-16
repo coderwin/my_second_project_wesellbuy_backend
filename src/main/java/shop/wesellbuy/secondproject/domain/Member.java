@@ -107,8 +107,13 @@ public class Member extends BaseDateColumnEntity {
     // ** 연관관계 메서드 ** //
     // 회원 id 입력
     public void addSelfPicture(SelfPicture selfPicture) {
-        this.selfPicture = selfPicture;
-        selfPicture.addMember(this);
+        // selfPicture이 없을 때 설정
+        if(selfPicture != null) {
+            this.selfPicture = selfPicture;
+            selfPicture.addMember(this);
+        } else {
+            this.selfPicture = null;
+        }
     }
 
     // ** 생성 메서드 ** //

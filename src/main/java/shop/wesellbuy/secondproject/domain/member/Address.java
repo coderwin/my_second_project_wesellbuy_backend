@@ -1,8 +1,10 @@
 package shop.wesellbuy.secondproject.domain.member;
 
 import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 회원 주소
@@ -15,6 +17,7 @@ import lombok.Getter;
 @Embeddable
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
 
     private String country; // 나라 이름
