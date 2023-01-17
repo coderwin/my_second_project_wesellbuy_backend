@@ -1,5 +1,8 @@
 package shop.wesellbuy.secondproject.repository.member;
 
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import shop.wesellbuy.secondproject.domain.Member;
@@ -34,6 +38,115 @@ public class MemberJpaRepositoryTest {
     @Autowired
     MemberJpaRepository memberJpaRepository;
 
+    @PersistenceContext
+    EntityManager em;
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.17
+     * updated by writer :
+     * update :
+     * description : 회원 상세보기 확인 + fetchjoin 확인
+     */
+    @Test
+    @Rollback(false)
+    public void 회원_상세보기_with_fetchJoin() {
+        // given
+        SelfPicture selfPicture = SelfPicture.createSelfPicture("test1", "test2");
+        // selfPicture NotNull
+        MemberForm memberForm1 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea", "b", "h", "h", "123", selfPicture);
+        // selfPicture Null
+        MemberForm memberForm2 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea", "b", "h", "h", "123", null);
+
+        Member member1 = Member.createMember(memberForm1);
+        Member member2 = Member.createMember(memberForm2);
+        em.persist(member1);
+        em.persist(member2);
+
+        // when
+        Member findMember1 = memberJpaRepository.findDetailInfoById(member1.getNum()).orElseThrow();
+        Member findMember2 = memberJpaRepository.findDetailInfoById(member2.getNum()).orElseThrow();
+
+        // then
+        assertThat(findMember1).isEqualTo(member1);
+        assertThat(findMember2).isEqualTo(member2);
+        // selfPicture 확인
+        assertThat(findMember1.getSelfPicture()).isEqualTo(selfPicture);
+//        assertThat(findMember2.getSelfPicture()).isEqualTo(null);
+        assertThat(findMember2.getSelfPicture()).isNull();
+//        assertThat(findMember2.getSelfPicture()).isEqualTo(""); // false
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.17
+     * updated by writer :
+     * update :
+     * description : 회원 찾기 by name, selfPhone, email test
+     */
+    @Test
+//    @Rollback(value = false)
+    public void 회원_찾기_by_name_email_selfPhone() {
+        // given
+        MemberForm memberForm1 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea", "b", "h", "h", "123", null);
+        MemberForm memberForm3 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea", "b", "h", "h", "123", null);
+        MemberForm memberForm2 = new MemberForm("b", "bc", "a@a", "01012341234", "0511231234", "korea2", "b", "h", "h", "123", null);
+
+        Member member1 = Member.createMember(memberForm1);
+        Member member2 = Member.createMember(memberForm2);
+        Member member3 = Member.createMember(memberForm3);
+
+        memberJpaRepository.save(member1);
+        memberJpaRepository.save(member2);
+        memberJpaRepository.save(member3);
+
+        // when
+        MemberSearchIdCond memberSearchIdCond1 = new MemberSearchIdCond("a", "01012341234", null);
+        MemberSearchIdCond memberSearchIdCond2 = new MemberSearchIdCond("b", null, "a@a");
+
+        List<Member> findMembers1 = memberJpaRepository.findByIdAndSelfPhoneAndEmail(memberSearchIdCond1);
+        List<Member> findMembers2 = memberJpaRepository.findByIdAndSelfPhoneAndEmail(memberSearchIdCond2);
+
+        // then
+        assertThat(findMembers1).containsExactly(member1, member3);
+        assertThat(findMembers2).containsExactly(member2);
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.17
+     * updated by writer :
+     * update :
+     * description : 회원 찾기 by id, selfPhone, email test
+     */
+    @Test
+//    @Rollback(value = false)
+    public void 회원_찾기_by_id_email_selfPhone() {
+        // given
+        MemberForm memberForm1 = new MemberForm("a", "a2", "a@a", "01012341234", "0511231234", "korea", "b", "h", "h", "123", null);
+        MemberForm memberForm3 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea", "b", "h", "h", "123", null);
+        MemberForm memberForm2 = new MemberForm("b", "bc", "a@a", "01012341234", "0511231234", "korea2", "b", "h", "h", "123", null);
+
+        Member member1 = Member.createMember(memberForm1);
+        Member member2 = Member.createMember(memberForm2);
+        Member member3 = Member.createMember(memberForm3);
+
+        memberJpaRepository.save(member1);
+        memberJpaRepository.save(member2);
+        memberJpaRepository.save(member3);
+
+        // when
+        MemberSearchPwdCond memberSearchPwdCond1 = new MemberSearchPwdCond("a", "01012341234", null);
+        MemberSearchPwdCond memberSearchPwdCond2 = new MemberSearchPwdCond("bc", null, "a@a");
+
+        List<Member> findMembers1 = memberJpaRepository.findByIdAndSelfPhoneAndEmail(memberSearchPwdCond1);
+        List<Member> findMembers2 = memberJpaRepository.findByIdAndSelfPhoneAndEmail(memberSearchPwdCond2);
+
+        // then
+        assertThat(findMembers1).containsExactly(member3);
+        assertThat(findMembers2).containsExactly(member2);
+    }
+
     /**
      * writer : 이호진
      * init : 2023.01.16
@@ -48,6 +161,7 @@ public class MemberJpaRepositoryTest {
         SelfPicture testSelfPicture = SelfPicture.createSelfPicture("a", "a");
 
         MemberForm memberForm1 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea", "b", "h", "h", "123", testSelfPicture);
+
         Member member1 = Member.createMember(memberForm1);
 
         // when
@@ -98,22 +212,22 @@ public class MemberJpaRepositoryTest {
         MemberSearchCond memberSearchCondWithId = new MemberSearchCond("a", null, null, null); // 2
         MemberSearchCond memberSearchCondWithCountry = new MemberSearchCond(null, "k", null, null); // 3
         MemberSearchCond memberSearchCondWithCity = new MemberSearchCond(null, null, "c", null); // 1
-        MemberSearchCond memberSearchCondWithCreateDate = new MemberSearchCond(null, null, null, "20230117"); // 4
+        MemberSearchCond memberSearchCondWithCreateDate = new MemberSearchCond(null, null, null, today); // 4
         // 조건 2개
         MemberSearchCond memberSearchCond1 = new MemberSearchCond("a", "korea", null, null); // 1
         MemberSearchCond memberSearchCond2 = new MemberSearchCond("c", null, "b", null); // 2
-        MemberSearchCond memberSearchCond3 = new MemberSearchCond("a", null, null, "20230117");// 2
-        MemberSearchCond memberSearchCond4 = new MemberSearchCond(null, "u", null, "20230117");// 1
+        MemberSearchCond memberSearchCond3 = new MemberSearchCond("a", null, null, today);// 2
+        MemberSearchCond memberSearchCond4 = new MemberSearchCond(null, "u", null, today);// 1
         MemberSearchCond memberSearchCond5 = new MemberSearchCond(null, "u", "a", null);// 0
-        MemberSearchCond memberSearchCond6 = new MemberSearchCond(null, null, "b", "20230117");// 3
+        MemberSearchCond memberSearchCond6 = new MemberSearchCond(null, null, "b", today);// 3
         MemberSearchCond memberSearchCond7 = new MemberSearchCond(null, "a", "b", null);// 3
         // 조건 3개
-        MemberSearchCond memberSearchCond8 = new MemberSearchCond(null, "a", "b", "20230118");// 0
+        MemberSearchCond memberSearchCond8 = new MemberSearchCond(null, "a", "b", nextday);// 0
         MemberSearchCond memberSearchCond9 = new MemberSearchCond("a", "ea", "b", null);// 1
-        MemberSearchCond memberSearchCond10 = new MemberSearchCond("b", "a", null, "20230117");// 1
-        MemberSearchCond memberSearchCond11 = new MemberSearchCond("b", null, "a", "20230117");// 0
+        MemberSearchCond memberSearchCond10 = new MemberSearchCond("b", "a", null, today);// 1
+        MemberSearchCond memberSearchCond11 = new MemberSearchCond("b", null, "a", today);// 0
         // 조건 4개
-        MemberSearchCond memberSearchCond12 = new MemberSearchCond("a", "k", "b", "20230117");// 1
+        MemberSearchCond memberSearchCond12 = new MemberSearchCond("a", "k", "b", today);// 1
 
 
         // 모든 회원 가져오기
@@ -159,7 +273,7 @@ public class MemberJpaRepositoryTest {
 //        findAllWithCondTest(memberSearchCond, pageRequestSize1, member1); // fail
 //        findAllWithCondTest(memberSearchCond, pageRequestSize1, member2); // fail
 
-        // then - 개수로 비교
+//         then - 개수로 비교
         // 조건 0
         findAllWithCondTestWithQuantity(memberSearchCond, pageRequestSize10, 4);
 
@@ -224,6 +338,51 @@ public class MemberJpaRepositoryTest {
         Page<Member> findMembers = memberJpaRepository.findAllInfo(memberSearchCond, pageRequest);
 
         assertThat(findMembers.getContent().size()).isEqualTo(quantity);
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.17
+     * updated by writer :
+     * update :
+     * description : findAll by condition and pageable Test + Slice 이용
+     *
+     * comment : Slice 객체인데 왜 count가 size + 1나 더 않 늘지?
+     */
+    @Test
+    @Rollback(value = false)
+    public void Slice를_이용하여_paging_해본다() {
+
+        // given
+        SelfPicture testSelfPicture = SelfPicture.createSelfPicture("a", "a");
+
+        MemberForm memberForm1 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm2 = new MemberForm("b", "bc", "a@a", "01012341234", "0511231234", "korea2", "b", "h", "h", "123", testSelfPicture);
+        MemberForm memberForm3 = new MemberForm("c", "c", "a@a", "01012341234", "0511231234", "korea3", "b", "h", "h", "123", testSelfPicture);
+        MemberForm memberForm4 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "us", "c", "h", "h", "123", testSelfPicture);
+
+        Member member1 = Member.createMember(memberForm1);
+        Member member2 = Member.createMember(memberForm2);
+        Member member3 = Member.createMember(memberForm3);
+        Member member4 = Member.createMember(memberForm4);
+
+        // 회원 저장
+        memberJpaRepository.save(member1);
+        memberJpaRepository.save(member2);
+        memberJpaRepository.save(member3);
+        memberJpaRepository.save(member4);
+
+        // when
+        MemberSearchCond memberSearchCond = new MemberSearchCond(null, null, null, null); // 4
+        PageRequest pageRequest = PageRequest.of(0, 3);
+
+        Slice<Member> findMembers = memberJpaRepository.findAllInfoUsingSlice(memberSearchCond, pageRequest);
+
+        // then
+        assertThat(findMembers.getContent().size()).isEqualTo(4);
+
+
+
     }
 
 

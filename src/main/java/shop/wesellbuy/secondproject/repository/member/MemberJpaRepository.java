@@ -3,6 +3,8 @@ package shop.wesellbuy.secondproject.repository.member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import shop.wesellbuy.secondproject.domain.Member;
 
+import java.util.List;
+
 /**
  * Member Repository
  * writer : 이호진
@@ -12,4 +14,5 @@ import shop.wesellbuy.secondproject.domain.Member;
  * description : Member Repository by Spring Data Jpa
  */
 public interface MemberJpaRepository extends JpaRepository<Member, Integer>, MemberJpaRepositoryCustom {
+
 }

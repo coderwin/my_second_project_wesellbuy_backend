@@ -39,10 +39,30 @@ public class CustomerService extends BaseDateColumnEntity {
     @OneToMany(mappedBy = "customerService")
     private List<CustomerServiceReply> customerServiceReplyList = new ArrayList<>(); // 댓글 모음
 
+    // ** setter ** //
+    public void addReportedId(String reportedId) {
+        this.reportedId = reportedId;
+    }
+
+    public void addContent(String content) {
+        this.content = content;
+    }
+
     // ** 연관관계 메서드 ** //
     public void addMember(Member member) {
         this.member = member;
         member.getCustomerServiceList().add(this);
+    }
+
+    // ** 생성 메서드 ** //
+    public static CustomerService createCustomerService(String reportedId, String content, Member member) {
+        CustomerService customerService = new CustomerService();
+
+        customerService.addReportedId(reportedId);
+        customerService.addContent(content);
+        customerService.addMember(member);
+
+        return customerService;
     }
 
     // ** 비즈니스(서비스) 로직(메서드) ** //
