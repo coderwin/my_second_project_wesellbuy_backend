@@ -19,7 +19,8 @@ public class LocalDateParser {
     private LocalDate searchDate;
 
     public LocalDateParser(String currentDate) {
-        this.searchDate = LocalDate.parse(currentDate, DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String dateType = "yyyy-MM-dd"; // 날짜 type
+        this.searchDate = LocalDate.parse(currentDate, DateTimeFormatter.ofPattern(dateType));
     }
 
     // 해당 날짜의 시작 시간(ex: 2020-02-02 00:00:00)

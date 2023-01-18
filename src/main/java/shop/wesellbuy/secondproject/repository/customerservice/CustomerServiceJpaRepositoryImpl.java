@@ -2,7 +2,6 @@ package shop.wesellbuy.secondproject.repository.customerservice;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -10,7 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import shop.wesellbuy.secondproject.domain.CustomerService;
-import shop.wesellbuy.secondproject.domain.QCustomerService;
+import shop.wesellbuy.secondproject.util.LocalDateParser;
 
 import java.util.List;
 
@@ -20,10 +19,10 @@ import static shop.wesellbuy.secondproject.domain.QMember.member;
 /**
  * CustomerServiceJpaRepositoryCustom 구현
  * writer : 이호진
- * init : 2023.01.16
+ * init : 2023.01.17
  * updated by writer :
  * update :
- * description : Admin에서 사용하는 MemberJpaRepository 구현 모음 + 최적화 사용(fetch)
+ * description : CustomerServiceJpaRepository 구현 모음 + 최적화 사용(fetch)
  */
 @RequiredArgsConstructor
 @Slf4j
@@ -34,9 +33,11 @@ public class CustomerServiceJpaRepositoryImpl implements CustomerServiceJpaRepos
     /**
      * writer : 이호진
      * init : 2023.01.17
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.01.18
      * description : 모든 고객지원 게시글 찾기 + fetchjoin
+     *
+     * comment - update : 날짜 검색 조건 추가
      */
     @Override
     public Page<CustomerService> findAllInfo(CustomerServiceSearchCond customerServiceSearchCond, Pageable pageable) {
@@ -48,7 +49,8 @@ public class CustomerServiceJpaRepositoryImpl implements CustomerServiceJpaRepos
                 .join(customerService.member, member).fetchJoin()
                 .where(
                         customerServiceIdEq(customerServiceSearchCond.getMemberId()),
-                        customerServiceReportedIdEq(customerServiceSearchCond.getReportedId())
+                        customerServiceReportedIdEq(customerServiceSearchCond.getReportedId()),
+                        customerServiceCreateDateBetween(customerServiceSearchCond.getCreateDate())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -61,11 +63,28 @@ public class CustomerServiceJpaRepositoryImpl implements CustomerServiceJpaRepos
                 .from(customerService)
                 .where(
                         customerServiceIdEq(customerServiceSearchCond.getMemberId()),
-                        customerServiceReportedIdEq(customerServiceSearchCond.getReportedId())
+                        customerServiceReportedIdEq(customerServiceSearchCond.getReportedId()),
+                        customerServiceCreateDateBetween(customerServiceSearchCond.getCreateDate())
                 )
                 .fetchOne();
 
         return new PageImpl<>(result, pageable, totalCount);
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.18
+     * updated by writer :
+     * update :
+     * description : 고객지원 정보 검색 조건 eq by createDate
+     */
+    private BooleanExpression customerServiceCreateDateBetween(String createDate) {
+        if(StringUtils.hasText(createDate)) {
+            // String을 LocalDateTime으로 바꾸기
+            LocalDateParser localDateParser = new LocalDateParser(createDate);
+            return customerService.createdDate.between(localDateParser.startDate(), localDateParser.endDate());
+        }
+        return null;
     }
 
     /**

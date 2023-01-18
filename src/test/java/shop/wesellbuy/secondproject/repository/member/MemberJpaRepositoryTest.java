@@ -203,8 +203,8 @@ public class MemberJpaRepositoryTest {
         memberJpaRepository.save(member4);
 
         // when
-        String today = "20230117";
-        String nextday = "20230118";
+        String today = "2023-01-18";
+        String nextday = "2023-01-19";
         // 조건 입력하기
         // 조건 0개
         MemberSearchCond memberSearchCond = new MemberSearchCond(null, null, null, null); // 4

@@ -1,6 +1,9 @@
 package shop.wesellbuy.secondproject.web.reply;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * board 댓글 dto
@@ -11,6 +14,8 @@ import lombok.Getter;
  * description : 클라이언트에게서 받은 댓글 내용 정보를 담아둔다.
  */
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReplyForm {
     private String content; // 내용
 }

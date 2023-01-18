@@ -16,7 +16,7 @@ spring:
   datasource:
     # H2
     url: jdbc:h2:tcp://localhost/~/wesellbuy
-    username: sa
+    username:
     password:
     driver-class-name: org.h2.Driver
 

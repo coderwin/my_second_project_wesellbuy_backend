@@ -57,7 +57,7 @@ public class CustomerServiceJpaRepositoryTest {
 
     /**
      * writer : 이호진
-     * init : 2023.01.16
+     * init : 2023.01.17
      * updated by writer :
      * update :
      * description : save Test
@@ -79,10 +79,12 @@ public class CustomerServiceJpaRepositoryTest {
 
     /**
      * writer : 이호진
-     * init : 2023.01.16
-     * updated by writer :
-     * update :
+     * init : 2023.01.17
+     * updated by writer : 이호진
+     * update : 2023.01.18
      * description : findAll by condition and pageable Test
+     *
+     * comment : update 날짜 조건 test
      */
     @Test
 //    @Rollback(false)
@@ -118,13 +120,21 @@ public class CustomerServiceJpaRepositoryTest {
         Pageable pageablePage3Size5 = PageRequest.of(3, 5);
         Pageable pageablePage2Size2 = PageRequest.of(2, 2);
 
+        // 날짜 condition
+        String today = "2023-01-18";
+        String otherDay = "2023-01-19";
+
         // 검색 조건
-        CustomerServiceSearchCond customerServiceSearchCond1 = new CustomerServiceSearchCond("a", null);
-        CustomerServiceSearchCond customerServiceSearchCond2 = new CustomerServiceSearchCond(null, "bd");
-        CustomerServiceSearchCond customerServiceSearchCond3 = new CustomerServiceSearchCond("bd", null);
+        CustomerServiceSearchCond customerServiceSearchCond1 = new CustomerServiceSearchCond("a", null, today);
+        CustomerServiceSearchCond customerServiceSearchCond2 = new CustomerServiceSearchCond(null, "bd", today);
+        CustomerServiceSearchCond customerServiceSearchCond3 = new CustomerServiceSearchCond("bd", null, today);
         // List가 있나 없나 구분
-        CustomerServiceSearchCond customerServiceSearchCond4 = new CustomerServiceSearchCond("a", "ac");
-        CustomerServiceSearchCond customerServiceSearchCond5 = new CustomerServiceSearchCond("a", "bd");
+        CustomerServiceSearchCond customerServiceSearchCond4 = new CustomerServiceSearchCond("a", "ac", today);
+        CustomerServiceSearchCond customerServiceSearchCond5 = new CustomerServiceSearchCond("a", "bd", today);
+        // 날짜 검색 되는지 확인
+        CustomerServiceSearchCond customerServiceSearchCond6 = new CustomerServiceSearchCond("a", "ac", today);
+        CustomerServiceSearchCond customerServiceSearchCond7 = new CustomerServiceSearchCond("a", "ac", otherDay);
+
 
         // when
         // total count 비교
@@ -141,6 +151,12 @@ public class CustomerServiceJpaRepositoryTest {
         // List 있나 없나 비교
         Page<CustomerService> result8 = customerServiceJpaRepository.findAllInfo(customerServiceSearchCond4, pageablePage0Size10);
         Page<CustomerService> result9 = customerServiceJpaRepository.findAllInfo(customerServiceSearchCond5, pageablePage0Size10);
+
+        // 날짜 검색 되는지 확인
+        Page<CustomerService> result10 = customerServiceJpaRepository.findAllInfo(customerServiceSearchCond6, pageablePage0Size10);
+        Page<CustomerService> result11 = customerServiceJpaRepository.findAllInfo(customerServiceSearchCond7, pageablePage0Size10);
+
+
 
         // then
         // total count 비교
@@ -159,8 +175,9 @@ public class CustomerServiceJpaRepositoryTest {
         assertThat(result8.getTotalElements()).isEqualTo(mCount);
         assertThat(result9.getTotalElements()).isEqualTo(0);
 
-
-
+        // 날짜 검색 되는지 확인
+        assertThat(result10.getTotalElements()).isEqualTo(mCount);
+        assertThat(result11.getTotalElements()).isEqualTo(0);
     }
 
 

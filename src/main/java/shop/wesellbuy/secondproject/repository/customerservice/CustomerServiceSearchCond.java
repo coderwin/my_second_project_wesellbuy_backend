@@ -17,6 +17,7 @@ public class CustomerServiceSearchCond {
 
     private String memberId; // 신고한 회원 아이디
     private String reportedId; // 신고당한 회원 아이디
+    private String createDate; // create date
 
 
 

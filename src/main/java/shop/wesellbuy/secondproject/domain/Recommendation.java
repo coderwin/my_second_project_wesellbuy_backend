@@ -18,9 +18,12 @@ import java.util.List;
  * 추천합니다 board
  * writer : 이호진
  * init : 2023.01.14
- * updated by writer :
- * update :
+ * updated by writer : 이호진
+ * update : 2023.01.18
  * description : 고객지원 게시판을 정의한다.
+ *
+ * comment - create : 연관관계 메서드 수정(recommendationPicture)
+ *                    -> FK가 있는 곳에서 연관관계 메서드 생성
  */
 @Entity
 @Getter
@@ -31,7 +34,7 @@ public class Recommendation extends BaseDateColumnEntity {
     @Id @GeneratedValue
     @Column(name = "recommendation_num")
     private Integer num;
-    private String ItemName; // 추천받은 상품 이름
+    private String itemName; // 추천받은 상품 이름
     private String sellerId; // 추천받은 판매자 이름
     private String content; // 추천 이유
     @ColumnDefault("0")
@@ -49,7 +52,7 @@ public class Recommendation extends BaseDateColumnEntity {
 
     // ** setter ** //
     public void addItemName(String itemName) {
-        ItemName = itemName;
+        this.itemName = itemName;
     }
 
     public void addSellerId(String sellerId) {
@@ -68,10 +71,10 @@ public class Recommendation extends BaseDateColumnEntity {
     }
 
     // RecommendationPicture
-    public void addRecommendationPicture(RecommendationPicture recommendationPicture) {
-        recommendationPicture.addRecommendation(this);
-        this.recommendationPictureList.add(recommendationPicture);
-    }
+//    public void addRecommendationPicture(RecommendationPicture recommendationPicture) {
+//        recommendationPicture.addRecommendation(this);
+//        this.recommendationPictureList.add(recommendationPicture);
+//    }
 
     // ** 생성 메서드 ** //
     public static Recommendation createRecommendation(RecommendationForm recommendationForm, Member member) {
@@ -83,9 +86,10 @@ public class Recommendation extends BaseDateColumnEntity {
         recommendation.addMember(member);
 
         // RecommendationPicture에 Recommendation 등록
-        recommendationForm.getRecommendationPictureList()
-                .forEach((rp) -> rp.getRecommendation().addRecommendationPicture(rp));
-
+        if(recommendationForm.getRecommendationPictureList() != null) {
+            recommendationForm.getRecommendationPictureList()
+                    .forEach((rp) -> rp.addRecommendation(recommendation));
+        }
         return recommendation;
     }
 

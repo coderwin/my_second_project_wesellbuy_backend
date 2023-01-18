@@ -21,7 +21,32 @@ public class RecommendationPicture extends BaseDateColumnEntity {
     private Recommendation recommendation; // 추천합니다 번호
 
     // ** setter ** //
-    public void addRecommendation(Recommendation recommendation) {
-        this.recommendation = recommendation;
+
+    public void addOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
     }
+
+    public void addStoredFileName(String storedFileName) {
+        this.storedFileName = storedFileName;
+    }
+
+    // ** 연관관계 메서드 ** //
+    public void addRecommendation(Recommendation recommendation) {
+
+        this.recommendation = recommendation;
+        recommendation.getRecommendationPictureList().add(this);
+    }
+
+
+    // ** 생성 메서드 ** //
+    public static RecommendationPicture createRecommendationPicture(String originalFileName, String storedFileName) {
+        RecommendationPicture recommendationPicture = new RecommendationPicture();
+
+        recommendationPicture.addOriginalFileName(originalFileName);
+        recommendationPicture.addStoredFileName(storedFileName);
+
+        return recommendationPicture;
+    }
+
+
 }

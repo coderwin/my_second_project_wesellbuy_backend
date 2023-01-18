@@ -1,7 +1,9 @@
 package shop.wesellbuy.secondproject.web.recommendation;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.recommendation.RecommendationPicture;
 
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 public class RecommendationForm {
 
     private String ItemName; // 추천받은 상품 이름
