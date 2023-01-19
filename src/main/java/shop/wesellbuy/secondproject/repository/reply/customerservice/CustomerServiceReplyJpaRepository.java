@@ -1,7 +1,5 @@
 package shop.wesellbuy.secondproject.repository.reply.customerservice;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import shop.wesellbuy.secondproject.domain.reply.CustomerServiceReply;
 

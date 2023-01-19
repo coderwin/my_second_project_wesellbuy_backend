@@ -3,7 +3,6 @@ package shop.wesellbuy.secondproject.repository.reply.customerservice;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +87,7 @@ public class CustomerServiceReplyRepositoryTest {
         CustomerServiceReply customerServiceReply = CustomerServiceReply.createCustomerServiceReply(replyForm, member, customerService);
 
         // when
-        em.persist(customerServiceReply);
+        csrJpaRepository.save(customerServiceReply);
 
         // then
         CustomerServiceReply findCustomerServiceReply = csrJpaRepository.findById(customerServiceReply.getNum()).orElseThrow();

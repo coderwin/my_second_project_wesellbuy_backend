@@ -19,7 +19,7 @@ import static shop.wesellbuy.secondproject.domain.QMember.member;
 import static shop.wesellbuy.secondproject.domain.reply.QCustomerServiceReply.customerServiceReply;
 
 /**
- * CustomerServiceJpaRepositoryCustom 구현
+ * CustomerServiceReplyJpaRepositoryCustom 구현
  * writer : 이호진
  * init : 2023.01.18
  * updated by writer :

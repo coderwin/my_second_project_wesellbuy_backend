@@ -34,11 +34,15 @@ public class Item extends BaseDateColumnEntity {
     private Integer num; // 상품 번호
     private Integer stock; // 제고 수량
     private Integer price; // 가격
+    private String name; // 상품명
     private String content; // 설명
     @ColumnDefault("0")
     private Integer hits; // 조회수
     @Enumerated(value = EnumType.STRING)
     private ItemStatus status; // 상품 등록 상태(REGISTER/DELETE)
+
+    @Column(name = "dtype", insertable = false, updatable = false)
+    private String dtype; // dtype 사용하기 // 읽기 전용
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.PERSIST) // 생명주기가 같다
     private List<ItemPicture> itemPictureList = new ArrayList<>(); // 상품 이미지 모음
@@ -53,6 +57,7 @@ public class Item extends BaseDateColumnEntity {
     @OneToMany(mappedBy = "item")
     private List<ItemLikes> itemLikesList = new ArrayList<>(); // 좋아요 모음
 
+
     // ** setter ** //
 
     public void addStock(Integer stock) {
@@ -61,6 +66,10 @@ public class Item extends BaseDateColumnEntity {
 
     public void addPrice(Integer price) {
         this.price = price;
+    }
+
+    public void addName(String name) {
+        this.name = name;
     }
 
     public void addContent(String content) {
@@ -91,12 +100,15 @@ public class Item extends BaseDateColumnEntity {
 
         item.addStock(itemForm.getStock());
         item.addPrice(itemForm.getPrice());
+        item.addName(itemForm.getName());
         item.addContent(itemForm.getContent());
         item.addStatus(ItemStatus.R);
         item.addMember(member);
         // 각각의 itemPicture에 item 등록
-        itemForm.getItemPictureList().forEach((ip) -> item.addItemPictures(ip));
-
+        if(itemForm.getItemPictureList() != null) {
+//            itemForm.getItemPictureList().forEach((ip) -> ip.addItem(item));
+            itemForm.getItemPictureList().forEach((ip) -> item.addItemPictures(ip));
+        }
         return item;
     }
 

@@ -23,17 +23,21 @@ public class Furniture extends Item {
 
     // ** 생성 메서드 ** //
     // item controller 만들 때, 나중에 다시 생각
-    public static Furniture createFurnitureForm(FurnitureForm furnitureForm, Member member) {
+    public static Furniture createFurniture(FurnitureForm furnitureForm, Member member) {
         Furniture furniture = new Furniture();
 
         furniture.addStock(furnitureForm.getStock());
         furniture.addPrice(furnitureForm.getPrice());
+        furniture.addName(furnitureForm.getName());
         furniture.addContent(furnitureForm.getContent());
+        furniture.addStatus(ItemStatus.R);
         furniture.addMember(member);
         furniture.addCompany(furnitureForm.getCompany());
         // 각각의 itemPicture에 item 등록
-        furniture.getItemPictureList().forEach((ip) -> furniture.addItemPictures(ip));
-
+        if(furnitureForm.getItemPictureList() != null) {
+            furnitureForm.getItemPictureList().forEach((ip) -> furniture.addItemPictures(ip));
+//            furnitureForm.getItemPictureList().forEach((ip) -> ip.addItem(furniture));
+        }
         return furniture;
     }
 }

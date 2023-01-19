@@ -27,11 +27,16 @@ public class HomeAppliances extends Item {
 
         homeAppliances.addStock(homeAppliancesForm.getStock());
         homeAppliances.addPrice(homeAppliancesForm.getPrice());
+        homeAppliances.addName(homeAppliancesForm.getName());
         homeAppliances.addContent(homeAppliancesForm.getContent());
+        homeAppliances.addStatus(ItemStatus.R);
         homeAppliances.addMember(member);
         homeAppliances.addCompany(homeAppliances.getCompany());
         // 각각의 itemPicture에 item 등록
-        homeAppliancesForm.getItemPictureList().forEach((ip) -> homeAppliances.addItemPictures(ip));
+        if(homeAppliancesForm.getItemPictureList() != null) {
+//            homeAppliancesForm.getItemPictureList().forEach((ip) -> ip.addItem(homeAppliances));
+            homeAppliancesForm.getItemPictureList().forEach((ip) -> homeAppliances.addItemPictures(ip));
+        }
 
         return homeAppliances;
     }

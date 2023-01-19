@@ -1,6 +1,9 @@
 package shop.wesellbuy.secondproject.web.item;
 
 import lombok.Getter;
+import shop.wesellbuy.secondproject.domain.item.ItemPicture;
+
+import java.util.List;
 
 /**
  * Item(Furniture) dto
@@ -13,4 +16,9 @@ import lombok.Getter;
 @Getter
 public class FurnitureForm extends ItemForm{
     private String company;
+
+    public FurnitureForm(Integer stock, Integer price, String name, String content, List<ItemPicture> itemPictureList, String company) {
+        super(stock, price, name, content, itemPictureList);
+        this.company = company;
+    }
 }

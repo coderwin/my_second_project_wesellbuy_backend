@@ -91,25 +91,22 @@ public class RecommendationJpaRepositoryTest {
     }
 
     @Test
-//    @Rollback(value = false)
+    @Rollback(value = false)
     public void 추천합니다_글_저장_add_상세보기() {
         // given
-        log.info("test start");
-
         List<RecommendationPicture> rpList = new ArrayList<>();
         rpList.add(RecommendationPicture.createRecommendationPicture("e", "e"));
         rpList.add(RecommendationPicture.createRecommendationPicture("e1", "e1"));
 
-        log.info("test middle 1");
         RecommendationForm recommendationForm = new RecommendationForm("y1", "y", "ok", rpList);
         Recommendation recommendation = Recommendation.createRecommendation(recommendationForm, member);
-        log.info("test middle 2");
-
-        em.persist(recommendation);
+        // 저장 확인
+        rJRepository.save(recommendation);
         // when
         Recommendation findRecommendation = rJRepository.findDetailInfoById(recommendation.getNum()).orElseThrow();
 
         // then
+        // 상세보기 확인
         assertThat(findRecommendation).isEqualTo(recommendation);
     }
 
