@@ -78,7 +78,7 @@ public class OrderJpaRepositoryImpl implements OrderJpaRepositoryCustom{
         if(StringUtils.hasText(createDate)) {
             // String을 LocalDateTime으로 바꾸기
             LocalDateParser localDateParser = new LocalDateParser(createDate);
-            return item.createdDate.between(localDateParser.startDate(), localDateParser.endDate());
+            return order.createdDate.between(localDateParser.startDate(), localDateParser.endDate());
         }
         return null;
     }
@@ -143,16 +143,20 @@ public class OrderJpaRepositoryImpl implements OrderJpaRepositoryCustom{
      * updated by writer :
      * update :
      * description : 주문 상세보기 + fetchjoin by order_num(id)
+     *
+     * comment : 왜 static으로 사용 못하지? order를
      */
     @Override
     public Optional<Order> findDetailInfoById(int num) {
         Order order = query
-                .selectFrom(order)
-                .join(order.member, member).fetchJoin()
-                .join(order.delivery, delivery).fetchJoin()
-                .where(order.num.eq(num))
+                .selectFrom(QOrder.order)
+                .join(QOrder.order.member, member).fetchJoin()
+                .join(QOrder.order.delivery, delivery).fetchJoin()
+                .where(QOrder.order.num.eq(num))
                 .fetchOne();
 
         return Optional.ofNullable(order);
     }
+
+
 }

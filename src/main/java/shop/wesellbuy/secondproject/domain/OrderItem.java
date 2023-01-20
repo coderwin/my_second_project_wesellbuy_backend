@@ -56,7 +56,7 @@ public class OrderItem extends BaseDateColumnEntity {
         orderItem.addItem(item);
 
         // item의 제고수량에서 주문수량을 빼준다.
-        item.removeStock();
+        item.removeStock(quantity);
 
         return orderItem;
     }

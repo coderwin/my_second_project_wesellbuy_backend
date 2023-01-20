@@ -8,6 +8,7 @@ import shop.wesellbuy.secondproject.domain.item.ItemPicture;
 import shop.wesellbuy.secondproject.domain.item.ItemStatus;
 import shop.wesellbuy.secondproject.domain.likes.ItemLikes;
 import shop.wesellbuy.secondproject.domain.reply.ItemReply;
+import shop.wesellbuy.secondproject.exception.item.OverflowQuantityException;
 import shop.wesellbuy.secondproject.web.item.ItemForm;
 
 import java.util.ArrayList;
@@ -113,11 +114,30 @@ public class Item extends BaseDateColumnEntity {
     }
 
     // ** 비즈니스 로직(메서드) ** //
-
     /**
-     * 상품주문이 있으면 해당 item 제고량 빼주기
+     * writer : 이호진
+     * init : 2023.01.20
+     * updated by writer :
+     * update :
+     * description : 상품주문이 있으면 해당 item 재고량 빼주기
+     *
+     * comment : errMsg는 view 설정시 국제화로 바꾼다.
      */
-    public void removeStock() {
+    public void removeStock(int quantity) {
+        String errMsg = ""; // errMsg
+        int changedStock = 0; // 바뀐 재고량
+
+        // 재고량에서 주문량을 빼준다.
+        changedStock = this.stock - quantity;// 바뀐 재고량
+        // 재고량에서 주문량을 뺐는데 0이하면 주문수량 초과 예외 발생
+        if(changedStock <= 0 || this.stock == 0) {
+            errMsg = "주문수량 초과";
+            throw new OverflowQuantityException(errMsg);
+//            return;
+        } else {
+            this.stock = changedStock;
+            return;
+        }
     }
 
     /**

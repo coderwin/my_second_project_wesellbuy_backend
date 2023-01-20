@@ -141,6 +141,7 @@ public class ItemJpaRepositoryTest {
         String otherDay = "2023-01-20";
 
         // 검색조건 생성
+        // when
         // 조건 1
 //        ItemSearchCond cond1 = new ItemSearchCond("x", null, null, null);
 //        ItemSearchCond cond2 = new ItemSearchCond(null, "a", null, null);
@@ -166,7 +167,7 @@ public class ItemJpaRepositoryTest {
 
 
         // 검색에 대한 result가 없는 경우
-        // when
+
 //        ItemSearchCond cond5 = new ItemSearchCond("hello", null, null, null);
 //        ItemSearchCond cond6 = new ItemSearchCond(null, null, null, "B23");
 //        ItemSearchCond cond27 = new ItemSearchCond(null, null, otherDay, "B");

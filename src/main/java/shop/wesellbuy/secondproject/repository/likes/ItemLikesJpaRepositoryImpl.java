@@ -1,6 +1,10 @@
 package shop.wesellbuy.secondproject.repository.likes;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import shop.wesellbuy.secondproject.domain.likes.ItemLikes;
@@ -23,8 +27,9 @@ import static shop.wesellbuy.secondproject.domain.likes.QItemLikes.itemLikes;
  */
 @RequiredArgsConstructor
 @Slf4j
-public class ItemLikesJpaRepositoryImpl implements ItemLikesJpaRepositoryCustom{
+public class ItemLikesJpaRepositoryImpl implements ItemLikesJpaRepositoryCustom, ItemLikesJpaRepositoryQueryCustom{
 
+    private final EntityManager em;
     private final JPAQueryFactory query;
 
     /**
@@ -48,4 +53,103 @@ public class ItemLikesJpaRepositoryImpl implements ItemLikesJpaRepositoryCustom{
                 .where(itemLikes.member.num.eq(memberNum))
                 .fetch();
     }
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.20
+     * updated by writer :
+     * update :
+     * description : 모든 상품 좋아요 많은 순위 찾기
+     */
+    @Override
+    public List<Tuple> findRank() {
+        String countStr = "count";
+        NumberExpression<Long> count = itemLikes.count();// 상품의 좋아요 개수
+
+        List<Tuple> result = query
+                .select(itemLikes.count(), item, member)
+                .from(itemLikes)
+                .join(itemLikes.item, item)
+                .join(item.member, member)
+                .groupBy(item.num)
+                .orderBy(count.desc(), item.num.asc())
+                .fetch();
+
+        return result;
+    }
+
+//    -------------------------------------ItemLikesJpaRepositoryQueryCustom method start---------------------
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.20
+     * updated by writer :
+     * update :
+     * description : 모든 상품 좋아요 많은 순위 찾기 + select(dto)
+     */
+    @Override
+    public List<ItemRankDto> findRankV2() {
+
+        List<ItemRankDto> result = query.select(
+                    Projections.constructor(ItemRankDto.class,
+                            itemLikes.count(),
+                            item.num,
+                            item.price,
+                            item.status,
+                            item.stock,
+                            member.id
+                            )
+                )
+                .from(itemLikes)
+                .join(itemLikes.item, item)
+                .join(item.member, member)
+                .groupBy(item.num)
+                .orderBy(itemLikes.count().desc(), item.num.asc())
+                .fetch();
+
+        return result;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.20
+     * updated by writer :
+     * update :
+     * description : 모든 상품 좋아요 많은 순위 찾기 + query
+     *
+     * comment : rank() 함수를 사용할 수 없을까?
+     */
+//    @Override
+    public List<Tuple> findRankV3() {
+
+
+        String query = "select" +
+//                "  rank() over (order by count(i1_0.num) desc)," +
+                " a.num.count(), " +
+                " i.item_num, " +
+                " i.content, " +
+                " i.price," +
+                " i.status," +
+                " i.stock," +
+                " m.id," +
+                " from" +
+                " ItemLikes a" +
+                " join" +
+                " il.item i"+
+                " join" +
+                " i.member m"+
+                " group by" +
+                " a.num" +
+                " order by" +
+                " rank() over (order by a.num.count() desc), i.num";
+
+        List<Tuple> result = em.createQuery(query).getResultList();
+
+        return result;
+    }
+
+//    -------------------------------------ItemLikesJpaRepositoryQueryCustom method end---------------------
+
+
+
 }

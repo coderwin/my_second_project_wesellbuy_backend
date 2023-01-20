@@ -11,5 +11,5 @@ import shop.wesellbuy.secondproject.domain.likes.ItemLikes;
  * update :
  * description : ItemLikes Repository by Spring Data Jpa
  */
-public interface ItemLikesJpaRepository extends JpaRepository<ItemLikes, Integer>, ItemLikesJpaRepositoryCustom {
+public interface ItemLikesJpaRepository extends JpaRepository<ItemLikes, Integer>, ItemLikesJpaRepositoryCustom, ItemLikesJpaRepositoryQueryCustom {
 }
