@@ -39,6 +39,13 @@ spring:
 
       open-in-view: true #지연 로딩 view, conrollerRkwl 가능(true)/불가능(false)
 
+  # 파일 업로드 사이즈 제한
+  servlet.multipart:
+    max-file-size: 1MB # 파일 하나의 최대 사이즈
+    max-request-size: 10MB # 멀티팔트 요청 하나에 업로드한 파일 총 사이즈
+
+    enabled: true # 멀티파트 데이터 처리 설정(true/ false)
+  
 logging.level:
   org.hibernate:
     SQL: debug # logger를 통해 하이버네이트 실행 sql 확인

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.member.SelfPicture;
-import shop.wesellbuy.secondproject.repository.member.MemberJpaRepository;
 import shop.wesellbuy.secondproject.web.member.MemberForm;
 
 /**

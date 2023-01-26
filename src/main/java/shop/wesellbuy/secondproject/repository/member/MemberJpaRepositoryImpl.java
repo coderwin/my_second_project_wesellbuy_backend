@@ -34,6 +34,26 @@ public class MemberJpaRepositoryImpl implements MemberJpaRepositoryCustom{
 
     /**
      * writer : 이호진
+     * init : 2023.01.26
+     * updated by writer :
+     * update :
+     * description : 회원 찾기 by id
+     *
+     * comment : text 진행하기
+     */
+    public Optional<Member> findByMemberId(String id) {
+
+        Member findMember = query
+                .select(member)
+                .from(member)
+                .where(member.id.eq(id))
+                .fetchOne();
+
+        return Optional.ofNullable(findMember);
+    }
+
+    /**
+     * writer : 이호진
      * init : 2023.01.17
      * updated by writer :
      * update :
@@ -50,7 +70,6 @@ public class MemberJpaRepositoryImpl implements MemberJpaRepositoryCustom{
                         memberSelfPhoneEq(memberSearchIdCond.getSelfPhone())
                 )
                 .fetch();
-
     }
 
     /**
@@ -140,8 +159,7 @@ public class MemberJpaRepositoryImpl implements MemberJpaRepositoryCustom{
         Member findMember = query
                 .select(member)
                 .from(member)
-                .leftJoin(member.selfPicture, selfPicture)
-                .fetchJoin()
+                .leftJoin(member.selfPicture, selfPicture).fetchJoin()
                 .where(member.num.eq(num))
                 .fetchOne();
 

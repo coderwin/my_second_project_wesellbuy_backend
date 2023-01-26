@@ -1,16 +1,13 @@
 package shop.wesellbuy.secondproject.repository.member;
 
-import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -380,9 +377,20 @@ public class MemberJpaRepositoryTest {
 
         // then
         assertThat(findMembers.getContent().size()).isEqualTo(4);
+    }
 
+    @Test
+    public void 회원_정보_가져오기_by_memberId() {
+        // given
+        MemberForm memberForm1 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        Member member = Member.createMember(memberForm1);
 
+        em.persist(member);
+        // when
+        Member findMember = memberJpaRepository.findByMemberId(member.getId()).orElseThrow();
 
+        // then
+        assertThat(findMember).isEqualTo(member);
     }
 
 

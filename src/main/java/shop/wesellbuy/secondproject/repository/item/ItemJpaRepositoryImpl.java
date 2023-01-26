@@ -33,7 +33,7 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
     /**
      * writer : 이호진
      * init : 2023.01.19
-     * updated by writer : 이호진
+     * updated by writer :
      * update :
      * description : 모든 추천합니다 게시글 찾기 + fetchjoin
      */

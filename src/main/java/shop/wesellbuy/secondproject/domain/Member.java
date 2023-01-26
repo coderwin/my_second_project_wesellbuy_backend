@@ -11,6 +11,7 @@ import shop.wesellbuy.secondproject.domain.reply.CustomerServiceReply;
 import shop.wesellbuy.secondproject.domain.reply.ItemReply;
 import shop.wesellbuy.secondproject.domain.reply.RecommendationReply;
 import shop.wesellbuy.secondproject.web.member.MemberForm;
+import shop.wesellbuy.secondproject.web.member.MemberUpdateForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,4 +156,21 @@ public class Member extends BaseDateColumnEntity {
         member.status = MemberStatus.W;
     }
 
+    /**
+     * writer : 이호진
+     * init : 2023.01.26
+     * updated by writer :
+     * update :
+     * description : 회원 정보 수정
+     */
+    public void updateMember(MemberUpdateForm memberUpdateForm, SelfPicture updateSelfPicture) {
+        this.addEmail(memberUpdateForm.getEmail());
+        this.addPhones(
+                Phone.createPhone(memberUpdateForm.getSelfPhone(), memberUpdateForm.getHomePhone())
+        );
+        this.addAddress(
+                Address.createAddress(memberUpdateForm.getCountry(), memberUpdateForm.getCity(), memberUpdateForm.getStreet(), memberUpdateForm.getDetail(), memberUpdateForm.getZipcode())
+        );
+        this.addSelfPicture(updateSelfPicture);
+    }
 }

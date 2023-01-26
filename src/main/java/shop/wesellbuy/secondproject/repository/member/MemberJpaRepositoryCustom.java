@@ -18,6 +18,15 @@ import java.util.Optional;
  */
 public interface MemberJpaRepositoryCustom {
 
+    /**
+     * writer : 이호진
+     * init : 2023.01.26
+     * updated by writer :
+     * update :
+     * description : 아이디 중복인지 확인한다.
+     */
+    public Optional<Member> findByMemberId(String id);
+
     //    -----------------------------아이디 찾기/비밀번호 찾기 시작--------------------------------------------
     /**
      * writer : 이호진
