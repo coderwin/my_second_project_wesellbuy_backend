@@ -48,9 +48,9 @@ public class ItemReplyRepositoryTest {
     @BeforeEach
     public void init() {
         // 회원 정보 저장
-        MemberForm memberForm1 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm2 = new MemberForm("b", "b", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm3 = new MemberForm("c", "c", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm1 = new MemberForm("a", "a","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm2 = new MemberForm("b", "b","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm3 = new MemberForm("c", "c","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
         Member member = Member.createMember(memberForm1);
         Member member2 = Member.createMember(memberForm2);
         Member member3 = Member.createMember(memberForm3);
@@ -137,46 +137,46 @@ public class ItemReplyRepositoryTest {
         Pageable pageablePage2Size2 = PageRequest.of(2, 2);
 
         // 날짜 condition
-        String today = "2023-01-19";
-        String otherDay = "2023-01-20";
+        String today = "2023-01-27";
+        String otherDay = "2023-01-28";
 
         // when
         // 검색조건 생성
         // 조건 1
-//        ItemReplySearchCond cond1 = new ItemReplySearchCond("a", null, null);
-//        ItemReplySearchCond cond2 = new ItemReplySearchCond(null, "hello11", null);
-//        ItemReplySearchCond cond3 = new ItemReplySearchCond(null, null, today);
+        ItemReplySearchCond cond1 = new ItemReplySearchCond("a", null, null);
+        ItemReplySearchCond cond2 = new ItemReplySearchCond(null, "hello11", null);
+        ItemReplySearchCond cond3 = new ItemReplySearchCond(null, null, today);
         // 조건 2
-//        ItemReplySearchCond cond21 = new ItemReplySearchCond("b", "hello2", null);
-//        ItemReplySearchCond cond22 = new ItemReplySearchCond("b", null, today);
-//        ItemReplySearchCond cond23 = new ItemReplySearchCond(null, "hello2", today);
+        ItemReplySearchCond cond21 = new ItemReplySearchCond("b", "hello2", null);
+        ItemReplySearchCond cond22 = new ItemReplySearchCond("b", null, today);
+        ItemReplySearchCond cond23 = new ItemReplySearchCond(null, "hello2", today);
 
         // 조건 3
         ItemReplySearchCond cond31 = new ItemReplySearchCond("c", "he", today);
 
 
         // 맞지 않는 조건
-//        ItemReplySearchCond cond4 = new ItemReplySearchCond("ab", null, null);
-//        ItemReplySearchCond cond24 = new ItemReplySearchCond("ab", "hello1", null);
+        ItemReplySearchCond cond4 = new ItemReplySearchCond("ab", null, null);
+        ItemReplySearchCond cond24 = new ItemReplySearchCond("ab", "hello1", null);
         ItemReplySearchCond cond32 = new ItemReplySearchCond("c", "hello3", otherDay);
 
         // then
         // 조건1
-//        testResult(pageablePage0Size10, cond1, rCount);
-//        testResult(pageablePage0Size10, cond2, rCount);
-//        testResult(pageablePage0Size10, cond3, rCount + r2Count + r3Count);
+        testResult(pageablePage0Size10, cond1, rCount);
+        testResult(pageablePage0Size10, cond2, rCount);
+        testResult(pageablePage0Size10, cond3, rCount + r2Count + r3Count);
         // 조건2
-//        testResult(pageablePage0Size10, cond21, r2Count);
-//        testResult(pageablePage0Size10, cond22, r2Count);
-//        testResult(pageablePage0Size10, cond23, r2Count);
+        testResult(pageablePage0Size10, cond21, r2Count);
+        testResult(pageablePage0Size10, cond22, r2Count);
+        testResult(pageablePage0Size10, cond23, r2Count);
         // 조건3
         testResult(pageablePage2Size2, cond31, r3Count);
 
 
 
         // 맞지 않는 조검
-//        testResult(pageablePage0Size10, cond4, 0);
-//        testResult(pageablePage0Size10, cond24, 0);
+        testResult(pageablePage0Size10, cond4, 0);
+        testResult(pageablePage0Size10, cond24, 0);
         testResult(pageablePage3Size5, cond32, 0);
 
     }

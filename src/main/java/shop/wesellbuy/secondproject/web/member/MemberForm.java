@@ -24,6 +24,7 @@ public class MemberForm {
 
     private String name; // 이름
     private String id; // 아이디
+    private String pwd; // 비밀번호
     private String email; // 이메일
     private String selfPhone; // 휴대전화(필수)
     private String homePhone; // 집전화(선택)

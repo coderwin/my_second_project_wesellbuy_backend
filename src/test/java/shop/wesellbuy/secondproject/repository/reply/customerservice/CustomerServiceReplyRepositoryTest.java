@@ -42,9 +42,9 @@ public class CustomerServiceReplyRepositoryTest {
     @BeforeEach
     public void init() {
         // 회원 정보 저장
-        MemberForm memberForm1 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm2 = new MemberForm("b", "b", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm3 = new MemberForm("c", "c", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm1 = new MemberForm("a", "a","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm2 = new MemberForm("b", "b","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm3 = new MemberForm("c", "c","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
         Member member = Member.createMember(memberForm1);
         Member member2 = Member.createMember(memberForm2);
         Member member3 = Member.createMember(memberForm3);
@@ -104,7 +104,7 @@ public class CustomerServiceReplyRepositoryTest {
      *
      */
     @Test
-    @Rollback(false)
+//    @Rollback(false)
     public void 고객지원글_모두_가져오기_By_조건_페이징() {
 
         // given
@@ -143,8 +143,8 @@ public class CustomerServiceReplyRepositoryTest {
         Pageable pageablePage2Size2 = PageRequest.of(2, 2);
 
         // 날짜 condition
-        String today = "2023-01-18";
-        String otherDay = "2023-01-19";
+        String today = "2023-01-27";
+        String otherDay = "2023-01-28";
 
         // 검색조건
         String content = "el";
@@ -161,11 +161,11 @@ public class CustomerServiceReplyRepositoryTest {
 
         // when
         // 검색조건 count 비교
-//        Page<CustomerServiceReply> result1 = csrJpaRepository.findAllInfo(cond1, pageablePage0Size10);
-//        Page<CustomerServiceReply> result2 = csrJpaRepository.findAllInfo(cond2, pageablePage0Size10);
-//        Page<CustomerServiceReply> result3 = csrJpaRepository.findAllInfo(cond3, pageablePage0Size10);
-//        Page<CustomerServiceReply> result4 = csrJpaRepository.findAllInfo(cond4, pageablePage0Size10);
-//        Page<CustomerServiceReply> result5 = csrJpaRepository.findAllInfo(cond5, pageablePage0Size10);
+        Page<CustomerServiceReply> result1 = csrJpaRepository.findAllInfo(cond1, pageablePage0Size10);
+        Page<CustomerServiceReply> result2 = csrJpaRepository.findAllInfo(cond2, pageablePage0Size10);
+        Page<CustomerServiceReply> result3 = csrJpaRepository.findAllInfo(cond3, pageablePage0Size10);
+        Page<CustomerServiceReply> result4 = csrJpaRepository.findAllInfo(cond4, pageablePage0Size10);
+        Page<CustomerServiceReply> result5 = csrJpaRepository.findAllInfo(cond5, pageablePage0Size10);
         // 아이디 다를 때
         Page<CustomerServiceReply> resultOtherId = csrJpaRepository.findAllInfo(condOtherId, pageablePage0Size10);
 
@@ -181,11 +181,11 @@ public class CustomerServiceReplyRepositoryTest {
 
         // then
         // 검색조건 count 비교
-//        assertThat(result1.getTotalElements()).isEqualTo(mCount);
-//        assertThat(result2.getTotalElements()).isEqualTo(mCount);
-//        assertThat(result3.getTotalElements()).isEqualTo(mCount);
-//        assertThat(result4.getTotalElements()).isEqualTo(mCount);
-//        assertThat(result5.getTotalElements()).isEqualTo(0);
+        assertThat(result1.getTotalElements()).isEqualTo(mCount);
+        assertThat(result2.getTotalElements()).isEqualTo(mCount);
+        assertThat(result3.getTotalElements()).isEqualTo(mCount);
+        assertThat(result4.getTotalElements()).isEqualTo(mCount);
+        assertThat(result5.getTotalElements()).isEqualTo(0);
 
         // 아이디 다를 때
         assertThat(resultOtherId.getTotalElements()).isEqualTo(0);

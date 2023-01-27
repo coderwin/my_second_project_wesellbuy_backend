@@ -57,10 +57,10 @@ public class MemberJpaRepositoryImpl implements MemberJpaRepositoryCustom{
      * init : 2023.01.17
      * updated by writer :
      * update :
-     * description : 모든 회원 정보 찾기 by 이름 and email
+     * description : 모든 회원 정보 찾기 by 이름 and email and selfPhone
      */
     @Override
-    public List<Member> findByIdAndSelfPhoneAndEmail(MemberSearchIdCond memberSearchIdCond) {
+    public List<Member> findByNameAndSelfPhoneAndEmail(MemberSearchIdCond memberSearchIdCond) {
 
         return query
                 .selectFrom(member)
@@ -80,10 +80,7 @@ public class MemberJpaRepositoryImpl implements MemberJpaRepositoryCustom{
      * description : 회원 정보 검색 조건 eq by name
      */
     private BooleanExpression memberNameEq(String name) {
-        if(StringUtils.hasText(name)) {
-            return member.name.eq(name);
-        }
-        return null;
+        return member.name.eq(name);
     }
 
     /**
@@ -94,10 +91,7 @@ public class MemberJpaRepositoryImpl implements MemberJpaRepositoryCustom{
      * description : 회원 정보 검색 조건 eq by id
      */
     private BooleanExpression memberIdEq(String id) {
-        if(StringUtils.hasText(id)) {
-            return member.id.eq(id);
-        }
-        return null;
+        return member.id.eq(id);
     }
 
     /**
@@ -133,7 +127,7 @@ public class MemberJpaRepositoryImpl implements MemberJpaRepositoryCustom{
      * init : 2023.01.17
      * updated by writer :
      * update :
-     * description : 모든 회원 정보 찾기 by id and email
+     * description : 모든 회원 정보 찾기 by id and email and selfPhone
      */
     @Override
     public List<Member> findByIdAndSelfPhoneAndEmail(MemberSearchPwdCond memberSearchPwdCond) {

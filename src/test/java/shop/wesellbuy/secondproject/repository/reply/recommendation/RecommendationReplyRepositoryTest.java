@@ -49,9 +49,9 @@ public class RecommendationReplyRepositoryTest {
     @BeforeEach
     public void init() {
         // 회원 정보 저장
-        MemberForm memberForm1 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm2 = new MemberForm("b", "b", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm3 = new MemberForm("c", "c", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm1 = new MemberForm("a", "a","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm2 = new MemberForm("b", "b","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm3 = new MemberForm("c", "c","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
         Member member = Member.createMember(memberForm1);
         Member member2 = Member.createMember(memberForm2);
         Member member3 = Member.createMember(memberForm3);
@@ -138,45 +138,45 @@ public class RecommendationReplyRepositoryTest {
         Pageable pageablePage2Size2 = PageRequest.of(2, 2);
 
         // 날짜 condition
-        String today = "2023-01-19";
-        String otherDay = "2023-01-20";
+        String today = "2023-01-27";
+        String otherDay = "2023-01-28";
 
         // when
         // 검색조건 생성
         // 조건 1
-//        RecommendationReplySearchCond cond1 = new RecommendationReplySearchCond("b", null, null);
-//        RecommendationReplySearchCond cond2 = new RecommendationReplySearchCond(null, "ll", null);
-//        RecommendationReplySearchCond cond3 = new RecommendationReplySearchCond(null, null, today);
+        RecommendationReplySearchCond cond1 = new RecommendationReplySearchCond("b", null, null);
+        RecommendationReplySearchCond cond2 = new RecommendationReplySearchCond(null, "ll", null);
+        RecommendationReplySearchCond cond3 = new RecommendationReplySearchCond(null, null, today);
         // 조건2
-//        RecommendationReplySearchCond cond21 = new RecommendationReplySearchCond("a", "ll", null);
-//        RecommendationReplySearchCond cond22 = new RecommendationReplySearchCond("a", null, today);
-//        RecommendationReplySearchCond cond23 = new RecommendationReplySearchCond("", "ll", today);
+        RecommendationReplySearchCond cond21 = new RecommendationReplySearchCond("a", "ll", null);
+        RecommendationReplySearchCond cond22 = new RecommendationReplySearchCond("a", null, today);
+        RecommendationReplySearchCond cond23 = new RecommendationReplySearchCond("", "ll", today);
         // 조건3
         RecommendationReplySearchCond cond31 = new RecommendationReplySearchCond("c", "ll", today);
 
 
         // 맞지 않는 조건
-//        RecommendationReplySearchCond cond4 = new RecommendationReplySearchCond(null, "hew", null);
-//        RecommendationReplySearchCond cond24 = new RecommendationReplySearchCond("a", "hew", "");
+        RecommendationReplySearchCond cond4 = new RecommendationReplySearchCond(null, "hew", null);
+        RecommendationReplySearchCond cond24 = new RecommendationReplySearchCond("a", "hew", "");
         RecommendationReplySearchCond cond32 = new RecommendationReplySearchCond("a", "hew", otherDay);
 
 
         // then
         // 조건1
-//        testResult(pageablePage1Size10, cond1, r2Count);
-//        testResult(pageablePage1Size10, cond2, rCount + r2Count + r3Count);
-//        testResult(pageablePage1Size10, cond3, rCount + r2Count + r3Count);
+        testResult(pageablePage1Size10, cond1, r2Count);
+        testResult(pageablePage1Size10, cond2, rCount + r2Count + r3Count);
+        testResult(pageablePage1Size10, cond3, rCount + r2Count + r3Count);
         // 조건2
-//        testResult(pageablePage1Size10, cond21, rCount);
-//        testResult(pageablePage1Size10, cond22, rCount);
-//        testResult(pageablePage1Size10, cond23, rCount + r2Count + r3Count);
+        testResult(pageablePage1Size10, cond21, rCount);
+        testResult(pageablePage1Size10, cond22, rCount);
+        testResult(pageablePage1Size10, cond23, rCount + r2Count + r3Count);
         // 조건3
         testResult(pageablePage1Size10, cond31, r3Count);
 
 
         // 맞지 않는 조건
-//        testResult(pageablePage1Size10, cond4, 0);
-//        testResult(pageablePage1Size10, cond24, 0);
+        testResult(pageablePage1Size10, cond4, 0);
+        testResult(pageablePage1Size10, cond24, 0);
         testResult(pageablePage1Size10, cond32, 0);
 
 

@@ -1,5 +1,6 @@
 package shop.wesellbuy.secondproject.service;
 
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,12 +17,21 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.member.MemberStatus;
 import shop.wesellbuy.secondproject.exception.member.ExistingIdException;
+import shop.wesellbuy.secondproject.exception.member.login.NotExistingInfoException;
+import shop.wesellbuy.secondproject.exception.member.login.WithdrawalMemberException;
 import shop.wesellbuy.secondproject.repository.member.MemberJpaRepository;
 import shop.wesellbuy.secondproject.repository.member.MemberSearchCond;
+import shop.wesellbuy.secondproject.repository.member.MemberSearchIdCond;
+import shop.wesellbuy.secondproject.repository.member.MemberSearchPwdCond;
 import shop.wesellbuy.secondproject.service.member.MemberService;
 import shop.wesellbuy.secondproject.web.member.MemberDetailForm;
+import shop.wesellbuy.secondproject.web.member.MemberForm;
 import shop.wesellbuy.secondproject.web.member.MemberOriginForm;
 import shop.wesellbuy.secondproject.web.member.MemberUpdateForm;
+import shop.wesellbuy.secondproject.web.member.login.LoginMemberForm;
+import shop.wesellbuy.secondproject.web.member.login.LoginMemberSessionForm;
+import shop.wesellbuy.secondproject.web.member.login.LoginSearchIdResultForm;
+import shop.wesellbuy.secondproject.web.member.login.LoginSearchPwdResultForm;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,6 +49,8 @@ public class MemberServiceTest {
     MemberService memberService;
     @Autowired
     MemberJpaRepository memberJpaRepository;
+    @Autowired
+    EntityManager em;
 
     private int memberNum; // 저장된 회원 num
 
@@ -66,13 +78,13 @@ public class MemberServiceTest {
         MockMultipartFile file2 = new MockMultipartFile("image12", originFileName2, contentType2, fileInputStream2);
 
         // 회원 가입
-        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "a1", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
-        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a2", "a2", "a2@a1.a1", "01012341234", "021231234", "eu", "s", "h", "123", "12345", file2);
-        MemberOriginForm memberOriginForm3 = new MemberOriginForm("a3", "a3", "a3@a1.a1", "01012341234", "021231234", "korea", "d", "h", "123", "12345", null);
-        MemberOriginForm memberOriginForm4 = new MemberOriginForm("a4", "a4", "a4@a1.a1", "01012341234", "021231234", "eu", "s", "h", "123", "12345", file);
-        MemberOriginForm memberOriginForm5 = new MemberOriginForm("a5", "a5", "a5@a1.a1", "01012341234", "021231234", "korea", "d", "h", "123", "12345", file);
-        MemberOriginForm memberOriginForm6 = new MemberOriginForm("a6", "a6", "a6@a1.a1", "01012341234", "021231234", "us", "s", "h", "123", "12345", file2);
-        MemberOriginForm memberOriginForm7 = new MemberOriginForm("a7", "a7", "a7@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
+        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "a1","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a2", "a2","123", "a2@a1.a1", "01012341234", "021231234", "eu", "s", "h", "123", "12345", file2);
+        MemberOriginForm memberOriginForm3 = new MemberOriginForm("a3", "a3","123", "a3@a1.a1", "01012341234", "021231234", "korea", "d", "h", "123", "12345", null);
+        MemberOriginForm memberOriginForm4 = new MemberOriginForm("a4", "a4","123", "a4@a1.a1", "01012341234", "021231234", "eu", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm5 = new MemberOriginForm("a5", "a5","123", "a5@a1.a1", "01012341234", "021231234", "korea", "d", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm6 = new MemberOriginForm("a6", "a6","123", "a6@a1.a1", "01012341234", "021231234", "us", "s", "h", "123", "12345", file2);
+        MemberOriginForm memberOriginForm7 = new MemberOriginForm("a7", "a7","123", "a7@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
 
         int memberNum = memberService.join(memberOriginForm);
         memberService.join(memberOriginForm2);
@@ -83,6 +95,45 @@ public class MemberServiceTest {
         memberService.join(memberOriginForm7);
 
         this.memberNum = memberNum;
+
+        // 아이디 찾기 비밀번호 찾기에서 사용
+        // 회원 등록
+        // 뒤에 숫자는 id의 글자수를 나타낸다.
+        MemberForm memberForm1 = new MemberForm("abc", "u", "123!@#", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm2 = new MemberForm("abc", "ab", "123!@#asd", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm3 = new MemberForm("abc", "abc", "123!@#", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm4 = new MemberForm("abc", "abcd", "123!@#", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm5 = new MemberForm("abc", "abcde", "123!@#", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm6 = new MemberForm("abc", "abcdef", "123!@#", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm7 = new MemberForm("abc", "abcdefg", "123!@#", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm8 = new MemberForm("abc", "abcdefgh", "123!@#", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm9 = new MemberForm("abc", "abcdefghi", "123!@#", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm10 = new MemberForm("abc", "abcdefghi1", "123!@#", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm11 = new MemberForm("abc", "abcdefghi12", "123!@#", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+
+        Member member1 = Member.createMember(memberForm1);
+        Member member2 = Member.createMember(memberForm2);
+        Member member3 = Member.createMember(memberForm3);
+        Member member4 = Member.createMember(memberForm4);
+        Member member5 = Member.createMember(memberForm5);
+        Member member6 = Member.createMember(memberForm6);
+        Member member7 = Member.createMember(memberForm7);
+        Member member8 = Member.createMember(memberForm8);
+        Member member9 = Member.createMember(memberForm9);
+        Member member10 = Member.createMember(memberForm10);
+        Member member11 = Member.createMember(memberForm11);
+
+        memberJpaRepository.save(member1);
+        memberJpaRepository.save(member2);
+        memberJpaRepository.save(member3);
+        memberJpaRepository.save(member4);
+        memberJpaRepository.save(member5);
+        memberJpaRepository.save(member6);
+        memberJpaRepository.save(member7);
+        memberJpaRepository.save(member8);
+        memberJpaRepository.save(member9);
+        memberJpaRepository.save(member10);
+        memberJpaRepository.save(member11);
 
         log.info("test init 끝");
     }
@@ -105,7 +156,7 @@ public class MemberServiceTest {
 
         MockMultipartFile file = new MockMultipartFile("image1", originFileName, contentType, fileInputStream);
         // MemberOriginForm 생성
-        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "a1", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "ab1","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
 
         // when
         // 회원 가입
@@ -138,7 +189,7 @@ public class MemberServiceTest {
         MockMultipartFile file = new MockMultipartFile("image1", originFileName, contentType, fileInputStream);
         MockMultipartFile file2 = new MockMultipartFile("image2", originFileName, contentType, fileInputStream2);
         // MemberOriginForm 생성
-        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "a1", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "b2", "123","a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
 
         // 회원 가입
         memberService.join(memberOriginForm);
@@ -146,7 +197,7 @@ public class MemberServiceTest {
         // when
         // then
         // 아이디 같은 회원 가입
-        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a", "a1", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file2);
+        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a", "b2", "123","a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file2);
         assertThrows(ExistingIdException.class, () -> memberService.join(memberOriginForm2));
     }
 
@@ -168,11 +219,11 @@ public class MemberServiceTest {
         MockMultipartFile file = new MockMultipartFile("image1", originFileName, contentType, fileInputStream);
         // 회원 가입
         // 첨부파일 있을 때
-        MemberOriginForm memberOriginForm = new MemberOriginForm("a2", "b2", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm = new MemberOriginForm("a2", "b2", "123","a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
         int memberNum = memberService.join(memberOriginForm);
 
         // 첨부파일 없을 때
-        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a2", "b3", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
+        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a2", "b3", "123","a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
         int memberNum2 = memberService.join(memberOriginForm2);
 
         // when
@@ -199,12 +250,12 @@ public class MemberServiceTest {
      * 회원 정보 수정 확인
      */
     @Test
-    @Rollback(value = false)
+//    @Rollback(value = false)
     public void 회원정보_수정_확인() throws IOException {
         // given
         // 수정 Form 만들기
         // 회원 picture 삭제
-        MemberUpdateForm memberUpdateForm = new MemberUpdateForm("b2@b2.com", "01012341238", "0631231234", "e", "1", "st", "mu", "78945", null);
+        MemberUpdateForm memberUpdateForm = new MemberUpdateForm("12345","b2@b2.com", "01012341238", "0631231234", "e", "1", "st", "mu", "78945", null);
 
         // 회원 picture 존재
         String fileName = "testFile2"; // 파일명
@@ -214,7 +265,7 @@ public class MemberServiceTest {
         FileInputStream fileInputStream = new FileInputStream(filePath); // 첨부파일 읽어오기
         MockMultipartFile file = new MockMultipartFile("image3", originFileName, contentType, fileInputStream);
 
-        MemberUpdateForm memberUpdateForm2 = new MemberUpdateForm("b3@b3.com", "01012341238", "0631231234", "e", "1", "st", "mu", "78945", file);
+        MemberUpdateForm memberUpdateForm2 = new MemberUpdateForm("12345","b3@b3.com", "01012341238", "0631231234", "e", "1", "st", "mu", "78945", file);
 
         // when
         memberService.update(memberUpdateForm, memberNum);
@@ -251,7 +302,7 @@ public class MemberServiceTest {
      * -> status 바꼈는지 확인(J -> W)
      */
     @Test
-    @Rollback(value = false)
+//    @Rollback(value = false)
     public void 회원_탈퇴_확인() {
         // given
         // when
@@ -264,11 +315,14 @@ public class MemberServiceTest {
         assertThat(findMember.getStatus()).isEqualTo(MemberStatus.W);
     }
 
+    //    ------------------------------methods using for admin start --------------------------------
+
+
     /**
      * 회원 page 불러오기 확인
      */
     @Test
-    @Rollback(value = false)
+//    @Rollback(value = false)
     public void 회원_page_불러오기_확인() {
         // given
         // 페이지, 사이즈 정하기
@@ -278,8 +332,8 @@ public class MemberServiceTest {
         Pageable pageablePage2Size7 = PageRequest.of(2, 7);
 
         // 날짜 condition
-        String today = "2023-01-26";
-        String otherDay = "2023-01-27";
+        String today = "2023-01-27";
+        String otherDay = "2023-01-28";
 
         // 검색조건 생성
         // when
@@ -360,7 +414,196 @@ public class MemberServiceTest {
         assertThat(findMemberDetailForms.getContent().size()).isEqualTo(quantity);
     }
 
+    ////    ------------------------------methods using for admin end --------------------------------
 
+    //   ------------------------------ methods using at login start  --------------------------------
+
+    /**
+     * 로그인 중 로그인 가능여부 확인
+     *
+     * comment : 왜 rollback을 하면 UnexpectedRollbackException가 일어나지? transaction 이 어디에서 걸리는 걸까?
+     */
+    @Test
+//    @Rollback(value = false)
+    public void 로그인_가능여부_확인() throws IOException {
+        // given
+        // 회원 등록
+        MemberOriginForm memberOriginForm = new MemberOriginForm("abc", "bcd","35678", "ab1@ab1.ab1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
+        int joinMemberNum = memberService.join(memberOriginForm);
+
+        MemberOriginForm memberOriginForm2 = new MemberOriginForm("abc", "bcd12","35678", "ab1@ab1.ab1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
+        int withdrawalMemberNum = memberService.join(memberOriginForm2);
+
+        log.info("회원가입 완료!!!!!");
+
+
+        // when
+        // 로그인 form 생성
+        // 아이디 틀렸을 때
+        LoginMemberForm failedIdForm = new LoginMemberForm("abcd", "35678", true);
+
+        // 비밀번호 틀렸을 때
+        LoginMemberForm failedPwdForm = new LoginMemberForm("bcd", "3567879", false);
+
+        // 아이디 비밀번호 맞았을 때
+        LoginMemberForm collectLoginForm = new LoginMemberForm("bcd", "35678", true);
+
+        // 아무것도 안 적었을 때
+        LoginMemberForm NothingLoginForm = new LoginMemberForm("", "", false);
+
+        // 탈퇴했을 때
+        memberService.withdrawal(withdrawalMemberNum);
+        LoginMemberForm withdrawalMemberLoginForm = new LoginMemberForm("bcd12", "35678", true);
+
+        log.info("로그인 조건 생성 완료!!!!!");
+
+        // then
+        // 로그인 시도
+        // 아이디 틀렸을 때
+        assertThrows(NotExistingInfoException.class, () -> memberService.login(failedIdForm));
+
+        // 비밀번호 틀렸을 때
+        assertThrows(NotExistingInfoException.class, () -> memberService.login(failedPwdForm));
+
+        // 아이디 비밀번호 맞았을 때
+        LoginMemberSessionForm loginMemberSessionForm = memberService.login(collectLoginForm);
+        assertThat(loginMemberSessionForm.getId()).isEqualTo(memberOriginForm.getId());
+        assertThat(loginMemberSessionForm.getName()).isEqualTo(memberOriginForm.getName());
+//        assertThat(loginMemberSessionForm.getName()).isEqualTo("hello");// 에러 발생
+        assertThat(loginMemberSessionForm.getNum()).isEqualTo(joinMemberNum);
+
+        // 아무것도 안 적었을 때
+        assertThrows(NotExistingInfoException.class, () -> memberService.login(NothingLoginForm));
+
+        // 탈퇴 회원일 때
+        assertThrows(WithdrawalMemberException.class, () -> memberService.login(withdrawalMemberLoginForm));
+        assertThrows(RuntimeException.class, () -> memberService.login(withdrawalMemberLoginForm));
+//        assertThrows(IllegalStateException.class, () -> memberService.login(withdrawalMemberLoginForm));// 에러 발생
+
+    }
+
+    /**
+     * 회원 아이디 찾기 확인
+     *
+     * comment : 왜 rollback을 하면 UnexpectedRollbackException가 일어나지? transaction 이 어디에서 걸리는 걸까?
+     */
+    @Test
+//    @Rollback(false)
+    public void 회원_아이디_찾기_확인() {
+        // given
+        // 아이디 찾기 form 생성
+        // 이름, 이메일 맞았을 때
+        MemberSearchIdCond cond1 = new MemberSearchIdCond("abc", "", "a@a");
+        // 이름, 휴대폰 맞았을 때
+        MemberSearchIdCond cond2 = new MemberSearchIdCond("abc", "01012341234", "");
+        // 이름, 이메일 틀렸을 때
+        MemberSearchIdCond cond21 = new MemberSearchIdCond("abc", "", "a@a2");
+        // 이름, 휴대폰 틀렸을 때
+        MemberSearchIdCond cond22 = new MemberSearchIdCond("abc", "01012341235", "");
+        // 아무것도 안 적었을 때
+        MemberSearchIdCond cond31 = new MemberSearchIdCond("", "", "");
+        // 조건이 하나만 있을 때
+        MemberSearchIdCond cond41 = new MemberSearchIdCond("abc", "", "");
+        MemberSearchIdCond cond42 = new MemberSearchIdCond("", "01012341234", "");
+        MemberSearchIdCond cond43 = new MemberSearchIdCond("", "", "a@a");
+
+        // when
+        // 이름, 이메일 or 이름, 휴대폰 맞았을 때
+        LoginSearchIdResultForm loginSearchIdResultForm1 = memberService.searchForIds(cond1);
+        LoginSearchIdResultForm loginSearchIdResultForm2 = memberService.searchForIds(cond2);
+
+        // then
+        // 이름, 이메일 or 이름, 휴대폰 맞았을 때
+        String[] expectedIds = {"*", "a*","ab*","ab**","abc**","abcd**","abcd***"
+                                ,"abcde***","abcdef***","abcdef****","abcdefg****"};
+
+        assertThat(loginSearchIdResultForm1.getIds()).containsExactly(expectedIds);
+        assertThat(loginSearchIdResultForm2.getIds()).containsExactly(expectedIds);
+
+        // 이름, 이메일 or 이름, 휴대폰 틀렸을 때
+        assertThrows(NotExistingInfoException.class, () -> memberService.searchForIds(cond21));
+        assertThrows(NotExistingInfoException.class, () -> memberService.searchForIds(cond22));
+        // 아무것도 안 적었을 때
+        assertThrows(NotExistingInfoException.class, () -> memberService.searchForIds(cond31));
+        // 조건이 하나만 있을 때
+        assertThrows(NotExistingInfoException.class, () -> memberService.searchForIds(cond41));
+        assertThrows(NotExistingInfoException.class, () -> memberService.searchForIds(cond42));
+        assertThrows(NotExistingInfoException.class, () -> memberService.searchForIds(cond43));
+    }
+
+    /**
+     * 회원 비밀번호 찾기 확인
+     *
+     * comment : 왜 rollback을 하면 UnexpectedRollbackException가 일어나지? transaction 이 어디에서 걸리는 걸까?
+     *          -> exception이 던져져서 Rollback(false)에 의해 UnexpectedRollbackException이 발생하는 건가!
+     *          -> exception이 안 일어나면 잘 된다.(rollback(false) 있어도 잘 된다.)
+     */
+    @Test
+//    @Rollback(false)
+    public void 회원_비밀번호_찾기_확인() {
+        // given
+        // 비밀번호 찾기 form 생성
+        // 이름, 이메일 맞았을 때
+        MemberSearchPwdCond cond1 = new MemberSearchPwdCond("u", "", "a@a");
+        // 이름, 휴대폰 맞았을 때
+        MemberSearchPwdCond cond2 = new MemberSearchPwdCond("ab", "01012341234", "");
+        // 이름, 이메일 틀렸을 때
+        MemberSearchPwdCond cond21 = new MemberSearchPwdCond("u", "", "a@a2");
+        // 이름, 휴대폰 틀렸을 때
+        MemberSearchPwdCond cond22 = new MemberSearchPwdCond("ab", "01012341235", "");
+        // 아무것도 안 적었을 때
+        MemberSearchPwdCond cond31 = new MemberSearchPwdCond("", "", "");
+        // 조건이 하나만 있을 때
+        MemberSearchPwdCond cond41 = new MemberSearchPwdCond("u", "", "");
+        MemberSearchPwdCond cond42 = new MemberSearchPwdCond("", "01012341234", "");
+        MemberSearchPwdCond cond43 = new MemberSearchPwdCond("", "", "a@a");
+
+        // when
+        // 아이디, 이메일 or 이름, 휴대폰 맞았을 때
+//        LoginSearchPwdResultForm loginSearchPwdResultForm = memberService.searchForPwd(cond1);
+//        LoginSearchPwdResultForm loginSearchPwdResultForm2 = memberService.searchForPwd(cond2);
+
+        // then
+        // 아이디, 이메일 or 이름, 휴대폰 맞았을 때
+//        assertThat(loginSearchPwdResultForm.getPwd()).isEqualTo("12****");
+//        assertThat(loginSearchPwdResultForm2.getPwd()).isEqualTo("123!@****");
+        // 아이디, 이메일 or 이름, 휴대폰 틀렸을 때
+//        assertThrows(NotExistingInfoException.class, () -> memberService.searchForPwd(cond21));
+//        assertThrows(NotExistingInfoException.class, () -> memberService.searchForPwd(cond22));
+        // 아무것도 안 적었을 때
+        assertThrows(NotExistingInfoException.class, () -> memberService.searchForPwd(cond31));
+        // 조건이 하나만 있을 때
+        assertThrows(NotExistingInfoException.class, () -> memberService.searchForPwd(cond41));
+        assertThrows(NotExistingInfoException.class, () -> memberService.searchForPwd(cond42));
+        assertThrows(NotExistingInfoException.class, () -> memberService.searchForPwd(cond43));
+    }
+
+
+    ////   ------------------------------ methods using at login end  --------------------------------
+
+    //   ------------------------------methods using at join start --------------------------------
+
+    /**
+     * 회원 가입 중, 아이디 중복 확인
+     */
+    @Test
+    public void 아이디_중복_확인_at_join() {
+        // given
+        String failedId = "a1";
+        String successId = "myname";
+
+        // when
+        String successMsg = memberService.confirmDuplicatedId(successId);
+
+        // then
+        // 사용 가능 아이디 일 때
+        assertThat(successMsg).isEqualTo("사용가능 아이디");
+        // 사용 불가 아이디 일 때
+        assertThrows(ExistingIdException.class, () -> memberService.confirmDuplicatedId(failedId));
+
+    }
+
+    ////  ------------------------------methods using at join end --------------------------------
 
 
 

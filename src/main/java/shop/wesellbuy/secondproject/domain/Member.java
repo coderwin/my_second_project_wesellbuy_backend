@@ -35,6 +35,7 @@ public class Member extends BaseDateColumnEntity {
     @Column(name = "member_num")
     private Integer num; // 회원가입 번호
     private String id; // 아이디
+    private String pwd; // 비밀번호
     private String name; // 이름
     private String email; // 이메일
 
@@ -89,6 +90,10 @@ public class Member extends BaseDateColumnEntity {
         this.id = id;
     }
 
+    public void addPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
     public void addEmail(String email) {
         this.email = email;
     }
@@ -123,6 +128,7 @@ public class Member extends BaseDateColumnEntity {
 
         member.addId(memberForm.getId());
         member.addName(memberForm.getName());
+        member.addPwd(memberForm.getPwd());
         member.addEmail(memberForm.getEmail());
         member.addPhones(Phone.createPhone(memberForm.getSelfPhone(), memberForm.getHomePhone()));
         member.addAddress(
@@ -164,13 +170,14 @@ public class Member extends BaseDateColumnEntity {
      * description : 회원 정보 수정
      */
     public void updateMember(MemberUpdateForm memberUpdateForm, SelfPicture updateSelfPicture) {
-        this.addEmail(memberUpdateForm.getEmail());
-        this.addPhones(
+        addPwd(memberUpdateForm.getPwd());
+        addEmail(memberUpdateForm.getEmail());
+        addPhones(
                 Phone.createPhone(memberUpdateForm.getSelfPhone(), memberUpdateForm.getHomePhone())
         );
-        this.addAddress(
+        addAddress(
                 Address.createAddress(memberUpdateForm.getCountry(), memberUpdateForm.getCity(), memberUpdateForm.getStreet(), memberUpdateForm.getDetail(), memberUpdateForm.getZipcode())
         );
-        this.addSelfPicture(updateSelfPicture);
+        addSelfPicture(updateSelfPicture);
     }
 }

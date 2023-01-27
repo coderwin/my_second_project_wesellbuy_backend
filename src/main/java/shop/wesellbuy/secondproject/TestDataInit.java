@@ -50,9 +50,9 @@ public class TestDataInit {
 
             SelfPicture testSelfPicture = SelfPicture.createSelfPicture("a", "a");
 
-            MemberForm memberForm1 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea", "b", "h", "h", "123", testSelfPicture);
-            MemberForm memberForm2 = new MemberForm("b", "c", "b@b", "01012341234", "0511231234", "korea", "b", "h", "h", "123", testSelfPicture);
-            MemberForm memberForm3 = new MemberForm("c", "c", "c@c", "01012341234", "0511231234", "korea", "b", "h", "h", "123", testSelfPicture);
+            MemberForm memberForm1 = new MemberForm("a", "a", "123", "a@a", "01012341234", "0511231234", "korea", "b", "h", "h", "123", testSelfPicture);
+            MemberForm memberForm2 = new MemberForm("b", "c","123", "b@b", "01012341234", "0511231234", "korea", "b", "h", "h","123", testSelfPicture);
+            MemberForm memberForm3 = new MemberForm("c", "c","123", "c@c", "01012341234", "0511231234", "korea", "b", "h", "h", "123",testSelfPicture);
 
             Member member1 = Member.createMember(memberForm1);
             Member member2 = Member.createMember(memberForm2);

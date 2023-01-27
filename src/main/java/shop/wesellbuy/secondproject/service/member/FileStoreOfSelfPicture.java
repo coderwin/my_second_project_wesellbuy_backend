@@ -107,9 +107,9 @@ public class FileStoreOfSelfPicture {
             log.info("폴더 생성 끝");
         }
         // 현재 시스템 경로 확인
-        log.info("현재 시스템 경로 확인 : {}", System.getProperty("user.dir"));
+        log.info("현재 시스템 경로 확인 : {}", System.getProperty("user.dir")); // 프로젝트 최상위 폴더 확인
         // 파일 위치 확인
-        log.info("파일 위치 확인 : {}", newDirectory.getPath());
+        log.info("파일 위치 확인 : {}", newDirectory.getPath()); // 이미지 저장 폴더 경로 확인
 
         log.info("makeFolder 작동 끝...");
     }

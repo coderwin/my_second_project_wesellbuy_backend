@@ -57,16 +57,16 @@ public class ItemLikesJpaRepositoryTest {
     public void init() {
 
         // 회원 정보 저장
-        MemberForm memberForm1 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm2 = new MemberForm("b", "b", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm3 = new MemberForm("c", "c", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm4 = new MemberForm("c", "c", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm5 = new MemberForm("c", "c", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm6 = new MemberForm("c", "c", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm7 = new MemberForm("c", "c", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm8 = new MemberForm("c", "c", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm9 = new MemberForm("c", "c", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
-        MemberForm memberForm10 = new MemberForm("c", "c", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm1 = new MemberForm("a", "a","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm2 = new MemberForm("b", "b","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm3 = new MemberForm("c", "c","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm4 = new MemberForm("c", "c","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm5 = new MemberForm("c", "c","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm6 = new MemberForm("c", "c","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm7 = new MemberForm("c", "c","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm8 = new MemberForm("c", "c","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm9 = new MemberForm("c", "c","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm10 = new MemberForm("c", "c","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
 
         Member member = Member.createMember(memberForm1);
         Member member2 = Member.createMember(memberForm2);
@@ -155,7 +155,7 @@ public class ItemLikesJpaRepositoryTest {
     }
 
     @Test
-    @Rollback(false)
+//    @Rollback(false)
     public void 모두_가져오기_상품_좋아요_by_memberNum() {
 
         // given
@@ -245,7 +245,7 @@ public class ItemLikesJpaRepositoryTest {
     }
 
     @Test
-    @Rollback(false)
+//    @Rollback(false)
     public void 상품_좋아요_개수에따른_순위_확인_V2() {
         // given
         // 좋아요 만들기

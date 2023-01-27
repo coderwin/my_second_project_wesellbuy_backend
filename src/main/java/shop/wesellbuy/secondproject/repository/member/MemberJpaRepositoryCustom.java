@@ -35,7 +35,7 @@ public interface MemberJpaRepositoryCustom {
      * update :
      * description : 모든 회원 정보 찾기 by 이름 and email
      */
-    public List<Member> findByIdAndSelfPhoneAndEmail(MemberSearchIdCond memberSearchIdCond);
+    public List<Member> findByNameAndSelfPhoneAndEmail(MemberSearchIdCond memberSearchIdCond);
 
     /**
      * writer : 이호진

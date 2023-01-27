@@ -37,11 +37,11 @@ public class CustomerServiceJpaRepositoryTest {
     public void init() {
 
         // 회원 정보 저장
-        MemberForm memberForm1 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm1 = new MemberForm("a", "a", "123","a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
         Member member = Member.createMember(memberForm1);
-        MemberForm memberForm2 = new MemberForm("a", "ac", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm2 = new MemberForm("a", "ac","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
         Member member2 = Member.createMember(memberForm2);
-        MemberForm memberForm3 = new MemberForm("b", "bd", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm3 = new MemberForm("b", "bd", "123","a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
         Member member3 = Member.createMember(memberForm3);
 
         em.persist(member);
@@ -119,8 +119,8 @@ public class CustomerServiceJpaRepositoryTest {
         Pageable pageablePage2Size2 = PageRequest.of(2, 2);
 
         // 날짜 condition
-        String today = "2023-01-18";
-        String otherDay = "2023-01-19";
+        String today = "2023-01-27";
+        String otherDay = "2023-01-28";
 
         // 검색 조건
         CustomerServiceSearchCond customerServiceSearchCond1 = new CustomerServiceSearchCond("a", null, today);

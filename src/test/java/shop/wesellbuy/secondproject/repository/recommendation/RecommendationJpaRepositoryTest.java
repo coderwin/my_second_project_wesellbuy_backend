@@ -47,11 +47,11 @@ public class RecommendationJpaRepositoryTest {
     public void init() {
 
         // 회원 생성
-        MemberForm memberForm1 = new MemberForm("a", "a", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm1 = new MemberForm("a", "a", "123","a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
         Member member = Member.createMember(memberForm1);
-        MemberForm memberForm2 = new MemberForm("a", "b", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm2 = new MemberForm("a", "b","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
         Member member2 = Member.createMember(memberForm2);
-        MemberForm memberForm3 = new MemberForm("b", "cd", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
+        MemberForm memberForm3 = new MemberForm("b", "cd","123", "a@a", "01012341234", "0511231234", "korea1", "b", "h", "h", "123", null);
         Member member3 = Member.createMember(memberForm3);
 
         em.persist(member);
@@ -90,7 +90,7 @@ public class RecommendationJpaRepositoryTest {
     }
 
     @Test
-    @Rollback(value = false)
+//    @Rollback(value = false)
     public void 추천합니다_글_저장_add_상세보기() {
         // given
         List<RecommendationPicture> rpList = new ArrayList<>();
@@ -110,7 +110,7 @@ public class RecommendationJpaRepositoryTest {
     }
 
     @Test
-    @Rollback(value = false)
+//    @Rollback(value = false)
     public void 추천합니다글_모두_가져오기_By_조건_페이징() {
         // given
         // 페이지, 사이즈 정하기
@@ -121,8 +121,8 @@ public class RecommendationJpaRepositoryTest {
         Pageable pageablePage2Size2 = PageRequest.of(2, 2);
 
         // 날짜 condition
-        String today = "2023-01-19";
-        String otherDay = "2023-01-20";
+        String today = "2023-01-27";
+        String otherDay = "2023-01-28";
 
         // 검색 조건 생성
         // 조건 1
