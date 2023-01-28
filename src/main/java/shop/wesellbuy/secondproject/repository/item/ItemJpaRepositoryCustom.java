@@ -33,4 +33,13 @@ public interface ItemJpaRepositoryCustom {
      * description : 상품 상세보기 + fetchjoin by num(id)
      */
     Optional<Item> findDetailInfoById(int num);
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.28
+     * updated by writer :
+     * update :
+     * description : 상품 name & 판매자 id로 Item 검색
+     */
+    Optional<Item> findByNameAndSellerId(String itemName, String memberId);
 }

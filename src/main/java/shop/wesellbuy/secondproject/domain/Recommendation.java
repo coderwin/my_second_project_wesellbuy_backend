@@ -10,6 +10,7 @@ import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.domain.recommendation.RecommendationPicture;
 import shop.wesellbuy.secondproject.domain.reply.RecommendationReply;
 import shop.wesellbuy.secondproject.web.recommendation.RecommendationForm;
+import shop.wesellbuy.secondproject.web.recommendation.RecommendationUpdateForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +103,34 @@ public class Recommendation extends BaseDateColumnEntity {
     @PrePersist
     public void prePersistHits() {
         this.hits = this.hits == null ? 0 : this.hits;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.28
+     * updated by writer :
+     * update :
+     * description : 조회수 1 증가시킨다.
+     */
+    public void changeHits() {
+        this.hits += 1;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.28
+     * updated by writer :
+     * update :
+     * description : 추천합니다글 정보 수정
+     */
+    public void updateRecommendation(RecommendationUpdateForm updateForm, List<RecommendationPicture> pictures) {
+
+        this.itemName = updateForm.getItemName();
+        this.sellerId = updateForm.getSellerId();
+        this.content = updateForm.getContent();
+        // 사진 추가하기
+        this.recommendationPictureList.addAll(pictures);
+
     }
 
 }

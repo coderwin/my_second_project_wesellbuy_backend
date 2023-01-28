@@ -9,9 +9,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import shop.wesellbuy.secondproject.domain.CustomerService;
+import shop.wesellbuy.secondproject.domain.QCustomerService;
 import shop.wesellbuy.secondproject.util.LocalDateParser;
 
 import java.util.List;
+import java.util.Optional;
 
 import static shop.wesellbuy.secondproject.domain.QCustomerService.customerService;
 import static shop.wesellbuy.secondproject.domain.QMember.member;
@@ -108,4 +110,24 @@ public class CustomerServiceJpaRepositoryImpl implements CustomerServiceJpaRepos
     private BooleanExpression customerServiceIdEq(String memberId) {
         return StringUtils.hasText(memberId) ? customerService.member.id.eq(memberId) : null;
     }
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.27
+     * updated by writer :
+     * update :
+     * description : 고객지원 상세보기 + fetchjoin by num(id)
+     */
+    @Override
+    public Optional<CustomerService> findDetailInfoById(int num) {
+        CustomerService customerService = query
+                .select(QCustomerService.customerService)
+                .from(QCustomerService.customerService)
+                .join(QCustomerService.customerService.member, member).fetchJoin()
+                .where(QCustomerService.customerService.num.eq(num))
+                .fetchOne();
+
+        return Optional.ofNullable(customerService);
+    }
+
 }

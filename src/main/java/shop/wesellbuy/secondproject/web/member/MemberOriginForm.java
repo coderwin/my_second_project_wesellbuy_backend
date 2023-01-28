@@ -6,6 +6,14 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 import shop.wesellbuy.secondproject.domain.member.SelfPicture;
 
+/**
+ * 회원 정보 form dto
+ * writer : 이호진
+ * init : 2023.01.26
+ * updated by writer :
+ * update :
+ * description : 클라이언트가 보내온 회원 정보를 담아둔다.
+ */
 @Getter @Setter
 @AllArgsConstructor
 public class MemberOriginForm {

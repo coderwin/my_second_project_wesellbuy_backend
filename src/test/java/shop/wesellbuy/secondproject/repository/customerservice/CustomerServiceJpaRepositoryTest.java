@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import shop.wesellbuy.secondproject.domain.CustomerService;
 import shop.wesellbuy.secondproject.domain.Member;
@@ -67,7 +68,7 @@ public class CustomerServiceJpaRepositoryTest {
         CustomerService customerService = CustomerService.createCustomerService("a", "ab", member);
 
         // when
-        em.persist(customerService);
+        customerServiceJpaRepository.save(customerService);
 
         // then
         var findCustomerService = customerServiceJpaRepository.findById(customerService.getNum()).orElseThrow();
@@ -176,6 +177,24 @@ public class CustomerServiceJpaRepositoryTest {
         // 날짜 검색 되는지 확인
         assertThat(result10.getTotalElements()).isEqualTo(mCount);
         assertThat(result11.getTotalElements()).isEqualTo(0);
+    }
+
+    /**
+     * 고객지원글 상세보기 출력 확인
+     */
+    @Test
+    public void 상세보기_출력_확인() {
+        // given
+        //고객 지원글 저장하기
+        CustomerService customerService = CustomerService.createCustomerService("a", "ab", member);
+        em.persist(customerService);
+
+        // when
+        // 상세보기
+        CustomerService findCustomerService = customerServiceJpaRepository.findDetailInfoById(customerService.getNum()).orElseThrow();
+
+        // then
+        assertThat(customerService).isEqualTo(findCustomerService);
     }
 
 

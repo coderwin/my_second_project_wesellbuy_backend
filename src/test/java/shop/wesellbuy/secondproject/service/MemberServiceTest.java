@@ -60,7 +60,7 @@ public class MemberServiceTest {
         log.info("test init 시작");
 
         // 회원 정보 저장하기
-        // MokMultipartFile 생성
+        // MockMultipartFile 생성
         String fileName = "testFile1"; // 파일명
         String contentType = "jpg"; // 파일 확장자/ 파일타입
         String originFileName = fileName + "." + contentType;

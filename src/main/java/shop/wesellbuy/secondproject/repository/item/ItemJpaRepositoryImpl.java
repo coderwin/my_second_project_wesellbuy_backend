@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import shop.wesellbuy.secondproject.domain.Item;
+import shop.wesellbuy.secondproject.domain.QItem;
 import shop.wesellbuy.secondproject.util.LocalDateParser;
 
 import java.util.List;
@@ -160,5 +161,27 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
                 .fetchOne();
 
         return Optional.ofNullable(findItem);
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.28
+     * updated by writer :
+     * update :
+     * description : 상품 name & 판매자 id로 Item 검색
+     */
+    @Override
+    public Optional<Item> findByNameAndSellerId(String itemName, String memberId) {
+        Item item = query
+                .select(QItem.item)
+                .from(QItem.item)
+                .join(QItem.item.member, member).fetchJoin()
+                .where(
+                        QItem.item.name.eq(itemName),
+                        member.id.eq(memberId)
+                )
+                .fetchOne();
+
+        return Optional.ofNullable(item);
     }
 }

@@ -32,6 +32,14 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Member Service 구현 클래스
+ * writer : 이호진
+ * init : 2023.01.26
+ * updated by writer :
+ * update :
+ * description : Member Service 구현 메소드 모음
+ */
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
