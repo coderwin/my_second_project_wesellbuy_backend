@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import shop.wesellbuy.secondproject.domain.CustomerService;
 
+import java.time.LocalDateTime;
+
 /**
  * 고객지원글 list dto
  * writer : 이호진
@@ -20,6 +22,7 @@ public class CustomerServiceListForm {
     private Integer num; // 게시글 번호
     private String reportedId; // 신고된 회원 아이디
     private String memberId; // 회원 아이디(작성자)
+    private LocalDateTime createDate; // 생성 날짜
 
     // ** 생성 메서드 ** //
     public static CustomerServiceListForm create(CustomerService customerService) {
@@ -27,7 +30,8 @@ public class CustomerServiceListForm {
         CustomerServiceListForm customerServiceListForm = new CustomerServiceListForm(
                 customerService.getNum(),
                 customerService.getReportedId(),
-                customerService.getMember().getId()
+                customerService.getMember().getId(),
+                customerService.getCreatedDate()
         );
 
         return customerServiceListForm;

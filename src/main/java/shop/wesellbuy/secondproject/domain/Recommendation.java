@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import shop.wesellbuy.secondproject.domain.board.BoardStatus;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.domain.recommendation.RecommendationPicture;
 import shop.wesellbuy.secondproject.domain.reply.RecommendationReply;
@@ -20,11 +21,13 @@ import java.util.List;
  * writer : 이호진
  * init : 2023.01.14
  * updated by writer : 이호진
- * update : 2023.01.18
+ * update : 2023.01.28
  * description : 고객지원 게시판을 정의한다.
  *
  * comment - create : 연관관계 메서드 수정(recommendationPicture)
  *                    -> FK가 있는 곳에서 연관관계 메서드 생성
+ *
+ *         - update : BaordStatus 추가
  */
 @Entity
 @Getter
@@ -40,6 +43,8 @@ public class Recommendation extends BaseDateColumnEntity {
     private String content; // 추천 이유
     @ColumnDefault("0")
     private Integer hits; // 조회수
+    @Enumerated(EnumType.STRING)
+    private BoardStatus status; // 게시판 등록 상태
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_num")
@@ -64,6 +69,10 @@ public class Recommendation extends BaseDateColumnEntity {
         this.content = content;
     }
 
+    public void addStatus(BoardStatus status) {
+        this.status = status;
+    }
+
     // ** 연관관계 메서드 ** //
     // Member
     public void addMember(Member member) {
@@ -84,6 +93,7 @@ public class Recommendation extends BaseDateColumnEntity {
         recommendation.addItemName(recommendationForm.getItemName());
         recommendation.addSellerId(recommendationForm.getSellerId());
         recommendation.addContent(recommendationForm.getContent());
+        recommendation.addStatus(BoardStatus.R);
         recommendation.addMember(member);
 
         // RecommendationPicture에 Recommendation 등록
@@ -133,4 +143,14 @@ public class Recommendation extends BaseDateColumnEntity {
 
     }
 
+    /**
+     * writer : 이호진
+     * init : 2023.01.28
+     * updated by writer :
+     * update :
+     * description : 추천합니다글 상태 수정(R -> D)
+     */
+    public void changeStatus() {
+        this.status = BoardStatus.D;
+    }
 }
