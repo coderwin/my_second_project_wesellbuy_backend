@@ -22,7 +22,7 @@ import java.util.List;
  * init : 2023.01.14
  * updated by writer : 이호진
  * update : 2023.01.28
- * description : 고객지원 게시판을 정의한다.
+ * description : 추천합니다 게시판을 정의한다.
  *
  * comment - create : 연관관계 메서드 수정(recommendationPicture)
  *                    -> FK가 있는 곳에서 연관관계 메서드 생성
@@ -139,8 +139,11 @@ public class Recommendation extends BaseDateColumnEntity {
         this.sellerId = updateForm.getSellerId();
         this.content = updateForm.getContent();
         // 사진 추가하기
-        this.recommendationPictureList.addAll(pictures);
-
+        // RecommendationPicture에 Recommendation 등록
+        // 연관관계 생각
+        if(pictures != null) {
+            pictures.forEach((p) -> p.addRecommendation(this));
+        }
     }
 
     /**
@@ -152,5 +155,23 @@ public class Recommendation extends BaseDateColumnEntity {
      */
     public void changeStatus() {
         this.status = BoardStatus.D;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.01
+     * updated by writer :
+     * update :
+     * description : 추천합니다글 이미지 삭제
+     *               -> pictureSatus를 수정(R -> D)
+     */
+    public void deletePicture(int pictureNum) {
+        // pictureNum에 맞는 pictures 불러오기
+        RecommendationPicture findPicture = recommendationPictureList.stream()
+                .filter(p -> p.getNum() == pictureNum)
+                .findFirst()
+                .orElseThrow();
+
+        findPicture.changeStatus();
     }
 }

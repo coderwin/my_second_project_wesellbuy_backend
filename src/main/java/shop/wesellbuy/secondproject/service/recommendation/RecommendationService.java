@@ -5,10 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import shop.wesellbuy.secondproject.repository.recommendation.RecommendationSearchCond;
-import shop.wesellbuy.secondproject.web.recommendation.RecommendationDetailForm;
-import shop.wesellbuy.secondproject.web.recommendation.RecommendationForm;
-import shop.wesellbuy.secondproject.web.recommendation.RecommendationListForm;
-import shop.wesellbuy.secondproject.web.recommendation.RecommendationUpdateForm;
+import shop.wesellbuy.secondproject.web.recommendation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -63,6 +60,16 @@ public interface RecommendationService {
 
     /**
      * writer : 이호진
+     * init : 2023.02.01
+     * updated by writer :
+     * update :
+     * description : 추천합니다글 이미지 삭제
+     *               -> status 상태를 변경한다(R -> D)
+     */
+    void deletePicture(int recommendationNum, int pictureNum);
+
+    /**
+     * writer : 이호진
      * init : 2023.01.28
      * updated by writer :
      * update :
@@ -86,7 +93,7 @@ public interface RecommendationService {
      *               -> status 상관 없이
      *               -> admin이 사용한다.
      */
-    Page<RecommendationListForm> selectListForAdmin(RecommendationSearchCond cond, Pageable pageable);
+    Page<RecommendationListForAdminForm> selectListForAdmin(RecommendationSearchCond cond, Pageable pageable);
 
     //    -------------------------methods using for admin end----------------------------------
 

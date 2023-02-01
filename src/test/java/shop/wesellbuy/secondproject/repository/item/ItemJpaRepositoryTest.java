@@ -3,6 +3,7 @@ package shop.wesellbuy.secondproject.repository.item;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import shop.wesellbuy.secondproject.web.member.MemberForm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -210,6 +212,29 @@ public class ItemJpaRepositoryTest {
     private void testResult(Pageable pageable, ItemSearchCond cond, int count) {
         Page<Item> result = itemJpaRepository.findAllInfo(cond, pageable);
         assertThat(result.getTotalElements()).isEqualTo(count);
+    }
+
+    /**
+     * 상품 이름, 판매자 검색 확인
+     */
+    @Test
+    @Rollback(value = false)
+    public void 상품이름_판매자로_검색_확인() {
+        // given
+        String itemName = "x";// 상품 이름
+        String sellerId = "a";// 판매자아이디 맞음
+
+        String notSellerId = "b";// 판매자아이디 아님
+        // when
+        Item findItem = itemJpaRepository.findByNameAndSellerId(itemName, sellerId).orElseThrow();
+
+        // then
+        assertThat(findItem.getName()).isEqualTo(itemName);
+        assertThat(findItem.getMember()).isEqualTo(member);
+
+        // 판매자 아이디 없음
+        Assertions.assertThrows(NoSuchElementException.class, () -> itemJpaRepository.findByNameAndSellerId(itemName, notSellerId).orElseThrow());
+//        Assertions.assertThrows(IllegalStateException.class, () -> itemJpaRepository.findByNameAndSellerId(itemName, notSellerId).orElseThrow()); // 에러 발생
     }
 
 

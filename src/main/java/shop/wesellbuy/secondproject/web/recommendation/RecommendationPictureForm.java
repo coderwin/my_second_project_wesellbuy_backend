@@ -16,12 +16,14 @@ import shop.wesellbuy.secondproject.domain.recommendation.RecommendationPicture;
 @AllArgsConstructor
 public class RecommendationPictureForm {
 
+    private Integer num; // 파일 번호
     private String originalFileName; // 원본 파일 이름
     private String storedFileName; // DB에 저장된 파일 이름
 
     // ** 생성 메서드 **//
     public static RecommendationPictureForm create(RecommendationPicture recommendationPicture) {
         RecommendationPictureForm recommendationDetailForm = new RecommendationPictureForm(
+                recommendationPicture.getNum(),
                 recommendationPicture.getOriginalFileName(),
                 recommendationPicture.getStoredFileName()
         );

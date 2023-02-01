@@ -11,21 +11,20 @@ import org.springframework.web.multipart.MultipartFile;
 import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.Recommendation;
 import shop.wesellbuy.secondproject.domain.board.BoardStatus;
+import shop.wesellbuy.secondproject.domain.common.PictureStatus;
 import shop.wesellbuy.secondproject.domain.recommendation.RecommendationPicture;
-import shop.wesellbuy.secondproject.exception.recommendation.NotExistingItemNameException;
+import shop.wesellbuy.secondproject.exception.recommendation.NotExistingItemException;
 import shop.wesellbuy.secondproject.repository.item.ItemJpaRepository;
 import shop.wesellbuy.secondproject.repository.member.MemberJpaRepository;
 import shop.wesellbuy.secondproject.repository.recommendation.RecommendationJpaRepository;
 import shop.wesellbuy.secondproject.repository.recommendation.RecommendationSearchCond;
-import shop.wesellbuy.secondproject.service.customerservice.FileStoreOfRecommendationPicture;
-import shop.wesellbuy.secondproject.web.recommendation.RecommendationDetailForm;
-import shop.wesellbuy.secondproject.web.recommendation.RecommendationForm;
-import shop.wesellbuy.secondproject.web.recommendation.RecommendationListForm;
-import shop.wesellbuy.secondproject.web.recommendation.RecommendationUpdateForm;
+import shop.wesellbuy.secondproject.web.recommendation.*;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional(readOnly = true)
@@ -57,6 +56,8 @@ public class RecommendationServiceImpl implements RecommendationService {
         Member member = memberJpaRepository.findById(memberNum).orElseThrow();
         // 추천합니다글 생성
         Recommendation recommendation = Recommendation.createRecommendation(recommendationForm, member);
+        // 추천합니다글 저장
+        recommendationJpaRepository.save(recommendation);
 
         return recommendation.getNum();
     }
@@ -72,7 +73,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         // 추천받은 상품 있는지 확인
         String errMsg = "추천 상품 또는 판매자를 잘못 입력하셨습니다.";
         itemJpaRepository.findByNameAndSellerId(itemName, memberId)
-                .orElseThrow(() -> new NotExistingItemNameException(errMsg));
+                .orElseThrow(() -> new NotExistingItemException(errMsg));
     }
 
     /**
@@ -148,6 +149,23 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     /**
      * writer : 이호진
+     * init : 2023.02.01
+     * updated by writer :
+     * update :
+     * description : 추천합니다글 이미지 삭제
+     *               -> status 상태를 변경한다(R -> D)
+     */
+    @Override
+    @Transactional
+    public void deletePicture(int recommendationNum, int pictureNum) {
+        // 추천합니다글 불러오기
+        Recommendation recommendation = recommendationJpaRepository.findById(recommendationNum).orElseThrow();
+        // picture를 삭제한다.
+        recommendation.deletePicture(pictureNum);
+    }
+
+    /**
+     * writer : 이호진
      * init : 2023.01.28
      * updated by writer :
      * update :
@@ -167,7 +185,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         List<RecommendationListForm> recommendationListForms = recommendationList.getContent().stream()
                 .filter(r -> r.getStatus().equals(BoardStatus.R))
                 .map(r -> RecommendationListForm.create(r))
-                .collect(Collectors.toList());
+                .collect(toList());
         // total count 만들기
         Long totalCount = recommendationList.getTotalElements();
 
@@ -184,18 +202,19 @@ public class RecommendationServiceImpl implements RecommendationService {
      * updated by writer :
      * update :
      * description : 추천합니다글 모두 불러오기
-     *               -> status 상관 없이
+     *               -> status 사용
      *               -> admin이 사용한다.
      */
     @Override
-    public Page<RecommendationListForm> selectListForAdmin(RecommendationSearchCond cond, Pageable pageable) {
+    public Page<RecommendationListForAdminForm> selectListForAdmin(RecommendationSearchCond cond, Pageable pageable) {
         // 조건에 맞는 추천합니다글 불러오기
         Page<Recommendation> recommendationList = recommendationJpaRepository.findAllInfo(cond, pageable);
         // RecommendationListForm에 정보 담기
-        Page<RecommendationListForm> result = recommendationList.map(r -> RecommendationListForm.create(r));
+        Page<RecommendationListForAdminForm> result = recommendationList.map(r -> RecommendationListForAdminForm.create(r));
 
         return result;
     }
+
 //    -------------------------methods using for admin end----------------------------------
 
 

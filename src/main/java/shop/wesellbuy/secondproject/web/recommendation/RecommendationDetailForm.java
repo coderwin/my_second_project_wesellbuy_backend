@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 import shop.wesellbuy.secondproject.domain.Recommendation;
+import shop.wesellbuy.secondproject.domain.common.PictureStatus;
 import shop.wesellbuy.secondproject.domain.recommendation.RecommendationPicture;
 import shop.wesellbuy.secondproject.domain.reply.RecommendationReply;
 import shop.wesellbuy.secondproject.web.reply.ReplyDetailForm;
@@ -47,6 +48,7 @@ public class RecommendationDetailForm {
                 recommendation.getMember().getId(),
                 recommendation.getCreatedDate(),
                 recommendation.getRecommendationPictureList().stream()
+                        .filter(p -> p.getStatus().equals(PictureStatus.R))
                         .map(p -> RecommendationPictureForm.create(p))
                         .collect(toList()),
                 recommendation.getRecommendationReplyList().stream()

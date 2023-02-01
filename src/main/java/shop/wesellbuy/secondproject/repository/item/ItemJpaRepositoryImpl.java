@@ -180,7 +180,7 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
                         QItem.item.name.eq(itemName),
                         member.id.eq(memberId)
                 )
-                .fetchOne();
+                .fetchFirst();
 
         return Optional.ofNullable(item);
     }
