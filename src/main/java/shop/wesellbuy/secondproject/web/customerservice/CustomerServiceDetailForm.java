@@ -3,6 +3,7 @@ package shop.wesellbuy.secondproject.web.customerservice;
 import lombok.Getter;
 import lombok.Setter;
 import shop.wesellbuy.secondproject.domain.CustomerService;
+import shop.wesellbuy.secondproject.domain.reply.ReplyStatus;
 import shop.wesellbuy.secondproject.web.reply.ReplyDetailForm;
 
 import java.time.LocalDateTime;
@@ -42,6 +43,7 @@ public class CustomerServiceDetailForm {
         // 댓글을 replyList에 넣어주기
         customerServiceDetailForm.setReplyList(
                 customerService.getCustomerServiceReplyList().stream()
+                        .filter(r -> r.getStatus().equals(ReplyStatus.R))
                         .map(r -> ReplyDetailForm.createReplyDetailForm(r))
                         .collect(toList())
         );

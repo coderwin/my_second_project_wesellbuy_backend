@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import shop.wesellbuy.secondproject.domain.Recommendation;
+import shop.wesellbuy.secondproject.domain.board.BoardStatus;
 import shop.wesellbuy.secondproject.util.LocalDateParser;
 
 import java.util.List;
@@ -33,13 +34,14 @@ public class RecommendationJpaRepositoryImpl implements RecommendationJpaReposit
 
     /**
      * writer : 이호진
-     * init : 2023.01.18
+     * init : 2023.02.01
      * updated by writer :
      * update :
      * description : 모든 추천합니다 게시글 찾기 + fetchjoin
+     *               -> admin에서 사용
      */
     @Override
-    public Page<Recommendation> findAllInfo(RecommendationSearchCond recommendationSearchCond, Pageable pageable) {
+    public Page<Recommendation> findAllInfoForAdmin(RecommendationSearchCond recommendationSearchCond, Pageable pageable) {
 
         // list
         List<Recommendation> result = query
@@ -66,6 +68,51 @@ public class RecommendationJpaRepositoryImpl implements RecommendationJpaReposit
                         recommendationItemNameEq(recommendationSearchCond.getItemName()),
                         recommendationItemSellerIdEq(recommendationSearchCond.getSellerId()),
                         recommendationCreateDateBetween(recommendationSearchCond.getCreateDate())
+                )
+                .fetchOne();
+
+        return new PageImpl<>(result, pageable, totalCount);
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.18
+     * updated by writer : 이호진
+     * update : 2023.02.01
+     * description : 모든 추천합니다 게시글 찾기 + fetchjoin
+     *
+     * update : add where절에 status = R(Register인 것만)
+     */
+    @Override
+    public Page<Recommendation> findAllInfo(RecommendationSearchCond recommendationSearchCond, Pageable pageable) {
+
+        // list
+        List<Recommendation> result = query
+                .select(recommendation)
+                .from(recommendation)
+                .join(recommendation.member, member).fetchJoin()
+                .where(
+                        recommendationIdEq(recommendationSearchCond.getMemberId()),
+                        recommendationItemNameEq(recommendationSearchCond.getItemName()),
+                        recommendationItemSellerIdEq(recommendationSearchCond.getSellerId()),
+                        recommendationCreateDateBetween(recommendationSearchCond.getCreateDate()),
+                        recommendation.status.eq(BoardStatus.R)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(recommendation.num.desc())
+                .fetch();
+
+        // totalCount
+        Long totalCount = query
+                .select(recommendation.count())
+                .from(recommendation)
+                .where(
+                        recommendationIdEq(recommendationSearchCond.getMemberId()),
+                        recommendationItemNameEq(recommendationSearchCond.getItemName()),
+                        recommendationItemSellerIdEq(recommendationSearchCond.getSellerId()),
+                        recommendationCreateDateBetween(recommendationSearchCond.getCreateDate()),
+                        recommendation.status.eq(BoardStatus.R)
                 )
                 .fetchOne();
 

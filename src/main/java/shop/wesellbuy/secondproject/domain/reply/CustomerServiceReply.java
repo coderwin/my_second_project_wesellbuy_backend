@@ -7,6 +7,7 @@ import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.board.BoardStatus;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.web.reply.ReplyForm;
+import shop.wesellbuy.secondproject.web.reply.ReplyUpdateForm;
 
 /**
  * 고객지원 board 댓글
@@ -68,5 +69,29 @@ public class CustomerServiceReply extends BaseDateColumnEntity {
         customerServiceReply.addCustomerService(customerService);
 
         return customerServiceReply;
+    }
+
+    // ** 비즈니스 메서드 ** //
+    /**
+     * writer : 이호진
+     * init : 2023.02.01
+     * updated by writer :
+     * update :
+     * description : 고객지원글 댓글 정보 수정
+     */
+    public void updateCustomerServiceReply(ReplyUpdateForm updateReplyForm) {
+        this.content = updateReplyForm.getContent();
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.01
+     * updated by writer :
+     * update :
+     * description : 상품 댓글 정보 삭제
+     *               -> status를 R -> D로 변경
+     */
+    public void delete() {
+        this.status = ReplyStatus.D;
     }
 }

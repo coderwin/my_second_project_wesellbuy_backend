@@ -7,6 +7,7 @@ import shop.wesellbuy.secondproject.domain.Item;
 import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.web.reply.ReplyForm;
+import shop.wesellbuy.secondproject.web.reply.ReplyUpdateForm;
 
 /**
  * Item(board) 댓글
@@ -41,15 +42,15 @@ public class ItemReply extends BaseDateColumnEntity {
         this.content = content;
     }
 
+    public void addStatus(ReplyStatus status) {
+        this.status = status;
+    }
+
     // ** 연관관계 메서드 ** //
     // Member
     public void addMember(Member member) {
         this.member = member;
         member.getItemReplyList().add(this);
-    }
-
-    public void addStatus(ReplyStatus status) {
-        this.status = status;
     }
 
     // Item
@@ -70,5 +71,29 @@ public class ItemReply extends BaseDateColumnEntity {
         itemReply.addItem(Item);
 
         return itemReply;
+    }
+
+    // ** 비즈니스 메서드 ** //
+    /**
+     * writer : 이호진
+     * init : 2023.02.01
+     * updated by writer :
+     * update :
+     * description : 상품 댓글 정보 수정
+     */
+    public void updateItemReply(ReplyUpdateForm updateReplyForm) {
+        this.content = updateReplyForm.getContent();
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.01
+     * updated by writer :
+     * update :
+     * description : 상품 댓글 정보 삭제
+     *               -> status를 R -> D로 변경
+     */
+    public void delete() {
+        this.status = ReplyStatus.D;
     }
 }

@@ -2,7 +2,6 @@ package shop.wesellbuy.secondproject.service;
 
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import shop.wesellbuy.secondproject.domain.item.ItemPicture;
 import shop.wesellbuy.secondproject.domain.member.SelfPicture;
 import shop.wesellbuy.secondproject.domain.recommendation.RecommendationPicture;
 import shop.wesellbuy.secondproject.domain.reply.RecommendationReply;
-import shop.wesellbuy.secondproject.exception.common.NotExistingIdException;
 import shop.wesellbuy.secondproject.exception.recommendation.NotExistingItemException;
 import shop.wesellbuy.secondproject.repository.item.ItemJpaRepository;
 import shop.wesellbuy.secondproject.repository.member.MemberJpaRepository;
@@ -78,7 +76,7 @@ public class RecommendationServiceTest {
     @BeforeEach
     public void init() throws IOException {
 
-// member 생성
+        // member 생성
         SelfPicture selfPicture = SelfPicture.createSelfPicture("test1", "test2");
         SelfPicture selfPicture3 = SelfPicture.createSelfPicture("test1", "test2");
         MemberForm memberForm1 = new MemberForm("a", "a1", "123", "a", "a@a", "01012341234", "0511231234", "korea", "b", "h", "h", selfPicture);
@@ -462,64 +460,61 @@ public class RecommendationServiceTest {
 
         // 조건 생성
         // 조건 0
-//        RecommendationSearchCond cond0 = new RecommendationSearchCond("", "", "", "");
+        RecommendationSearchCond cond0 = new RecommendationSearchCond("", "", "", "");
         // 조건 1
-//        RecommendationSearchCond cond11 = new RecommendationSearchCond("book1", "", "", "");
-//        RecommendationSearchCond cond12 = new RecommendationSearchCond("", "a1", "", "");
-//        RecommendationSearchCond cond13 = new RecommendationSearchCond("", "", "b1", "");
-//        RecommendationSearchCond cond14 = new RecommendationSearchCond("", "", "", today);
+        RecommendationSearchCond cond11 = new RecommendationSearchCond("book1", "", "", "");
+        RecommendationSearchCond cond12 = new RecommendationSearchCond("", "a1", "", "");
+        RecommendationSearchCond cond13 = new RecommendationSearchCond("", "", "b1", "");
+        RecommendationSearchCond cond14 = new RecommendationSearchCond("", "", "", today);
         // 조건 2
-//        RecommendationSearchCond cond21 = new RecommendationSearchCond("book1", "a1", "", "");
-//        RecommendationSearchCond cond22 = new RecommendationSearchCond("book1", "", "b1", "");
-//        RecommendationSearchCond cond23 = new RecommendationSearchCond("book1", "", "", today);
-//        RecommendationSearchCond cond24 = new RecommendationSearchCond("", "a1", "a1", "");
-//        RecommendationSearchCond cond25 = new RecommendationSearchCond("", "a1", "", today);
-//        RecommendationSearchCond cond26 = new RecommendationSearchCond("", "", "c1", today);
+        RecommendationSearchCond cond21 = new RecommendationSearchCond("book1", "a1", "", "");
+        RecommendationSearchCond cond22 = new RecommendationSearchCond("book1", "", "b1", "");
+        RecommendationSearchCond cond23 = new RecommendationSearchCond("book1", "", "", today);
+        RecommendationSearchCond cond24 = new RecommendationSearchCond("", "a1", "a1", "");
+        RecommendationSearchCond cond25 = new RecommendationSearchCond("", "a1", "", today);
+        RecommendationSearchCond cond26 = new RecommendationSearchCond("", "", "c1", today);
         // 조건 3
-//        RecommendationSearchCond cond31 = new RecommendationSearchCond("book1", "a1", "b1", "");
-//        RecommendationSearchCond cond32 = new RecommendationSearchCond("book1", "a1", "", today);
-//        RecommendationSearchCond cond33 = new RecommendationSearchCond("book3", "", "c1", today);
-//        RecommendationSearchCond cond34 = new RecommendationSearchCond("", "a1", "b1", today);
+        RecommendationSearchCond cond31 = new RecommendationSearchCond("book1", "a1", "b1", "");
+        RecommendationSearchCond cond32 = new RecommendationSearchCond("book1", "a1", "", today);
+        RecommendationSearchCond cond33 = new RecommendationSearchCond("book3", "", "c1", today);
+        RecommendationSearchCond cond34 = new RecommendationSearchCond("", "a1", "b1", today);
         // 조건4
         RecommendationSearchCond cond41 = new RecommendationSearchCond("book1", "a1", "b1", today);
 
         // 조건에 맞는 값 없을 때
-//        RecommendationSearchCond cond15 = new RecommendationSearchCond("", "a3", "", "");
-//        RecommendationSearchCond cond27 = new RecommendationSearchCond("", "123456", "c1", "");
-//        RecommendationSearchCond cond35 = new RecommendationSearchCond("book1", "a1", "b12", "");
+        RecommendationSearchCond cond15 = new RecommendationSearchCond("", "a3", "", "");
+        RecommendationSearchCond cond27 = new RecommendationSearchCond("", "123456", "c1", "");
+        RecommendationSearchCond cond35 = new RecommendationSearchCond("book1", "a1", "b12", "");
         RecommendationSearchCond cond42 = new RecommendationSearchCond("book1123", "a1", "b1", otherDay);
 
 
         // then
         // 조건0
-//        searchListTestResult(cond0, page0size10, rCount + r2Count + r3Count);
+        searchListTestResult(cond0, page0size10, rCount + r2Count + r3Count);
         // 조건1
-//        searchListTestResult(cond11, page0size10, rCount + r2Count);
-//        searchListTestResult(cond12, page0size10, rCount + r2Count);
-//        searchListTestResult(cond13, page0size10, r2Count);
-//        searchListTestResult(cond14, page0size10, rCount + r2Count + r3Count);
+        searchListTestResult(cond11, page0size10, rCount + r2Count);
+        searchListTestResult(cond12, page0size10, rCount + r2Count);
+        searchListTestResult(cond13, page0size10, r2Count);
+        searchListTestResult(cond14, page0size10, rCount + r2Count + r3Count);
         // 조건2
-//        searchListTestResult(cond21, page2size5, rCount + r2Count);
-//        searchListTestResult(cond22, page2size5, r2Count);
-//        searchListTestResult(cond23, page2size5, rCount + r2Count);
-//        searchListTestResult(cond24, page2size5, rCount);
-//        searchListTestResult(cond25, page2size5, rCount + r2Count);
-//        searchListTestResult(cond26, page2size5, r3Count);
+        searchListTestResult(cond21, page2size5, rCount + r2Count);
+        searchListTestResult(cond22, page2size5, r2Count);
+        searchListTestResult(cond23, page2size5, rCount + r2Count);
+        searchListTestResult(cond24, page2size5, rCount);
+        searchListTestResult(cond25, page2size5, rCount + r2Count);
+        searchListTestResult(cond26, page2size5, r3Count);
         // 조건3
-//        searchListTestResult(cond31, page2size5, r2Count);
-//        searchListTestResult(cond32, page2size5, rCount + r2Count);
-//        searchListTestResult(cond33, page2size5, r3Count);
-//        searchListTestResult(cond34, page2size5, r2Count);
+        searchListTestResult(cond31, page2size5, r2Count);
+        searchListTestResult(cond32, page2size5, rCount + r2Count);
+        searchListTestResult(cond33, page2size5, r3Count);
+        searchListTestResult(cond34, page2size5, r2Count);
         // 조건4
         searchListTestResult(cond41, page0size10, r2Count);
 
-
-
-
         // 조건에 맞는 값 없을 때
-//        searchListTestResult(cond15, page0size10, 0);
-//        searchListTestResult(cond27, page2size5, 0);
-//        searchListTestResult(cond35, page2size5, 0);
+        searchListTestResult(cond15, page0size10, 0);
+        searchListTestResult(cond27, page2size5, 0);
+        searchListTestResult(cond35, page2size5, 0);
         searchListTestResult(cond42, page0size10, 0);
     }
 

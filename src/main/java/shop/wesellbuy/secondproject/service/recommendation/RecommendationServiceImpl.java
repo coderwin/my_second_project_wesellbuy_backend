@@ -26,6 +26,14 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * RecommendationService Service 구현 클래스
+ * writer : 이호진
+ * init : 2023.02.01
+ * updated by writer :
+ * update :
+ * description : RecommendationService Service 구현 메소드 모음
+ */
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -45,6 +53,7 @@ public class RecommendationServiceImpl implements RecommendationService {
      * description : 추천합니다글 저장
      */
     @Override
+    @Transactional
     public int save(RecommendationForm recommendationForm, List<MultipartFile> files, int memberNum) throws IOException {
         // 추천받은 상품 & 판매자 있는지 확인
         checkItemNameAndSellerId(recommendationForm.getItemName(), recommendationForm.getSellerId());
@@ -167,13 +176,15 @@ public class RecommendationServiceImpl implements RecommendationService {
     /**
      * writer : 이호진
      * init : 2023.01.28
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.02.01
      * description : 추천합니다글 모두 불러오기
      *               -> status 상태(D)는 출력 안 한다.
      *
      * comment : list, count를 찾아서 다시 Page를 만들어야할까?
      *           아니면 Page<Recommendation> 상태에서 바로 만드는 방법 있을까?
+     *
+     *           --> db의 where절에 status = R 조건 추가로 해결
      */
     @Override
     public Page<RecommendationListForm> selectList(RecommendationSearchCond cond, Pageable pageable) {
@@ -182,15 +193,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         // RecommendationListForm에 정보 담기
         // status가 D(Delete)인 건 출력 안한다.
         // list 만들기
-        List<RecommendationListForm> recommendationListForms = recommendationList.getContent().stream()
-                .filter(r -> r.getStatus().equals(BoardStatus.R))
-                .map(r -> RecommendationListForm.create(r))
-                .collect(toList());
-        // total count 만들기
-        Long totalCount = recommendationList.getTotalElements();
-
-        // Page 만들기
-        Page<RecommendationListForm> result = new PageImpl(recommendationListForms, pageable, totalCount);
+        Page<RecommendationListForm> result = recommendationList.map(r -> RecommendationListForm.create(r));
 
         return result;
     }
@@ -208,7 +211,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public Page<RecommendationListForAdminForm> selectListForAdmin(RecommendationSearchCond cond, Pageable pageable) {
         // 조건에 맞는 추천합니다글 불러오기
-        Page<Recommendation> recommendationList = recommendationJpaRepository.findAllInfo(cond, pageable);
+        Page<Recommendation> recommendationList = recommendationJpaRepository.findAllInfoForAdmin(cond, pageable);
         // RecommendationListForm에 정보 담기
         Page<RecommendationListForAdminForm> result = recommendationList.map(r -> RecommendationListForAdminForm.create(r));
 

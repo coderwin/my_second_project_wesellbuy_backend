@@ -8,6 +8,7 @@ import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.Recommendation;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.web.reply.ReplyForm;
+import shop.wesellbuy.secondproject.web.reply.ReplyUpdateForm;
 
 /**
  * 추천합니다 board 댓글
@@ -70,5 +71,29 @@ public class RecommendationReply extends BaseDateColumnEntity {
         recommendationReply.addRecommendation(Recommendation);
 
         return recommendationReply;
+    }
+
+    // ** 비즈니스 메서드 ** //
+    /**
+     * writer : 이호진
+     * init : 2023.02.01
+     * updated by writer :
+     * update :
+     * description : 추천합니다글 댓글 정보 수정
+     */
+    public void updateRecommendationReply(ReplyUpdateForm updateReplyForm) {
+        this.content = updateReplyForm.getContent();
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.01
+     * updated by writer :
+     * update :
+     * description : 댓글 삭제
+     *               status를 변경한다.(R -> D)
+     */
+    public void delete() {
+        this.status = ReplyStatus.D;
     }
 }
