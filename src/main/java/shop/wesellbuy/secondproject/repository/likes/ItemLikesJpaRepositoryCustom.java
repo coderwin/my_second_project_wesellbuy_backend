@@ -31,6 +31,7 @@ public interface ItemLikesJpaRepositoryCustom {
      * updated by writer : 이호진
      * update : 2023.01.18
      * description : 모든 상품_좋아요 or 좋아요 많은 순위 찾기
+     *               -> item service에서 사용한다.
      */
     List<Tuple> findRank();
 
