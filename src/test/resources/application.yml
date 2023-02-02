@@ -45,7 +45,9 @@ logging.level:
 file:
   selfPicture.dir: "C:/my_project_2/upload/images/" # 회원 이미지
   recommendationPicture.dir: "C:/my_project_2/upload/recommendation/images/" # 추천합니다글 이미지
+  itemPicture.dir: "C:/my_project_2/upload/item/images/" # 상품 이미지
 #폴더 생성 경로
 directory:
   selfPicture.dir: "C:/my_project_2/upload/images" # 회원 이미지
   recommendationPicture.dir: "C:/my_project_2/upload/recommendation/images" # 추천합니다글 이미지
+  itemPicture.dir: "C:/my_project_2/upload/item/images" # 상품 이미지

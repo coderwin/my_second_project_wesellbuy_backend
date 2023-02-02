@@ -29,4 +29,17 @@ public class ItemForm {
 
     // item controller 만들 때, 나중에 다시 생각
     private List<ItemPicture> itemPictureList; // 상품 이미지 모음
+
+    // ** 생성 메서드 ** //
+    public static ItemForm create(ItemOriginalForm itemOriginalForm) {
+        ItemForm form = new ItemForm(
+                itemOriginalForm.getStock(),
+                itemOriginalForm.getPrice(),
+                itemOriginalForm.getName(),
+                itemOriginalForm.getContent(),
+                itemOriginalForm.getItemPictureList()
+        );
+
+        return form;
+    }
 }

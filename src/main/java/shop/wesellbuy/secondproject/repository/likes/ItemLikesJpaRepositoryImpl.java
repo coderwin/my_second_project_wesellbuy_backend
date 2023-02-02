@@ -7,6 +7,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import shop.wesellbuy.secondproject.domain.Item;
+import shop.wesellbuy.secondproject.domain.item.ItemStatus;
 import shop.wesellbuy.secondproject.domain.likes.ItemLikes;
 
 import java.util.List;
@@ -57,9 +59,13 @@ public class ItemLikesJpaRepositoryImpl implements ItemLikesJpaRepositoryCustom,
     /**
      * writer : 이호진
      * init : 2023.01.20
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.02.02
      * description : 모든 상품 좋아요 많은 순위 찾기
+     *
+     * update : add where절에 item status == R(Register)
+     *
+     * comment : test 해보기
      */
     @Override
     public List<Tuple> findRank() {
@@ -71,8 +77,34 @@ public class ItemLikesJpaRepositoryImpl implements ItemLikesJpaRepositoryCustom,
                 .from(itemLikes)
                 .join(itemLikes.item, item)
                 .join(item.member, member)
+                .where(item.status.eq(ItemStatus.R))
                 .groupBy(item.num)
                 .orderBy(count.desc(), item.num.asc())
+                .fetch();
+
+        return result;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.20
+     * updated by writer : 이호진
+     * update : 2023.02.02
+     * description : 모든 상품 좋아요 많은 순위 찾기 V4
+     *               -> List<Item> 반환
+     *               -> fetchJoin 사용
+     */
+    @Override
+    public List<Item> findRankV4() {
+
+        List<Item> result = query
+                .select(item)
+                .from(itemLikes)
+                .join(itemLikes.item, item).fetchJoin()
+                .join(item.member, member).fetchJoin()
+                .where(item.status.eq(ItemStatus.R))
+                .groupBy(item.num)
+                .orderBy(itemLikes.count().desc(), item.num.asc())
                 .fetch();
 
         return result;
@@ -83,9 +115,13 @@ public class ItemLikesJpaRepositoryImpl implements ItemLikesJpaRepositoryCustom,
     /**
      * writer : 이호진
      * init : 2023.01.20
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.02.02
      * description : 모든 상품 좋아요 많은 순위 찾기 + select(dto)
+     *
+     * update : add where절에 item status == R(Register)
+     *
+     * comment : test 해보기
      */
     @Override
     public List<ItemRankDto> findRankV2() {
@@ -103,6 +139,7 @@ public class ItemLikesJpaRepositoryImpl implements ItemLikesJpaRepositoryCustom,
                 .from(itemLikes)
                 .join(itemLikes.item, item)
                 .join(item.member, member)
+                .where(item.status.eq(ItemStatus.R))
                 .groupBy(item.num)
                 .orderBy(itemLikes.count().desc(), item.num.asc())
                 .fetch();

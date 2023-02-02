@@ -42,4 +42,21 @@ public interface ItemJpaRepositoryCustom {
      * description : 상품 name & 판매자 id로 Item 검색
      */
     Optional<Item> findByNameAndSellerId(String itemName, String memberId);
+
+//    -------------------------methods using for admin start----------------------------------
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.02
+     * updated by writer :
+     * update :
+     * description : 모든 추천합니다 게시글 찾기 + fetchjoin
+     *               -> admin에서 사용
+     *
+     * comment : test 해보기
+     */
+    Page<Item> findAllInfoForAdmin(ItemSearchCond itemSearchCond, Pageable pageable);
+
+//    -------------------------methods using for admin end----------------------------------
+
 }

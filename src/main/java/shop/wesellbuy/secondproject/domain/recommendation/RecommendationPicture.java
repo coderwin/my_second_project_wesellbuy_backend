@@ -71,7 +71,7 @@ public class RecommendationPicture extends BaseDateColumnEntity {
      * init : 2023.02.01
      * updated by writer :
      * update :
-     * description : satus를 수정(R -> D)
+     * description : status를 수정(R -> D)
      */
     public void changeStatus() {
         status = PictureStatus.D;

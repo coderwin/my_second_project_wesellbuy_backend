@@ -29,4 +29,19 @@ public class BookForm extends ItemForm{
         this.publisher = publisher;
     }
 
+    // ** 생성 메서드 ** //
+    public static BookForm create(ItemOriginalForm itemOriginalForm) {
+        BookForm form = new BookForm(
+                itemOriginalForm.getStock(),
+                itemOriginalForm.getPrice(),
+                itemOriginalForm.getName(),
+                itemOriginalForm.getContent(),
+                itemOriginalForm.getItemPictureList(),
+                itemOriginalForm.getAuthor(),
+                itemOriginalForm.getPublisher()
+        );
+
+        return form;
+    }
+
 }

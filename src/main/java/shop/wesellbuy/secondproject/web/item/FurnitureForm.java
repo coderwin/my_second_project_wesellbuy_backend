@@ -21,4 +21,18 @@ public class FurnitureForm extends ItemForm{
         super(stock, price, name, content, itemPictureList);
         this.company = company;
     }
+
+    // ** 생성 메서드 ** //
+    public static FurnitureForm create(ItemOriginalForm itemOriginalForm) {
+        FurnitureForm form = new FurnitureForm(
+                itemOriginalForm.getStock(),
+                itemOriginalForm.getPrice(),
+                itemOriginalForm.getName(),
+                itemOriginalForm.getContent(),
+                itemOriginalForm.getItemPictureList(),
+                itemOriginalForm.getCompany()
+        );
+
+        return form;
+    }
 }

@@ -21,4 +21,18 @@ public class HomeAppliancesForm extends ItemForm{
         super(stock, price, name, content, itemPictureList);
         this.company = company;
     }
+
+    // ** 생성 메서드 ** //
+    public static HomeAppliancesForm create(ItemOriginalForm itemOriginalForm) {
+        HomeAppliancesForm form = new HomeAppliancesForm(
+                itemOriginalForm.getStock(),
+                itemOriginalForm.getPrice(),
+                itemOriginalForm.getName(),
+                itemOriginalForm.getContent(),
+                itemOriginalForm.getItemPictureList(),
+                itemOriginalForm.getCompany()
+        );
+
+        return form;
+    }
 }

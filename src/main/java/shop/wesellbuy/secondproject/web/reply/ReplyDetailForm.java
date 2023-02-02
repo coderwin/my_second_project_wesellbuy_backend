@@ -74,6 +74,20 @@ public class ReplyDetailForm {
         return replyDetailForm;
     }
 
+    /**
+     * ItemDetailForm -> Reply에 사용
+     */
+    public static ReplyDetailForm createReplyDetailForm(ItemReply reply) {
+        ReplyDetailForm replyDetailForm = new ReplyDetailForm(
+                reply.getNum(),
+                reply.getContent(),
+                reply.getMember().getId(),
+                reply.getCreatedDate()
+        );
+
+        return replyDetailForm;
+    }
+
 //    -------------------------methods using for admin start----------------------------------
 
     /**

@@ -8,6 +8,7 @@ import shop.wesellbuy.secondproject.domain.Item;
 import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.web.item.BookForm;
 import shop.wesellbuy.secondproject.web.item.FurnitureForm;
+import shop.wesellbuy.secondproject.web.item.ItemUpdateForm;
 
 @Entity
 @DiscriminatorValue("B")
@@ -48,5 +49,30 @@ public class Book extends Item {
             bookForm.getItemPictureList().forEach((ip) -> book.addItemPictures(ip));
         }
         return book;
+    }
+
+    // ** 비즈니스 로직(메서드) ** //
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.02
+     * updated by writer :
+     * update :
+     * description : Book type 상품 정보 수정
+     */
+    public void update(ItemUpdateForm updateForm) {
+        this.addName(updateForm.getName());
+        this.addStock(updateForm.getStock());
+        this.addPrice(updateForm.getPrice());
+        this.addContent(updateForm.getContent());
+        // 사진 추가하기
+        // 연관관계 생각
+        if(updateForm.getItemPictureList() != null) {
+            updateForm.getItemPictureList()
+                    .forEach(p -> this.addItemPictures(p));
+        }
+        // book
+        this.addAuthor(updateForm.getAuthor());
+        this.addPublisher(updateForm.getPublisher());
     }
 }

@@ -10,6 +10,7 @@ import shop.wesellbuy.secondproject.domain.likes.ItemLikes;
 import shop.wesellbuy.secondproject.domain.reply.ItemReply;
 import shop.wesellbuy.secondproject.exception.item.OverflowQuantityException;
 import shop.wesellbuy.secondproject.web.item.ItemForm;
+import shop.wesellbuy.secondproject.web.item.ItemUpdateForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +19,20 @@ import java.util.List;
  * 상품 정보
  * writer : 이호진
  * init : 2023.01.14
- * updated by writer :
- * update :
- * description : 회원이 입력한  상품 정보를 정의한다.
+ * updated by writer : 이호진
+ * update : 2023.02.02
+ * description : 회원이 입력한 상품 정보를 정의한다.
  *
  * comment : '할인률'도 생각해보자
+ *
+ * update : DiscriminatorValue 설정
+ *          -> value = ITEM
+ *          -> 상품종료중 '기타'를 말한다.
  */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
+@DiscriminatorValue(value = "ITEM")
 @Getter
 public class Item extends BaseDateColumnEntity {
 
@@ -116,6 +122,26 @@ public class Item extends BaseDateColumnEntity {
     // ** 비즈니스 로직(메서드) ** //
     /**
      * writer : 이호진
+     * init : 2023.02.02
+     * updated by writer :
+     * update :
+     * description : Item type 상품 정보 수정
+     */
+    public void update(ItemUpdateForm updateForm) {
+        this.name = updateForm.getName();
+        this.stock = updateForm.getStock();
+        this.price = updateForm.getPrice();
+        this.content = updateForm.getContent();
+        // 사진 추가하기
+        // 연관관계 생각
+        if(updateForm.getItemPictureList() != null) {
+            updateForm.getItemPictureList()
+                    .forEach(p -> this.addItemPictures(p));
+        }
+    }
+
+    /**
+     * writer : 이호진
      * init : 2023.01.20
      * updated by writer :
      * update :
@@ -147,5 +173,46 @@ public class Item extends BaseDateColumnEntity {
     @PrePersist
     public void prePersistHits() {
         this.hits = this.hits == null ? 0 : this.hits;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.02
+     * updated by writer :
+     * update :
+     * description : 추천합니다글 삭제
+     *               -> status 상태를 변경한다(R -> D)
+     */
+    public void changeStatus() {
+        this.status = ItemStatus.D;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.02
+     * updated by writer :
+     * update :
+     * description : 상품 조회수 1 증가
+     */
+    public void changeHits() {
+        this.hits += 1;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.02
+     * updated by writer :
+     * update :
+     * description : 상품 이미지 삭제
+     *               -> status 상태를 변경한다(R -> D)
+     */
+    public void deletePicture(int pictureNum) {
+        // pictureNum에 맞는 picture 불러오기
+        ItemPicture findPicture = itemPictureList.stream()
+                .filter(p -> p.getNum() == pictureNum)
+                .findFirst()
+                .orElseThrow();
+        // 상태 변경하기
+        findPicture.changeStatus();
     }
 }

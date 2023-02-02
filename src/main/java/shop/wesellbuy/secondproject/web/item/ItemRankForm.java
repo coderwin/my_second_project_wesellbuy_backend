@@ -1,0 +1,73 @@
+package shop.wesellbuy.secondproject.web.item;
+
+import lombok.Getter;
+import shop.wesellbuy.secondproject.domain.Item;
+import shop.wesellbuy.secondproject.domain.common.PictureStatus;
+import shop.wesellbuy.secondproject.domain.item.ItemPicture;
+
+/**
+ * 상품 순위 상세보기 dto
+ * writer : 이호진
+ * init : 2023.02.02
+ * updated by writer :
+ * update :
+ * description : 서버로부터 받은 상품 순위 정보를 담아둔다.
+ *               by 좋아요수
+ */
+@Getter
+public class ItemRankForm {
+
+    private Integer num; // 상품 번호
+    private String name; // 상품명
+    private Integer price; // 가격
+    private Integer hits; // 조회수
+    private Integer likes; // 좋아요수
+    private Integer rank; // 순위
+    private ItemPicture picture; // 이미지 한장만
+
+    // 있어야 하는지 생각해 볼 것들
+    private String memberId; // 상품 등록 회원(판매자) 아이디
+
+    // ** 생성자 ** //
+
+    public ItemRankForm(Integer num, String name, Integer price, Integer hits, Integer likes, ItemPicture picture, String memberId) {
+        this.num = num;
+        this.name = name;
+        this.price = price;
+        this.hits = hits;
+        this.likes = likes;
+        this.picture = picture;
+        this.memberId = memberId;
+    }
+
+    // ** 생성 메서드 ** //
+    public static ItemRankForm create(Item item) {
+
+        ItemRankForm form = new ItemRankForm(
+                item.getNum(),
+                item.getName(),
+                item.getPrice(),
+                item.getHits(),
+                item.getItemLikesList().size(),
+                item.getItemPictureList().stream()
+                        .filter(p -> p.getStatus().equals(PictureStatus.R))
+                        .findFirst()
+                        .orElseThrow(),
+                item.getMember().getId()
+        );
+
+        return form;
+    }
+
+    // ** 비즈니스 메서드 ** //
+    /**
+     * writer : 이호진
+     * init : 2023.02.02
+     * updated by writer :
+     * update :
+     * description : 순위 입력.
+     */
+    public void addRank(Integer rank) {
+        this.rank = rank;
+    }
+}

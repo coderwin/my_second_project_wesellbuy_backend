@@ -1,6 +1,7 @@
 package shop.wesellbuy.secondproject.repository.likes;
 
 import com.querydsl.core.Tuple;
+import shop.wesellbuy.secondproject.domain.Item;
 import shop.wesellbuy.secondproject.domain.likes.ItemLikes;
 
 import java.util.List;
@@ -35,5 +36,14 @@ public interface ItemLikesJpaRepositoryCustom {
      */
     List<Tuple> findRank();
 
-
+    /**
+     * writer : 이호진
+     * init : 2023.01.20
+     * updated by writer : 이호진
+     * update : 2023.02.02
+     * description : 모든 상품 좋아요 많은 순위 찾기 V4
+     *               -> List<Item> 반환
+     *               -> fetchJoin 사용
+     */
+    List<Item> findRankV4();
 }

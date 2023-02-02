@@ -5,8 +5,19 @@ import lombok.Getter;
 import shop.wesellbuy.secondproject.domain.Item;
 import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
+import shop.wesellbuy.secondproject.domain.common.PictureStatus;
 import shop.wesellbuy.secondproject.domain.recommendation.RecommendationPicture;
 
+/**
+ * 상품 board 이미지 entity
+ * writer : 이호진
+ * init : 2023.01.14
+ * updated by writer : 이호진
+ * update : 2023.02.02
+ * description : 상품 게시판의 이미지 정보를 정의한다.
+ *
+ * update : status 추가
+ */
 @Entity
 @Getter
 public class ItemPicture extends BaseDateColumnEntity {
@@ -17,7 +28,8 @@ public class ItemPicture extends BaseDateColumnEntity {
     private Integer num; // 이미지 번호
     private String originalFileName; // 원본 파일 이름
     private String storedFileName; // DB에 저장된 파일 이름
-
+    @Enumerated(EnumType.STRING)
+    private PictureStatus status; // 이미지 상태
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_num")
     private Item item; // 회원 번호
@@ -30,6 +42,10 @@ public class ItemPicture extends BaseDateColumnEntity {
 
     public void addStoredFileName(String storedFileName) {
         this.storedFileName = storedFileName;
+    }
+
+    public void addStatus(PictureStatus status) {
+        this.status = status;
     }
 
     public void addItem(Item item) {
@@ -49,7 +65,19 @@ public class ItemPicture extends BaseDateColumnEntity {
 
         itemPicture.addOriginalFileName(originalFileName);
         itemPicture.addStoredFileName(storedFileName);
-
+        itemPicture.addStatus(PictureStatus.R);
         return itemPicture;
+    }
+
+    // ** 비즈니스 메서드 ** //
+    /**
+     * writer : 이호진
+     * init : 2023.02.02
+     * updated by writer :
+     * update :
+     * description : status를 수정(R -> D)
+     */
+    public void changeStatus() {
+        this.status = PictureStatus.D;
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import shop.wesellbuy.secondproject.domain.Item;
 import shop.wesellbuy.secondproject.domain.QItem;
+import shop.wesellbuy.secondproject.domain.item.ItemStatus;
 import shop.wesellbuy.secondproject.util.LocalDateParser;
 
 import java.util.List;
@@ -34,9 +35,14 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
     /**
      * writer : 이호진
      * init : 2023.01.19
-     * updated by writer :
-     * update :
-     * description : 모든 추천합니다 게시글 찾기 + fetchjoin
+     * updated by writer : 이호진
+     * update : 2023.02.02
+     * description : 모든 상품 게시글 찾기 + fetchjoin
+     *               -> admin 외에 사용
+     *
+     * update : add where절에 status = R(Register)
+     *
+     * comment : test 해보기
      */
     @Override
     public Page<Item> findAllInfo(ItemSearchCond itemSearchCond, Pageable pageable) {
@@ -50,7 +56,8 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
                         itemIdEq(itemSearchCond.getMemberId()),
                         itemNameEq(itemSearchCond.getName()),
                         itemCreateDateBetween(itemSearchCond.getCreateDate()),
-                        itemDtypeEq(itemSearchCond.getDtype())
+                        itemDtypeEq(itemSearchCond.getDtype()),
+                        item.status.eq(ItemStatus.R)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -65,8 +72,9 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
                         itemIdEq(itemSearchCond.getMemberId()),
                         itemNameEq(itemSearchCond.getName()),
                         itemCreateDateBetween(itemSearchCond.getCreateDate()),
-                        itemDtypeEq(itemSearchCond.getDtype())
-                        )
+                        itemDtypeEq(itemSearchCond.getDtype()),
+                        item.status.eq(ItemStatus.R)
+                )
                 .fetchOne();
 
         return new PageImpl<>(result, pageable, totalCount);
@@ -163,6 +171,7 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
         return Optional.ofNullable(findItem);
     }
 
+
     /**
      * writer : 이호진
      * init : 2023.01.28
@@ -184,4 +193,53 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
 
         return Optional.ofNullable(item);
     }
+
+//    -------------------------methods using for admin start----------------------------------
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.02
+     * updated by writer :
+     * update :
+     * description : 모든 추천합니다 게시글 찾기 + fetchjoin
+     *               -> admin에서 사용
+     *
+     * comment : test 해보기
+     */
+    @Override
+    public Page<Item> findAllInfoForAdmin(ItemSearchCond itemSearchCond, Pageable pageable) {
+
+        // list
+        List<Item> result = query
+                .select(item)
+                .from(item)
+                .join(item.member, member).fetchJoin()
+                .where(
+                        itemIdEq(itemSearchCond.getMemberId()),
+                        itemNameEq(itemSearchCond.getName()),
+                        itemCreateDateBetween(itemSearchCond.getCreateDate()),
+                        itemDtypeEq(itemSearchCond.getDtype())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(item.num.desc())
+                .fetch();
+
+        // totalCount
+        Long totalCount = query
+                .select(item.count())
+                .from(item)
+                .where(
+                        itemIdEq(itemSearchCond.getMemberId()),
+                        itemNameEq(itemSearchCond.getName()),
+                        itemCreateDateBetween(itemSearchCond.getCreateDate()),
+                        itemDtypeEq(itemSearchCond.getDtype())
+                )
+                .fetchOne();
+
+        return new PageImpl<>(result, pageable, totalCount);
+    }
+
+//    -------------------------methods using for admin end----------------------------------
+
 }

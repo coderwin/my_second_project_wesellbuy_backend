@@ -171,7 +171,7 @@ public class Recommendation extends BaseDateColumnEntity {
                 .filter(p -> p.getNum() == pictureNum)
                 .findFirst()
                 .orElseThrow();
-
+        // picture 상태변경 하기
         findPicture.changeStatus();
     }
 }
