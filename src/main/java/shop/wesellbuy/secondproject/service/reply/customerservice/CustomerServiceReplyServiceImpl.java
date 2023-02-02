@@ -44,11 +44,11 @@ public class CustomerServiceReplyServiceImpl implements CustomerServiceReplyServ
      */
     @Override
     @Transactional
-    public int save(ReplyForm replyForm, int memberNum, int itemNum) {
+    public int save(ReplyForm replyForm, int memberNum, int customerServiceNum) {
         // member 불러오기
         Member member = memberJpaRepository.findById(memberNum).orElseThrow();
         // customerService 불러오기
-        CustomerService customerService = customerServiceJpaRepository.findById(itemNum).orElseThrow();
+        CustomerService customerService = customerServiceJpaRepository.findById(customerServiceNum).orElseThrow();
         // 댓글 생성
         CustomerServiceReply customerServiceReply = CustomerServiceReply.createCustomerServiceReply(replyForm, member, customerService);
         // 댓글 저장하기

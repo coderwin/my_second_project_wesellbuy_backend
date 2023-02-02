@@ -24,7 +24,7 @@ public interface RecommendationReplyService {
      * update :
      * description : 댓글 저장
      */
-    int save(ReplyForm replyForm, int memberNum, int itemNum);
+    int save(ReplyForm replyForm, int memberNum, int recommendationNum);
 
     /**
      * writer : 이호진

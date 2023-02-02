@@ -31,7 +31,7 @@ public class HomeAppliances extends Item {
         homeAppliances.addContent(homeAppliancesForm.getContent());
         homeAppliances.addStatus(ItemStatus.R);
         homeAppliances.addMember(member);
-        homeAppliances.addCompany(homeAppliances.getCompany());
+        homeAppliances.addCompany(homeAppliancesForm.getCompany());
         // 각각의 itemPicture에 item 등록
         if(homeAppliancesForm.getItemPictureList() != null) {
 //            homeAppliancesForm.getItemPictureList().forEach((ip) -> ip.addItem(homeAppliances));

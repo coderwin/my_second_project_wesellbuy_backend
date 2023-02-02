@@ -24,7 +24,7 @@ public interface CustomerServiceReplyService {
      * update :
      * description : 댓글 저장
      */
-    int save(ReplyForm replyForm, int memberNum, int itemNum);
+    int save(ReplyForm replyForm, int memberNum, int customerServiceNum);
 
     /**
      * writer : 이호진

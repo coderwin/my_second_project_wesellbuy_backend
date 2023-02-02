@@ -1,7 +1,7 @@
-package shop.wesellbuy.secondproject.service.reply.item;
+package shop.wesellbuy.secondproject.service.reply.customerservice;
 
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,55 +9,46 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import shop.wesellbuy.secondproject.domain.Item;
+import shop.wesellbuy.secondproject.domain.CustomerService;
 import shop.wesellbuy.secondproject.domain.Member;
-import shop.wesellbuy.secondproject.domain.item.Book;
-import shop.wesellbuy.secondproject.domain.item.Furniture;
-import shop.wesellbuy.secondproject.domain.item.HomeAppliances;
-import shop.wesellbuy.secondproject.domain.item.ItemPicture;
 import shop.wesellbuy.secondproject.domain.member.SelfPicture;
-import shop.wesellbuy.secondproject.domain.reply.ItemReply;
-import shop.wesellbuy.secondproject.domain.reply.ReplyStatus;
-import shop.wesellbuy.secondproject.repository.item.ItemJpaRepository;
+import shop.wesellbuy.secondproject.domain.reply.CustomerServiceReply;
+import shop.wesellbuy.secondproject.repository.customerservice.CustomerServiceJpaRepository;
 import shop.wesellbuy.secondproject.repository.member.MemberJpaRepository;
-import shop.wesellbuy.secondproject.repository.reply.item.ItemReplyJpaRepository;
-import shop.wesellbuy.secondproject.repository.reply.item.ItemReplySearchCond;
-import shop.wesellbuy.secondproject.web.item.BookForm;
-import shop.wesellbuy.secondproject.web.item.FurnitureForm;
-import shop.wesellbuy.secondproject.web.item.HomeAppliancesForm;
+import shop.wesellbuy.secondproject.repository.reply.customerservice.CustomerServiceReplyJpaRepository;
+import shop.wesellbuy.secondproject.repository.reply.customerservice.CustomerServiceReplySearchCond;
+import shop.wesellbuy.secondproject.service.customerservice.CustomerServiceService;
+import shop.wesellbuy.secondproject.web.customerservice.CustomerServiceDetailForm;
 import shop.wesellbuy.secondproject.web.member.MemberForm;
 import shop.wesellbuy.secondproject.web.reply.ReplyDetailForm;
 import shop.wesellbuy.secondproject.web.reply.ReplyForm;
 import shop.wesellbuy.secondproject.web.reply.ReplyUpdateForm;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
 @Slf4j
-public class ItemReplyServiceTest {
+public class CustomerServiceReplyServiceTest {
 
     @Autowired
     MemberJpaRepository memberJpaRepository;
     @Autowired
-    ItemJpaRepository itemJpaRepository;
+    CustomerServiceJpaRepository customerServiceJpaRepository;
     @Autowired
-    ItemReplyService itemReplyService;
+    CustomerServiceReplyService customerServiceReplyService;
     @Autowired
-    ItemReplyJpaRepository itemReplyJpaRepository;
+    CustomerServiceReplyJpaRepository customerServiceReplyJpaRepository;
 
     Member member; // test 회원
     Member member2; // test 회원
     Member member3; // test 회원
 
-    Item item; // test 상품
-    Item item2; // test 상품
-    Item item3; // test 상품
+    CustomerService customerService;// test 고객지원글
+    CustomerService customerService2;// test 고객지원글
+    CustomerService customerService3;// test 고객지원글
+
     @BeforeEach
     public void init() {
 
@@ -80,28 +71,20 @@ public class ItemReplyServiceTest {
         this.member2 = member2;
         this.member3 = member3;
 
-        // 상품 생성
-        List<ItemPicture> itemPictureList = new ArrayList<>();
-        itemPictureList.add(ItemPicture.createItemPicture("a", "a"));
-        itemPictureList.add(ItemPicture.createItemPicture("a1", "a2"));
+        // 고객지원글 생성
+        CustomerService customerService1 = CustomerService.createCustomerService("b1", "불량을 팔았어요!", member);
+        CustomerService customerService2 = CustomerService.createCustomerService("c1", "아니에요!", member2);
+        CustomerService customerService3 = CustomerService.createCustomerService("a1", "배달이 잘못 왔어요", member3);
 
-        HomeAppliancesForm homeAppliancesForm = new HomeAppliancesForm(20, 5000, "청소기", "쓱쓱 청소 돼요", new ArrayList<>(), "samsung");
-        Item item = HomeAppliances.createHomeAppliances(homeAppliancesForm, member2);
-        FurnitureForm furnitureForm = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList, "hansem");
-        Item item2 = Furniture.createFurniture(furnitureForm, member);
-        BookForm bookForm = new BookForm(10, 1000, "book1", "x is...", itemPictureList, "ed", "ok");
-        Item item3 = Book.createBook(bookForm, member);
+        customerServiceJpaRepository.save(customerService1);
+        customerServiceJpaRepository.save(customerService2);
+        customerServiceJpaRepository.save(customerService3);
 
-        itemJpaRepository.save(item);
-        itemJpaRepository.save(item2);
-        itemJpaRepository.save(item3);
-
-        this.item = item;
-        this.item2 = item2;
-        this.item3 = item3;
+        this.customerService = customerService1;
+        this.customerService2 = customerService2;
+        this.customerService3 = customerService3;
 
         log.info("test init 끝");
-
     }
 
     /**
@@ -113,11 +96,9 @@ public class ItemReplyServiceTest {
         // given
         ReplyForm replyForm = new ReplyForm("멋지네요~");
         // when
-        // 저장하기
-        int replyNum = itemReplyService.save(replyForm, member.getNum(), item.getNum());
-
+        int replyNum = customerServiceReplyService.save(replyForm, member.getNum(), customerService2.getNum());
         // then
-        ItemReply result = itemReplyJpaRepository.findById(replyNum).orElseThrow();
+        CustomerServiceReply result = customerServiceReplyJpaRepository.findById(replyNum).orElseThrow();
 
         assertThat(result.getNum()).isEqualTo(replyNum);
         assertThat(result.getContent()).isEqualTo(replyForm.getContent());
@@ -132,46 +113,54 @@ public class ItemReplyServiceTest {
         // given
         // 댓글 생성
         ReplyForm replyForm = new ReplyForm("멋지네요~");
-        int replyNum = itemReplyService.save(replyForm, member.getNum(), item.getNum());
+        int replyNum = customerServiceReplyService.save(replyForm, member.getNum(), customerService2.getNum());
 
         // when
         // 댓글 수정
-        ReplyUpdateForm replyUpdateForm = new ReplyUpdateForm(replyNum, "아주 멋지네요~");
+        ReplyUpdateForm replyUpdateForm = new ReplyUpdateForm(replyNum, "그랬군요!");
 
-        itemReplyService.update(replyUpdateForm);
+        customerServiceReplyService.update(replyUpdateForm);
         // then
-        ItemReply findReply = itemReplyJpaRepository.findById(replyNum).orElseThrow();
+        CustomerServiceReply findReply = customerServiceReplyJpaRepository.findById(replyNum).orElseThrow();
 
-        // 수정 상태 content
+        // 수정 후 content
         assertThat(findReply.getContent()).isEqualTo(replyUpdateForm.getContent());
-        // 처음 상태 content
+        // 수정 전 content
         assertThat(findReply.getContent()).isNotEqualTo(replyForm.getContent());
     }
 
     /**
      * 댓글 삭제 확인
      * -> status : R -> D로 바뀜
-     * -> 상품 자세히 보기에서 확인 가능(안 나타나야함) : ItemService
+     * -> 고객지원글 자세히 보기에서 확인 가능(안 나타나야함) : CustomerServiceService
      */
     @Test
 //    @Rollback(value = false)
-    public void 댓글_삭제_확인() {
+    public void 댓글_삭제_확인(@Autowired CustomerServiceService customerServiceService,
+                         @Autowired EntityManager em) {
         // given
+        // 댓글 생성
         ReplyForm replyForm = new ReplyForm("멋지네요~");
-        int replyNum = itemReplyService.save(replyForm, member3.getNum(), item2.getNum());
-
-        // 현재 상태 확인(R)
-        ItemReply findItemReply1 = itemReplyJpaRepository.findById(replyNum).orElseThrow();
-
-        assertThat(findItemReply1.getStatus()).isEqualTo(ReplyStatus.R);
-
+        int replyNum = customerServiceReplyService.save(replyForm, member.getNum(), customerService3.getNum());
+        ReplyForm replyForm2 = new ReplyForm("멋지네요~");
+        int replyNum2 = customerServiceReplyService.save(replyForm2, member2.getNum(), customerService3.getNum());
+        ReplyForm replyForm3 = new ReplyForm("멋지네요~");
+        int replyNum3 = customerServiceReplyService.save(replyForm3, member.getNum(), customerService3.getNum());
         // when
-        itemReplyService.delete(replyNum);
+        customerServiceReplyService.delete(replyNum);
+
+        // betch size 작동하는지 확인하기
+        em.flush();
+        em.clear();
 
         // then
-        ItemReply findItemReply2 = itemReplyJpaRepository.findById(replyNum).orElseThrow();
+        // CustomerServiceService에서 확인
+        CustomerServiceDetailForm detailForm = customerServiceService.watchDetail(customerService3.getNum());
 
-        assertThat(findItemReply2.getStatus()).isEqualTo(ReplyStatus.D);
+        // 댓글을 R -> D로 바꾸었기에
+        // 댓글은 3개에서 2개로 나타난다.
+        assertThat(detailForm.getReplyList().size()).isEqualTo(2);
+        assertThat(detailForm.getReplyList().size()).isNotEqualTo(3);
     }
 
 //    -------------------------methods using for admin start----------------------------------
@@ -190,27 +179,28 @@ public class ItemReplyServiceTest {
         var r2Count = 0; // 댓글 개수
         var r3Count = 0; // 댓글 개수
         ReplyForm replyForm = null;
-        ItemReply itemReply = null;
+        CustomerServiceReply customerServiceReply = null;
+
         for(int i = 0; i < amount; i++) {
             if(i % 3 == 1) {
                 replyForm = new ReplyForm("편리해요");
-                itemReply = ItemReply.createItemReply(replyForm, member, item);
+                customerServiceReply = CustomerServiceReply.createCustomerServiceReply(replyForm, member, customerService);
                 rCount += 1;
             } else if(i * 3 == 2) {
                 replyForm = new ReplyForm("좋아요~~~~~");
-                itemReply = ItemReply.createItemReply(replyForm, member2, item);
+                customerServiceReply = CustomerServiceReply.createCustomerServiceReply(replyForm, member2, customerService);
                 r2Count += 1;
             } else {
                 replyForm = new ReplyForm("멋지네요~~~~~");
-                itemReply = ItemReply.createItemReply(replyForm, member3, item2);
+                customerServiceReply = CustomerServiceReply.createCustomerServiceReply(replyForm, member3, customerService2);
                 r3Count += 1;
             }
-
-            itemReplyJpaRepository.save(itemReply);
+            // 저장하기
+            customerServiceReplyJpaRepository.save(customerServiceReply);
 
             // 삭제하기
             if(i % 4 == 0) {
-                itemReply.delete();
+                customerServiceReply.delete();
             }
         }
 
@@ -224,23 +214,23 @@ public class ItemReplyServiceTest {
 
         // when
         // 조건 0
-        ItemReplySearchCond cond0 = new ItemReplySearchCond("", "", "");
+        CustomerServiceReplySearchCond cond0 = new CustomerServiceReplySearchCond("", "", "");
         // 조건 1
-        ItemReplySearchCond cond11 = new ItemReplySearchCond("a1", "", "");
-        ItemReplySearchCond cond12 = new ItemReplySearchCond("", "요~~", "");
-        ItemReplySearchCond cond13 = new ItemReplySearchCond("", "", today);
+        CustomerServiceReplySearchCond cond11 = new CustomerServiceReplySearchCond("a1", "", "");
+        CustomerServiceReplySearchCond cond12 = new CustomerServiceReplySearchCond("", "요~~", "");
+        CustomerServiceReplySearchCond cond13 = new CustomerServiceReplySearchCond("", "", today);
         // 조건 2
-        ItemReplySearchCond cond21 = new ItemReplySearchCond("b1", "아요", "");
-        ItemReplySearchCond cond22 = new ItemReplySearchCond("b1", "", today);
-        ItemReplySearchCond cond23 = new ItemReplySearchCond("", "요~", today);
+        CustomerServiceReplySearchCond cond21 = new CustomerServiceReplySearchCond("b1", "아요", "");
+        CustomerServiceReplySearchCond cond22 = new CustomerServiceReplySearchCond("b1", "", today);
+        CustomerServiceReplySearchCond cond23 = new CustomerServiceReplySearchCond("", "요~", today);
         // 조건 3
-        ItemReplySearchCond cond31 = new ItemReplySearchCond("c1", "멋지네요", today);
+        CustomerServiceReplySearchCond cond31 = new CustomerServiceReplySearchCond("c1", "멋지네요", today);
 
 
         // 조건이 잘못 전달될 때
-        ItemReplySearchCond cond14 = new ItemReplySearchCond("a123", "", "");
-        ItemReplySearchCond cond24 = new ItemReplySearchCond("b123", "", today);
-        ItemReplySearchCond cond32 = new ItemReplySearchCond("c1", "멋지네요!", today);
+        CustomerServiceReplySearchCond cond14 = new CustomerServiceReplySearchCond("a123", "", "");
+        CustomerServiceReplySearchCond cond24 = new CustomerServiceReplySearchCond("b123", "", today);
+        CustomerServiceReplySearchCond cond32 = new CustomerServiceReplySearchCond("c1", "멋지네요!", today);
 
         // then
         // 조건 0
@@ -260,17 +250,15 @@ public class ItemReplyServiceTest {
         testResultForAdmin(cond14, page2size10, 0);
         testResultForAdmin(cond24, page0size10, 0);
         testResultForAdmin(cond32, page2size10,  0);
-
     }
 
     /**
      * test 결과에 사용
      */
-    private void testResultForAdmin(ItemReplySearchCond cond, Pageable pageable, int count) {
-        Page<ReplyDetailForm> result = itemReplyService.selectListForAdmin(cond, pageable);
+    private void testResultForAdmin(CustomerServiceReplySearchCond cond, Pageable pageable, int count) {
+        Page<ReplyDetailForm> result = customerServiceReplyService.selectListForAdmin(cond, pageable);
         assertThat(result.getTotalElements()).isEqualTo(count);
     }
-
 
 //    -------------------------methods using for admin admin----------------------------------
 

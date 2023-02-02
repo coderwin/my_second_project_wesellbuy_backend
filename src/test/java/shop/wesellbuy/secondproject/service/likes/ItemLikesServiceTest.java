@@ -33,6 +33,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * comment - item의 dtype이 왜 'item'으로 나오지?
  *           B, F, HA로 안 나오고
+ *
+ *           -> 해결
+ *              -> createItem()이 아니라 createBook()을 사용해서
+ *                 Item 객체가 아닌 Book 객체를 생성해야 한다.
  */
 @SpringBootTest
 @Transactional
@@ -78,11 +82,11 @@ public class ItemLikesServiceTest {
         itemPictureList.add(ItemPicture.createItemPicture("a1", "a2"));
 
         HomeAppliancesForm homeAppliancesForm = new HomeAppliancesForm(20, 5000, "청소기", "쓱쓱 청소 돼요", new ArrayList<>(), "samsung");
-        Item item = HomeAppliances.createItem(homeAppliancesForm, member2);
+        Item item = HomeAppliances.createHomeAppliances(homeAppliancesForm, member2);
         FurnitureForm furnitureForm = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList, "hansem");
-        Item item2 = Furniture.createItem(furnitureForm, member);
+        Item item2 = Furniture.createFurniture(furnitureForm, member);
         BookForm bookForm = new BookForm(10, 1000, "book1", "x is...", itemPictureList, "ed", "ok");
-        Item item3 = Book.createItem(bookForm, member);
+        Item item3 = Book.createBook(bookForm, member);
 
         itemJpaRepository.save(item);
         itemJpaRepository.save(item2);

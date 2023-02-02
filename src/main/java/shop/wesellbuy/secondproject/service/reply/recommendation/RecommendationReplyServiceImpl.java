@@ -44,11 +44,11 @@ public class RecommendationReplyServiceImpl implements RecommendationReplyServic
      */
     @Override
     @Transactional
-    public int save(ReplyForm replyForm, int memberNum, int itemNum) {
+    public int save(ReplyForm replyForm, int memberNum, int recommendationNum) {
         // member 불러오기
         Member member = memberJpaRepository.findById(memberNum).orElseThrow();
         // item 불러오기
-        Recommendation recommendation = recommendationJpaRepository.findById(itemNum).orElseThrow();
+        Recommendation recommendation = recommendationJpaRepository.findById(recommendationNum).orElseThrow();
         // 댓글 생성
         RecommendationReply recommendationReply = RecommendationReply.createRecommendationReply(replyForm, member, recommendation);
         // 댓글 저장하기

@@ -7,6 +7,7 @@ import shop.wesellbuy.secondproject.domain.Recommendation;
 import shop.wesellbuy.secondproject.domain.common.PictureStatus;
 import shop.wesellbuy.secondproject.domain.recommendation.RecommendationPicture;
 import shop.wesellbuy.secondproject.domain.reply.RecommendationReply;
+import shop.wesellbuy.secondproject.domain.reply.ReplyStatus;
 import shop.wesellbuy.secondproject.web.reply.ReplyDetailForm;
 
 import java.time.LocalDateTime;
@@ -52,6 +53,7 @@ public class RecommendationDetailForm {
                         .map(p -> RecommendationPictureForm.create(p))
                         .collect(toList()),
                 recommendation.getRecommendationReplyList().stream()
+                        .filter(r -> r.getStatus().equals(ReplyStatus.R))
                         .map(r -> ReplyDetailForm.createReplyDetailForm(r))
                         .collect(toList())
         );
