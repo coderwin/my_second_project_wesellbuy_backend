@@ -15,10 +15,18 @@ import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.QItem;
 import shop.wesellbuy.secondproject.domain.QMember;
 import shop.wesellbuy.secondproject.domain.item.Book;
+import shop.wesellbuy.secondproject.domain.item.Furniture;
+import shop.wesellbuy.secondproject.domain.item.HomeAppliances;
+import shop.wesellbuy.secondproject.domain.item.ItemPicture;
 import shop.wesellbuy.secondproject.domain.likes.ItemLikes;
+import shop.wesellbuy.secondproject.repository.item.ItemJpaRepository;
 import shop.wesellbuy.secondproject.web.item.BookForm;
+import shop.wesellbuy.secondproject.web.item.FurnitureForm;
+import shop.wesellbuy.secondproject.web.item.HomeAppliancesForm;
+import shop.wesellbuy.secondproject.web.item.ItemForm;
 import shop.wesellbuy.secondproject.web.member.MemberForm;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -36,6 +44,8 @@ public class ItemLikesJpaRepositoryTest {
 
     @Autowired
     ItemLikesJpaRepository itemLikesJpaRepository;
+    @Autowired
+    ItemJpaRepository itemJpaRepository;
 
     Member member; // 등록 회원
     Member member2; // 등록 회원
@@ -285,6 +295,101 @@ public class ItemLikesJpaRepositoryTest {
             assertThat(result.get(i).getCount()).isEqualTo(values[i]);
             i++;
         }
+    }
+
+    /**
+     * findRankV4 확인
+     * -> select에 itemLikes.count()가 없을 때
+     * -> 에러가 나나?
+     *    test 후 -> 에러가 안 난다!
+     */
+    @Test
+    public void findRankV4_test() {
+
+        // given
+        // 10개의 상품 생성
+        List<ItemPicture> itemPictureList = new ArrayList<>();
+        itemPictureList.add(ItemPicture.createItemPicture("a", "a"));
+        itemPictureList.add(ItemPicture.createItemPicture("a1", "a2"));
+
+        FurnitureForm furnitureForm1 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList, "hansem");
+        Item item1 = Furniture.createFurniture(furnitureForm1, member);
+        FurnitureForm furnitureForm2 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList, "hansem");
+        Item item2 = Furniture.createFurniture(furnitureForm2, member2);
+        FurnitureForm furnitureForm3 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList, "hansem");
+        Item item3 = Furniture.createFurniture(furnitureForm3, member);
+        FurnitureForm furnitureForm4 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList, "hansem");
+        Item item4 = Furniture.createFurniture(furnitureForm4, member2);
+        FurnitureForm furnitureForm5 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList, "hansem");
+        Item item5 = Furniture.createFurniture(furnitureForm5, member);
+
+        HomeAppliancesForm haForm1 = new HomeAppliancesForm(20, 2000, "냉장고", "잘 만들어졌어요~", itemPictureList, "samsug");
+        Item item6 = HomeAppliances.createHomeAppliances(haForm1, member);
+        HomeAppliancesForm haForm2 = new HomeAppliancesForm(20, 2000, "냉장고", "잘 만들어졌어요~", itemPictureList, "samsug");
+        Item item7 = HomeAppliances.createHomeAppliances(haForm2, member3);
+        HomeAppliancesForm haForm3 = new HomeAppliancesForm(20, 2000, "냉장고", "잘 만들어졌어요~", itemPictureList, "samsug");
+        Item item8 = HomeAppliances.createHomeAppliances(haForm3, member3);
+
+        BookForm bForm = new BookForm(5, 2000, "책1", "잘 만들어졌어요~", itemPictureList, "곰돌이푸", "곰돌이출판사");
+        Item item9 = Book.createBook(bForm, member);
+
+        ItemForm iForm = new ItemForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList);
+        Item item10 = Item.createItem(iForm, member);
+
+        itemJpaRepository.save(item1);
+        itemJpaRepository.save(item2);
+        itemJpaRepository.save(item3);
+        itemJpaRepository.save(item4);
+        itemJpaRepository.save(item5);
+        itemJpaRepository.save(item6);
+        itemJpaRepository.save(item7);
+        itemJpaRepository.save(item8);
+        itemJpaRepository.save(item9);
+        itemJpaRepository.save(item10);
+
+
+        // when
+        // 좋아요 생성(4, 6, 5, 1, 4, 3, 6, 0, 4, 1)
+        Member[] members = {member, member2, member3, member4, member5, member6};
+        Item[] items = {item1, item2, item3, item4, item5,
+                item6, item7, item8, item9 ,item10};
+        int[] counts = {4, 6, 5, 2, 4, 3, 6, 1, 4, 2}; // 좋아요수
+
+        for(int i = 0; i < counts.length; i++) {
+            chooseLikes(members, counts[i], items[i]);
+        }
+
+        // item5 삭제
+        item5.changeStatus();
+
+        // then
+        // findRankV4 불러오기
+        List<Item> rankList = itemLikesJpaRepository.findRankV4();
+
+        int i = 0;
+        for(Item item : rankList) {
+
+            log.info("item + " + i + " : {}", item);
+            i++;
+        }
+
+        // item 출력 개수
+        assertThat(rankList.size()).isEqualTo(9);
+
+
+    }
+
+    // 좋아요를 여러번 수행하기
+    private void chooseLikes(Member[] members, int count, Item items) {
+        for(int i = 0; i < count; i++) {
+            makeLikes(members[i], items);
+        }
+    }
+
+    // 좋아요 만들기
+    private void makeLikes(Member member, Item item) {
+        ItemLikes itemLikes = ItemLikes.createItemLikes(member, item);
+        itemLikesJpaRepository.save(itemLikes);
     }
 
 

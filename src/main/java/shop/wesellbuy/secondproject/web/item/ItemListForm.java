@@ -40,7 +40,7 @@ public class ItemListForm {
                 item.getItemPictureList().stream()
                         .filter(p -> p.getStatus().equals(PictureStatus.R))
                         .findFirst()
-                        .orElseThrow(),
+                        .orElse(null),
                 item.getMember().getId()
         );
 

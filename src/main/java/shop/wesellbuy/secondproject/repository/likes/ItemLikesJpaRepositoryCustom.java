@@ -44,6 +44,8 @@ public interface ItemLikesJpaRepositoryCustom {
      * description : 모든 상품 좋아요 많은 순위 찾기 V4
      *               -> List<Item> 반환
      *               -> fetchJoin 사용
+     *
+     *               -> itemLikes와 item은 fetch조인이 왜 안 될까?
      */
     List<Item> findRankV4();
 }

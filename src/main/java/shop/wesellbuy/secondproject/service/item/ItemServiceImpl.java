@@ -1,5 +1,6 @@
 package shop.wesellbuy.secondproject.service.item;
 
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,9 @@ import java.io.IOException;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static shop.wesellbuy.secondproject.domain.QItem.item;
+import static shop.wesellbuy.secondproject.domain.QMember.member;
+import static shop.wesellbuy.secondproject.domain.likes.QItemLikes.itemLikes;
 
 /**
  * Item Service 구현 클래스
@@ -62,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
         // 회원 불러오기
         Member member = memberJpaRepository.findById(memberNum).orElseThrow();
         // 상품 종류(type)에 따라 저장 객체 정하기
-        Item item = makeItemAsType(itemOriginalForm, member);
+        Item item = makeItemByType(itemOriginalForm, member);
         // 상품 저장
         itemJpaRepository.save(item);
 
@@ -76,7 +80,7 @@ public class ItemServiceImpl implements ItemService {
      * update :
      * description : 상품 종류(type)에 따라 상품 객체 생성하기
      */
-    private Item makeItemAsType(ItemOriginalForm itemOriginalForm, Member member) {
+    private Item makeItemByType(ItemOriginalForm itemOriginalForm, Member member) {
 
         Item item = null;
 
@@ -261,6 +265,9 @@ public class ItemServiceImpl implements ItemService {
      * comment : repository에서 select(item)에 문제가 있을 것으로 예상()
      *           -> Dto로 해결해볼 것을 생각
      *           -> Dto 말고는 없을까?
+     *
+     *           -> itemLikes에서 fetch join 사용 못하는 것 말고는 문제 없음
+     *              -> itemLikes만 fetchjoin을 왜 사용 못하지?
      */
     @Override
     public List<ItemRankForm> selectRank() {
@@ -282,21 +289,67 @@ public class ItemServiceImpl implements ItemService {
      * updated by writer :
      * update :
      * description : 상품 순위(rank)를 결정한다.
+     *               -> sql의 rank함수로 만든다.
+     *               -> 1,1,3,4,5,5,7...... 순위가 이렇게 나오게
      */
     private void inputRank(List<ItemRankForm> rankList) {
-        int max = rankList.get(0).getLikes();
+        Long max = rankList.get(0).getLikes();
         int rank = 1; // 1번부터 rankList 수까지
+        int i = 1; // 차례(1, 2, 3, ...)를 정한다.
         for(ItemRankForm form : rankList) {
 
             if(form.getLikes() == max) {
                 form.addRank(rank);
                 // rank는 같다.
+                i++;
                 continue;
             } else if(form.getLikes() < max) {
-                rank += 1;
+                rank = i;
                 form.addRank(rank);
+                max = form.getLikes();
+                i++;
             }
         }
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.03
+     * updated by writer :
+     * update :
+     * description : 상품 순위 불러오기 V2
+     *               -> 좋아요수가 높은 순으로
+     *               -> Tuple 이용
+     *
+     * comment : Qclass를 써도 될까?(서비스에서?)
+     *           -> 안 쓰고 순위대로 불러오는 방법이 있을까?
+     *           -> DTO로 조회하는 것 밖에 없나?
+     *              -> DTO로 조회시, 사진 list는 어떻게 할 것인가?
+     *                  -> N + 1문제 발생하지 않나?
+     *                  -> 불러와지지도 않을까?
+     *           -> test 결과
+     *              -> 영속성에 객체들이 있어서
+     *              -> N + 1 문제 발생 안 함
+     *              -> 불러와짐
+     *              -> 쿼리는 한번만 불러와진다.
+     *                  -> 다른 List<>객체를 불러오면 어떻게 될지는 모르겠다.
+     */
+    @Override
+    public List<ItemRankForm> selectRankV2() {
+        // 상품 순위 불러오기
+        List<Tuple> tupleList = itemLikesJpaRepository.findRank();
+        // ItemRankForm으로 만들기
+        List<ItemRankForm> rankList = tupleList.stream()
+                .map(t -> ItemRankForm.create(
+                        t.get(itemLikes.count()),
+                        t.get(item),
+                        t.get(member)
+                ))
+                .collect(toList());
+        // 순위 입력하기(결정하기)
+        inputRank(rankList);
+
+        return rankList;
     }
 
     /**

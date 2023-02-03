@@ -43,7 +43,7 @@ public class ItemListFormForAdmin {
                 item.getItemPictureList().stream()
                         .filter(p -> p.getStatus().equals(PictureStatus.R))
                         .findFirst()
-                        .orElseThrow(),
+                        .orElse(null),
                 item.getMember().getId()
         );
 

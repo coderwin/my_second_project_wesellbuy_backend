@@ -96,6 +96,11 @@ public class ItemJpaRepositoryTest {
                 this.r3Count += 1;
             }
             itemJpaRepository.save(item);
+
+            // 삭제하기
+            if(i % 3 == 2) {
+                item.changeStatus();
+            }
         }
 
 
@@ -126,6 +131,9 @@ public class ItemJpaRepositoryTest {
         assertThat(findItem).isEqualTo(item);
     }
 
+    /**
+     * 관리자 일 때, 상품 모두 가져오기 확인
+     */
     @Test
     @Rollback(value = false)
     public void 상품_모두_가져오기_By_조건_페이징() {
@@ -210,9 +218,103 @@ public class ItemJpaRepositoryTest {
 
     // findAllInfo test result
     private void testResult(Pageable pageable, ItemSearchCond cond, int count) {
+        Page<Item> result = itemJpaRepository.findAllInfoForAdmin(cond, pageable);
+        assertThat(result.getTotalElements()).isEqualTo(count);
+    }
+
+    /**
+     * 관리자 아닐 때, 상품 모두 가져오기 확인
+     */
+    @Test
+    @Rollback(value = false)
+    public void 상품_모두_가져오기_By_조건_페이징_확인V2() {
+        // given
+        // 페이지, 사이즈 정하기
+//        Pageable pageablePage0Size100 = PageRequest.of(0, 100);
+        Pageable pageablePage0Size10 = PageRequest.of(0, 10);
+        Pageable pageablePage1Size10 = PageRequest.of(1, 10);
+        Pageable pageablePage3Size5 = PageRequest.of(3, 5);
+        Pageable pageablePage2Size2 = PageRequest.of(2, 2);
+
+        // 날짜 condition
+        String today = "2023-02-03";
+        String otherDay = "2023-02-04";
+
+        // 검색조건 생성
+        // when
+        // 조건 1
+        ItemSearchCond cond1 = new ItemSearchCond("x", "", "", "");
+        ItemSearchCond cond2 = new ItemSearchCond("", "a", "", "");
+        ItemSearchCond cond3 = new ItemSearchCond("", "", today, "");
+        ItemSearchCond cond4 = new ItemSearchCond("", "", "", "HA");
+
+        // 조건 2
+        ItemSearchCond cond21 = new ItemSearchCond("x", "a", "", "");
+        ItemSearchCond cond22 = new ItemSearchCond("x", "", today, "");
+        ItemSearchCond cond23 = new ItemSearchCond("x", "", "", "B");
+        ItemSearchCond cond24 = new ItemSearchCond("", "a", today, "");
+        ItemSearchCond cond25 = new ItemSearchCond("", "a", "", "B");
+        ItemSearchCond cond26 = new ItemSearchCond("", "", today, "F");
+
+        // 조건 3
+        ItemSearchCond cond31 = new ItemSearchCond("x", "a", today, "");
+        ItemSearchCond cond32 = new ItemSearchCond("x", "a", "", "B");
+        ItemSearchCond cond33 = new ItemSearchCond("x", "", today, "B");
+        ItemSearchCond cond34 = new ItemSearchCond("", "b", today, "F");
+
+        // 조건 4
+        ItemSearchCond cond41 = new ItemSearchCond("x", "a", today, "B");
+
+
+        // 검색에 대한 result가 없는 경우
+
+        ItemSearchCond cond5 = new ItemSearchCond("hello", "", "", "");
+        ItemSearchCond cond6 = new ItemSearchCond("", "", "", "B23");
+        ItemSearchCond cond27 = new ItemSearchCond("", "", otherDay, "B");
+        ItemSearchCond cond35 = new ItemSearchCond("", "abc", today, "B");
+        ItemSearchCond cond42 = new ItemSearchCond("x", "a", today, "Hcd");
+
+
+        // then
+        // 결과 확인(개수로)
+        // 조건 1
+        testResultV2(pageablePage0Size10, cond1, rCount);
+        testResultV2(pageablePage0Size10, cond2, rCount);
+        testResultV2(pageablePage0Size10, cond3, rCount + r2Count);
+        testResultV2(pageablePage0Size10, cond4, 0);
+        // 조건 2
+        testResultV2(pageablePage0Size10, cond21, rCount);
+        testResultV2(pageablePage0Size10, cond22, rCount);
+        testResultV2(pageablePage0Size10, cond23, rCount);
+        testResultV2(pageablePage0Size10, cond24, rCount);
+        testResultV2(pageablePage0Size10, cond25, rCount);
+        testResultV2(pageablePage0Size10, cond26, r2Count);
+        // 조건 3
+        testResultV2(pageablePage0Size10, cond31, rCount);
+        testResultV2(pageablePage0Size10, cond32, rCount);
+        testResultV2(pageablePage0Size10, cond33, rCount);
+        testResultV2(pageablePage0Size10, cond34, r2Count);
+
+        // 조건 4
+        testResultV2(pageablePage3Size5, cond41, rCount);
+//        testResultV2(pageablePage3Size5, cond41, 0);// 에러 발생
+
+
+        // 검색에 대한 result가 없는 경우
+        testResultV2(pageablePage0Size10, cond5, 0);
+        testResultV2(pageablePage0Size10, cond6, 0);
+        testResultV2(pageablePage0Size10, cond27, 0);
+        testResultV2(pageablePage0Size10, cond35, 0);
+        testResultV2(pageablePage2Size2, cond42, 0);
+    }
+
+    // findAllInfo test result
+    private void testResultV2(Pageable pageable, ItemSearchCond cond, int count) {
         Page<Item> result = itemJpaRepository.findAllInfo(cond, pageable);
         assertThat(result.getTotalElements()).isEqualTo(count);
     }
+
+
 
     /**
      * 상품 이름, 판매자 검색 확인

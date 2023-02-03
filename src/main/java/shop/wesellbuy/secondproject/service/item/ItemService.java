@@ -89,6 +89,24 @@ public interface ItemService {
 
     /**
      * writer : 이호진
+     * init : 2023.02.03
+     * updated by writer :
+     * update :
+     * description : 상품 순위 불러오기 V2
+     *               -> 좋아요수가 높은 순으로
+     *               -> Tuple 이용
+     *
+     * comment : Qclass를 써도 될까?(서비스에서?)
+     *           -> 안 쓰고 순위대로 불러오는 방법이 있을까?
+     *           -> DTO로 조회하는 것 밖에 없나?
+     *              -> DTO로 조회시, 사진 list는 어떻게 할 것인가?
+     *                  -> N + 1문제 발생하지 않나?
+     *                  -> 불러와지지도 않을까?
+     */
+    List<ItemRankForm> selectRankV2();
+
+    /**
+     * writer : 이호진
      * init : 2023.02.02
      * updated by writer : 이호진
      * update : 2023.02.01

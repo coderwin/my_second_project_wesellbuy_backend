@@ -85,7 +85,7 @@ public class ItemReplyRepositoryTest {
      */
     @Test
 //    @Rollback(false)
-    public void 고객지원글저장() {
+    public void 상품_댓글_저장() {
         // given
         ReplyForm replyForm = new ReplyForm("hello2");
         ItemReply itemReply = ItemReply.createItemReply(replyForm, member, item);

@@ -89,10 +89,12 @@ public class ItemLikesJpaRepositoryImpl implements ItemLikesJpaRepositoryCustom,
      * writer : 이호진
      * init : 2023.01.20
      * updated by writer : 이호진
-     * update : 2023.02.02
+     * update : 2023.02.03
      * description : 모든 상품 좋아요 많은 순위 찾기 V4
      *               -> List<Item> 반환
      *               -> fetchJoin 사용
+     *
+     * update : itemLikes, item의 fetch join 지움
      */
     @Override
     public List<Item> findRankV4() {
@@ -100,7 +102,7 @@ public class ItemLikesJpaRepositoryImpl implements ItemLikesJpaRepositoryCustom,
         List<Item> result = query
                 .select(item)
                 .from(itemLikes)
-                .join(itemLikes.item, item).fetchJoin()
+                .join(itemLikes.item, item)
                 .join(item.member, member).fetchJoin()
                 .where(item.status.eq(ItemStatus.R))
                 .groupBy(item.num)

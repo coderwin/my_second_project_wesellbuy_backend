@@ -39,6 +39,8 @@ public class ItemOriginalForm {
      * 상품 이미지 list 담기
      */
     public void addItemPictureList(List<ItemPicture> itemPictureList) {
-        this.itemPictureList = itemPictureList;
+        if(!itemPictureList.isEmpty()) {
+            this.itemPictureList = itemPictureList;
+        }
     }
 }
