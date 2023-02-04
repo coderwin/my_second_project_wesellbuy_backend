@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wesellbuy.secondproject.domain.delivery.DeliveryStatus;
 import shop.wesellbuy.secondproject.domain.member.Address;
+import shop.wesellbuy.secondproject.exception.delivery.NotCancelOrderException;
 
 /**
  * 회원 가입 현황 정보
@@ -53,5 +54,49 @@ public class Delivery {
         return delivery;
     }
 
+    // ** 비즈니스 메서드 ** //
 
+    /**
+     * writer : 이호진
+     * init : 2023.02.04
+     * updated by writer :
+     * update :
+     * description : 주문취소 일어났을 때,
+     *               -> 배달 상태에 따라 주문 취소 가능 판별
+     *
+     * comment : order에 있어야할까? delivery에 있어야할까?
+     */
+    public void cancel() {
+        if(status.equals(DeliveryStatus.T)) {
+            String errMsg = "배송중으로 취소 불가";
+            throw new NotCancelOrderException(errMsg);
+        } else if(status.equals(DeliveryStatus.C)) {
+            String errMsg = "배송완료로 취소 불가";
+            throw new NotCancelOrderException(errMsg);
+        }
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.04
+     * updated by writer :
+     * update :
+     * description : 배달 상태 변경
+     *               -> delivery status : T(TRANSIT) -> C(COMPLETE)
+     */
+    public void changeStatusRT() {
+        this.status = DeliveryStatus.T;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.04
+     * updated by writer :
+     * update :
+     * description : 배달 상태 변경
+     *               -> delivery status : T(TRANSIT) -> C(COMPLETE)
+     */
+    public void changeStatusTC() {
+        this.status = DeliveryStatus.C;
+    }
 }

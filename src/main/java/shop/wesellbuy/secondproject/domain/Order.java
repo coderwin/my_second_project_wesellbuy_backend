@@ -6,11 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
+import shop.wesellbuy.secondproject.domain.delivery.DeliveryStatus;
 import shop.wesellbuy.secondproject.domain.order.OrderStatus;
+import shop.wesellbuy.secondproject.exception.order.NotChangeDeliveryStatusException;
+import shop.wesellbuy.secondproject.exception.order.NotCorrectPaidMoneyException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * 회원주문 정보
@@ -33,7 +39,7 @@ public class Order extends BaseDateColumnEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_num")
-    private Member member;// 회원 num
+    private Member member;// 주문한 회원 num
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "delivery_num")
@@ -78,5 +84,103 @@ public class Order extends BaseDateColumnEntity {
         order.addOrderStatus(OrderStatus.O);
 
         return order;
+    }
+
+    /**
+     * comment : Order 생성
+     *           + 총 주문상품 가격과 사용자의 지불 금액 확인
+     *
+     *           > test 필요
+     */
+    public static Order createOrder(Member member, Delivery delivery, int paidMoney, OrderItem... orderItems) {
+        Order order = new Order();
+
+        order.addMember(member);
+        order.addDelivery(delivery);
+        // orderItem에 order 주입
+        Arrays.stream(orderItems)
+                .forEach(oi -> order.addOrderItems(oi));
+        order.addOrderStatus(OrderStatus.O);
+
+        // 총 주문상품 가격과 사용자의 지불 금액 확인
+        checkPaidMoney(paidMoney, order);
+
+        return order;
+    }
+
+    // ** 비즈니스 메서드 ** //
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.04
+     * updated by writer :
+     * update :
+     * description : 총 주문상품 가격과 사용자의 지불 금액 확인
+     */
+    private static void checkPaidMoney(int paidMoney, Order order) {
+        // 총 주문상품 가격과 사용자의 지불 금액 확인
+        if(paidMoney < order.getTotalPrice()) {
+            String errMsg = "지불된 금액이 부족합니다.";
+            throw new NotCorrectPaidMoneyException(errMsg);
+        } else if(paidMoney > order.getTotalPrice()) {
+            String errMsg = "지불된 금액이 주문 금액을 초과하였습니다.";
+            throw new NotCorrectPaidMoneyException(errMsg);
+        }
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.04
+     * updated by writer :
+     * update :
+     * description : order status : R(READY) -> C(CANCEL)
+     */
+    public void changeStatus() {
+        //배달 status가 배송중, 배송완료면 불가하다.
+        // -> 예외 일어남
+        delivery.cancel();
+        // R -> C 로 변경
+        this.status = OrderStatus.C;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.04
+     * updated by writer :
+     * update :
+     * description : 주문 배송 상태를 확인한다.
+     */
+    public void chnageDeliveryStatus() {
+        // 주문취소 일 때
+        if(status.equals(OrderStatus.C)) {
+            String errMsg = "주문이 취소되어 배송상태 변경 불가합니다.";
+            throw new NotChangeDeliveryStatusException(errMsg);
+        }
+        // 주문취소 안 되었을 때
+        if(delivery.getStatus().equals(DeliveryStatus.R)) {
+            delivery.changeStatusRT();
+        } else if(delivery.getStatus().equals(DeliveryStatus.T)) {
+            delivery.changeStatusTC();
+        }
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.04
+     * updated by writer :
+     * update :
+     * description : 총 주문 가격
+     */
+    public int getTotalPrice() {
+        // 주문상품 각각의 가격 가져오기
+        List<Integer> eachItemTotalPrices = orderItemList.stream().map(oi -> oi.getTotalPrice())
+                .collect(toList());
+        // 전체 가격 만들기
+        int totalPrice = 0;
+        for(int price : eachItemTotalPrices) {
+            totalPrice += price;
+        }
+
+        return totalPrice;
     }
 }

@@ -6,7 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 import shop.wesellbuy.secondproject.domain.Recommendation;
 
 /**
- * 추천합니다글 상세보기 dto
+ * 추천합니다글 목록 dto
  * writer : 이호진
  * init : 2023.01.28
  * updated by writer :

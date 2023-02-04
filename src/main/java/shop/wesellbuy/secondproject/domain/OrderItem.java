@@ -60,4 +60,11 @@ public class OrderItem extends BaseDateColumnEntity {
 
         return orderItem;
     }
+
+    // ** 비즈니스 메서드 ** //
+    public int getTotalPrice() {
+        int totalPrice = quantity * itemPrice;
+
+        return totalPrice;
+    }
 }

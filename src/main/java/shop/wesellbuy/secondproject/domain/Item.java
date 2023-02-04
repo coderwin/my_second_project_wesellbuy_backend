@@ -143,11 +143,13 @@ public class Item extends BaseDateColumnEntity {
     /**
      * writer : 이호진
      * init : 2023.01.20
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.02.04
      * description : 상품주문이 있으면 해당 item 재고량 빼주기
      *
      * comment : errMsg는 view 설정시 국제화로 바꾼다.
+     *
+     * update : if() 조건에서 changedStock <= 0에서 changedStock < 0으로 바꿈
      */
     public void removeStock(int quantity) {
         String errMsg = ""; // errMsg
@@ -156,8 +158,8 @@ public class Item extends BaseDateColumnEntity {
         // 재고량에서 주문량을 빼준다.
         changedStock = this.stock - quantity;// 바뀐 재고량
         // 재고량에서 주문량을 뺐는데 0이하면 주문수량 초과 예외 발생
-        if(changedStock <= 0 || this.stock == 0) {
-            errMsg = "주문수량 초과";
+        if(changedStock < 0 || this.stock == 0) {
+            errMsg =  this.name + "' 상품이 주문수량 초과";
             throw new OverflowQuantityException(errMsg);
 //            return;
         } else {

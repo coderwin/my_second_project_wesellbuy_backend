@@ -18,10 +18,17 @@ import java.util.List;
 import java.util.Optional;
 
 import static shop.wesellbuy.secondproject.domain.QDelivery.delivery;
-import static shop.wesellbuy.secondproject.domain.QItem.item;
 import static shop.wesellbuy.secondproject.domain.QMember.member;
 import static shop.wesellbuy.secondproject.domain.QOrder.order;
 
+/**
+ * OrderJpaRepositoryCustom 구현
+ * writer : 이호진
+ * init : 2023.01.19
+ * updated by writer :
+ * update :
+ * description : OrderJpaRepository 구현 모음 + 최적화 사용(fetch)
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class OrderJpaRepositoryImpl implements OrderJpaRepositoryCustom{
@@ -32,18 +39,20 @@ public class OrderJpaRepositoryImpl implements OrderJpaRepositoryCustom{
      * writer : 이호진
      * init : 2023.01.19
      * updated by writer : 이호진
-     * update :
+     * update : 2023.02.04
      * description : 모든 주문 찾기 + fetchjoin
+     *               -> 회원만 사용
+     *               -> orderSearchCond에 회원아이디가 있어야 한다.
      */
     @Override
     public Page<Order> findAllInfo(OrderSearchCond orderSearchCond, Pageable pageable) {
 
         List<Order> result = query
                 .selectFrom(order)
-                .join(order.member, member).fetchJoin()
+                .join(order.member, member).fetchJoin() // 주문한 회원 id
                 .join(order.delivery, delivery).fetchJoin()
                 .where(
-                        orderIdEq(orderSearchCond.getMemberId()),
+                        member.id.eq(orderSearchCond.getMemberId()),
                         orderOrderStatusEq(orderSearchCond.getOrderStatus()),
                         orderDeliveryStatusEq(orderSearchCond.getDeliveryStatus()),
                         orderCreateDateBetween(orderSearchCond.getCreateDate())
@@ -57,7 +66,7 @@ public class OrderJpaRepositoryImpl implements OrderJpaRepositoryCustom{
                 .select(order.count())
                 .from(order)
                 .where(
-                        orderIdEq(orderSearchCond.getMemberId()),
+                        order.member.id.eq(orderSearchCond.getMemberId()),
                         orderOrderStatusEq(orderSearchCond.getOrderStatus()),
                         orderDeliveryStatusEq(orderSearchCond.getDeliveryStatus()),
                         orderCreateDateBetween(orderSearchCond.getCreateDate())
@@ -89,6 +98,9 @@ public class OrderJpaRepositoryImpl implements OrderJpaRepositoryCustom{
      * updated by writer :
      * update :
      * description : 주문 정보 검색 조건 eq by 배달 상태
+     *
+     * comment : 상태가 다른 값이면 null 말고 처리방법 없을까?
+     *           -> null이라 모든 값이 나온다.
      */
     private BooleanExpression orderDeliveryStatusEq(String deliveryStatus) {
         if(StringUtils.hasText(deliveryStatus)) {
@@ -112,6 +124,9 @@ public class OrderJpaRepositoryImpl implements OrderJpaRepositoryCustom{
      * updated by writer :
      * update :
      * description : 주문 정보 검색 조건 eq by 주문 상태
+     *
+     * comment : 상태가 다른 값이면 null 말고 처리방법 없을까?
+     *           -> null이라 모든 값이 나온다.
      */
     private BooleanExpression orderOrderStatusEq(String orderStatus) {
         if(StringUtils.hasText(orderStatus)) {
@@ -157,6 +172,50 @@ public class OrderJpaRepositoryImpl implements OrderJpaRepositoryCustom{
 
         return Optional.ofNullable(order);
     }
+
+//    -------------------------methods using for admin start----------------------------------
+
+    /**
+     * writer : 이호진
+     * init : 2023.01.19
+     * updated by writer : 이호진
+     * update :
+     * description : 모든 주문 찾기 + fetchjoin
+     *               -> 관리자만 사용
+     */
+    @Override
+    public Page<Order> findAllInfoForAdmin(OrderSearchCond orderSearchCond, Pageable pageable) {
+
+        List<Order> result = query
+                .selectFrom(order)
+                .join(order.member, member).fetchJoin() // 주문한 회원 id
+                .join(order.delivery, delivery).fetchJoin()
+                .where(
+                        orderIdEq(orderSearchCond.getMemberId()),
+                        orderOrderStatusEq(orderSearchCond.getOrderStatus()),
+                        orderDeliveryStatusEq(orderSearchCond.getDeliveryStatus()),
+                        orderCreateDateBetween(orderSearchCond.getCreateDate())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(order.num.desc())
+                .fetch();
+
+        Long totalCount = query
+                .select(order.count())
+                .from(order)
+                .where(
+                        orderIdEq(orderSearchCond.getMemberId()),
+                        orderOrderStatusEq(orderSearchCond.getOrderStatus()),
+                        orderDeliveryStatusEq(orderSearchCond.getDeliveryStatus()),
+                        orderCreateDateBetween(orderSearchCond.getCreateDate())
+                )
+                .fetchOne();
+
+        return new PageImpl(result, pageable, totalCount);
+    }
+
+//    -------------------------methods using for admin end----------------------------------
 
 
 }
