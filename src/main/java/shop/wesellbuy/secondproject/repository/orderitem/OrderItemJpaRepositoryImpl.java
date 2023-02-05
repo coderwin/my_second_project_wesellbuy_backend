@@ -64,6 +64,7 @@ public class OrderItemJpaRepositoryImpl implements OrderItemJpaRepositoryCustom 
                 .join(order.member, member).fetchJoin()
                 .join(order.delivery, delivery).fetchJoin()
                 .where(
+//                        orderItem.item.member.num.eq(cond.getSellerNum()),
                         im.num.eq(cond.getSellerNum()),
                         orderIdEq(cond.getOrderId()),
                         orderOrderStatusEq(cond.getOrderStatus()),
@@ -79,7 +80,13 @@ public class OrderItemJpaRepositoryImpl implements OrderItemJpaRepositoryCustom 
         Long count = query
                 .select(orderItem.count())
                 .from(orderItem)
+                .join(orderItem.item, item)
+                .join(item.member, im)
+                .join(orderItem.order, order)
+//                .join(order.member, member)
+//                .join(order.delivery, delivery)
                 .where(
+//                        orderItem.item.member.num.eq(cond.getSellerNum()),
                         im.num.eq(cond.getSellerNum()),
                         orderIdEq(cond.getOrderId()),
                         orderOrderStatusEq(cond.getOrderStatus()),
@@ -122,12 +129,15 @@ public class OrderItemJpaRepositoryImpl implements OrderItemJpaRepositoryCustom 
         if(StringUtils.hasText(deliveryStatus)) {
             // 배달 준비 상태
             if("R".equalsIgnoreCase(deliveryStatus)) {
+//                return orderItem.order.delivery.status.eq(DeliveryStatus.R);
                 return order.delivery.status.eq(DeliveryStatus.R);
                 // 배달중 상태
             } else if("T".equalsIgnoreCase(deliveryStatus)) {
+//                return orderItem.order.delivery.status.eq(DeliveryStatus.T);
                 return order.delivery.status.eq(DeliveryStatus.T);
                 // 배달완료 상태
             } else if("C".equalsIgnoreCase(deliveryStatus)) {
+//                return orderItem.order.delivery.status.eq(DeliveryStatus.C);
                 return order.delivery.status.eq(DeliveryStatus.C);
             }
         }
@@ -148,9 +158,11 @@ public class OrderItemJpaRepositoryImpl implements OrderItemJpaRepositoryCustom 
         if(StringUtils.hasText(orderStatus)) {
             // 주문 상태
             if ("O".equalsIgnoreCase(orderStatus)) {
+//                return orderItem.order.status.eq(OrderStatus.O);
                 return order.status.eq(OrderStatus.O);
                 // 주문 취소 상태
             } else if ("C".equalsIgnoreCase(orderStatus)) {
+//                return orderItem.order.status.eq(OrderStatus.C);
                 return order.status.eq(OrderStatus.C);
             }
         }
@@ -165,6 +177,7 @@ public class OrderItemJpaRepositoryImpl implements OrderItemJpaRepositoryCustom 
      * description : 주문상품 정보 검색 조건 eq by 주문 회원 아이디
      */
     private BooleanExpression orderIdEq(String orderId) {
+//        return StringUtils.hasText(orderId) ? orderItem.order.member.id.eq(orderId) : null;
         return StringUtils.hasText(orderId) ? order.member.id.eq(orderId) : null;
     }
 

@@ -62,9 +62,30 @@ public class OrderItem extends BaseDateColumnEntity {
     }
 
     // ** 비즈니스 메서드 ** //
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.04
+     * updated by writer :
+     * update :
+     * description : 주문상품 총 가격 출력
+     */
     public int getTotalPrice() {
         int totalPrice = quantity * itemPrice;
 
         return totalPrice;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.04
+     * updated by writer :
+     * update :
+     * description : 주문 취소 요청이 왔을 때
+     *               -> item의 제고량에 orderItem의 주문수량만큼 늘리기
+     */
+    public void cancel() {
+        // item의 제고량에 orderItem의 주문수량만큼 늘리기
+        item.restoreStock(quantity);
     }
 }

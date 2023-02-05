@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Order Service
  * writer : 이호진
- * init : 2023.02.03
+ * init : 2023.02.04
  * updated by writer :
  * update :
  * description : Order Service 메소드 모음
@@ -25,14 +25,17 @@ public interface OrderService {
     /**
      * writer : 이호진
      * init : 2023.02.04
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2024.02.05
      * description : 주문 저장 V1
      *               == 주문하기
      *
      * comment : controller에서 list를 받을 때
+     *
+     * update : 파라미터 paidMoney 추가
+     *          createOrder() 파라미터 padiMoney 추가
      */
-    int save(List<OrderItemForm> orderItemFormList, int memberNum);
+    int save(List<OrderItemForm> orderItemFormList, int memberNum, int paidMoney);
 
     /**
      * writer : 이호진
@@ -97,7 +100,7 @@ public interface OrderService {
      * update :
      * description : 판매자가 판매된 상품(목록) 확인하기
      */
-    Page<OrderItemListForm> watchOrderItemList(OrderItemSearchCond cond, Pageable pageable, int memberNum);
+    Page<OrderItemListForm> selectOrderItemList(OrderItemSearchCond cond, Pageable pageable, int memberNum);
 
 
 //    -------------------------methods using for user(seller) end ----------------------------------
@@ -122,7 +125,7 @@ public interface OrderService {
 
 //    -------------------------methods using for deliver end ----------------------------------
 
-//    -------------------------methods using for admin start----------------------------------
+//    -------------------------methods using for admin, deliver start----------------------------------
 
     /**
      * writer : 이호진
@@ -131,10 +134,10 @@ public interface OrderService {
      * update :
      * description : 회원이 주문한 주문 모두 불러오기 + by 회원(주문자)아이디
      *               -> for admin
-     *               -> for delivery
+     *               -> for deliver
      */
     Page<OrderListFormForAdmin> selectListForAdmin(OrderSearchCond cond, Pageable pageable);
 
-//    -------------------------methods using for admin end ----------------------------------
+//    -------------------------methods using for admin, deliver end ----------------------------------
 
 }

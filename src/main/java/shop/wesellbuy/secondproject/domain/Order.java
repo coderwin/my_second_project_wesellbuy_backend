@@ -1,10 +1,7 @@
 package shop.wesellbuy.secondproject.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.domain.delivery.DeliveryStatus;
 import shop.wesellbuy.secondproject.domain.order.OrderStatus;
@@ -14,7 +11,6 @@ import shop.wesellbuy.secondproject.exception.order.NotCorrectPaidMoneyException
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -150,7 +146,7 @@ public class Order extends BaseDateColumnEntity {
      * update :
      * description : 주문 배송 상태를 확인한다.
      */
-    public void chnageDeliveryStatus() {
+    public void changeDeliveryStatus() {
         // 주문취소 일 때
         if(status.equals(OrderStatus.C)) {
             String errMsg = "주문이 취소되어 배송상태 변경 불가합니다.";
@@ -182,5 +178,24 @@ public class Order extends BaseDateColumnEntity {
         }
 
         return totalPrice;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.05
+     * updated by writer :
+     * update :
+     * description : 주문 취소 요청이 왔을 때
+     *               -> orderStatus 변경(O -> C)
+     *               -> -> item의 제고량에 orderItem의 주문수량만큼 늘리기
+     */
+    public void cancel() {
+
+        // 주문 상태 변경
+        changeStatus();
+        // orderItem의 제고량을 뺀 만큼 채우기
+        orderItemList.stream().forEach(
+                oi -> oi.cancel()
+        );
     }
 }

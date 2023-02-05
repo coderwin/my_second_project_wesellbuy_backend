@@ -46,16 +46,19 @@ public class OrderServiceImpl implements OrderService {
     /**
      * writer : 이호진
      * init : 2023.02.04
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.02.05
      * description : 주문 저장 V1
      *               == 주문하기
      *
      * comment : controller에서 list를 받을 때
+     *
+     * update : 파라미터 paidMoney 추가
+     *          createOrder() 파라미터 padiMoney 추가
      */
     @Override
     @Transactional
-    public int save(List<OrderItemForm> orderItemFormList, int memberNum) {
+    public int save(List<OrderItemForm> orderItemFormList, int memberNum, int paidMoney) {
         // 상품 생성 and 주문상품 만들기(재고 부족 예외 발생할 수 있음)
         List<OrderItem> orderItemList = orderItemFormList.stream()
                 .map(oi -> makeOrderItem(oi))
@@ -68,7 +71,7 @@ public class OrderServiceImpl implements OrderService {
         // list를 array로 변경하기
 //        OrderItem[] orderItemArrys = orderItemList.stream().toArray(OrderItem[]::new);
         OrderItem[] OrderItemArr = orderItemList.toArray(new OrderItem[orderItemList.size()]);
-        Order order = Order.createOrder(member, delivery, OrderItemArr);
+        Order order = Order.createOrder(member, delivery, paidMoney, OrderItemArr);
         // 주문하기
         orderJpaRepository.save(order);
 
@@ -81,12 +84,15 @@ public class OrderServiceImpl implements OrderService {
      * updated by writer :
      * update :
      * description : 주문상품(OrderItem) 만들기
+     *
+     * update : view에서 가격을 받는 것이 아니라
+     *          상품에서 받는다.
      */
     private OrderItem makeOrderItem(OrderItemForm oi) {
         // 상품 불러오기
         Item item = itemJpaRepository.findById(oi.getItemNum()).orElseThrow();
         // 주문상품 만들기
-        OrderItem orderItem = OrderItem.createOrderItem(oi.getQuantity(), oi.getPrice(), item);
+        OrderItem orderItem = OrderItem.createOrderItem(oi.getQuantity(), item.getPrice(), item);
 
         return orderItem;
     }
@@ -137,14 +143,17 @@ public class OrderServiceImpl implements OrderService {
      * update :
      * description : 주문 취소
      *               -> order status : O(ORDER) -> C(CANCEL)
+     *
+     * comment : repository에서 fetch join 사용할지 생각해보기
      */
     @Override
     @Transactional
     public void cancel(int num) {
         // order 불러오기
         Order order = orderJpaRepository.findById(num).orElseThrow();
-        // order status를 변경하기
-        order.changeStatus();
+        // 주문 취소하기
+        order.cancel();
+
         log.info( "주문번호 : " + num + " 주문취소 완료");
     }
 
@@ -202,8 +211,8 @@ public class OrderServiceImpl implements OrderService {
         // order 불러오기
         Order order = orderJpaRepository.findById(num).orElseThrow();
         // delivery status를 변경하기
-        order.chnageDeliveryStatus();
-        log.info( "주문번호 : " + num + " 배송중");
+        order.changeDeliveryStatus();
+        log.info( "주문번호 : '" + num + "' 배송중");
     }
 
     /**
@@ -214,7 +223,7 @@ public class OrderServiceImpl implements OrderService {
      * description : 판매자가 판매된 상품(목록) 확인하기
      */
     @Override
-    public Page<OrderItemListForm> watchOrderItemList(OrderItemSearchCond cond, Pageable pageable, int memberNum) {
+    public Page<OrderItemListForm> selectOrderItemList(OrderItemSearchCond cond, Pageable pageable, int memberNum) {
         // OrderItemSearchCond에 memberNum 담기
         cond.addSellerNum(memberNum);
         // 판매자의 판매 상품 목록 불러오기
@@ -248,8 +257,8 @@ public class OrderServiceImpl implements OrderService {
         // order 불러오기
         Order order = orderJpaRepository.findById(num).orElseThrow();
         // order delivery를 변경하기
-        order.chnageDeliveryStatus();
-        log.info( "주문번호 : " + num + " 배송완료");
+        order.changeDeliveryStatus();
+        log.info( "주문번호 : '" + num + "' 배송완료");
     }
 
 //    -------------------------methods using for deliver end ----------------------------------
