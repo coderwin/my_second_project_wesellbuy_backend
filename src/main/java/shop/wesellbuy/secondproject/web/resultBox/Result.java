@@ -19,4 +19,6 @@ public class Result <T> {
 
     private final T data;
 
+
+
 }

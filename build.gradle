@@ -53,6 +53,13 @@ dependencies {
 
 	// === QueryDsl 끝 ===
 
+	// === swagger 시작 ===
+
+	implementation 'io.springfox:springfox-swagger2:2.9.2'
+	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+
+	// === swagger 끝 ===
+
 	// test lombok 사용 시작 //
 
 	testCompileOnly 'org.projectlombok:lombok' // 테스트 의존성 추가

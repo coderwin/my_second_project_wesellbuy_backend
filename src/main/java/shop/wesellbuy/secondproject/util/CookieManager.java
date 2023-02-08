@@ -26,10 +26,12 @@ public class CookieManager {
      * updated by writer :
      * update :
      * description : 쿠키 생성
+     *
+     * comment : maxAge = 86400 (24시간)
      */
     public static void makeCookie(String cookieName, String value, HttpServletResponse response, int maxAge) {
         Cookie cookie = new Cookie(cookieName, value);
-        cookie.setMaxAge(86400); // 하루 동안 생성(24시간)
+        cookie.setMaxAge(maxAge);
         // 쿠키 생성
         response.addCookie(cookie);
     }

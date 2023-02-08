@@ -19,7 +19,7 @@ public class ErrorResultMsg {
     private String errMsg; // 에러 메시지
 
     // ** 생성 메서드** //
-    public static ErrorResultMsg createErrorResultMsg(String code, String errMsg) {
+    public static ErrorResultMsg create(String code, String errMsg) {
 
         ErrorResultMsg errorResultMsg = new ErrorResultMsg(code, errMsg);
         return errorResultMsg;

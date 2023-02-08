@@ -21,13 +21,15 @@ import java.util.List;
  * writer : 이호진
  * init : 2023.01.14
  * updated by writer : 이호진
- * update : 2023.01.28
+ * update : 2023.02.08
  * description : 추천합니다 게시판을 정의한다.
  *
  * comment - create : 연관관계 메서드 수정(recommendationPicture)
  *                    -> FK가 있는 곳에서 연관관계 메서드 생성
  *
  *         - update : BaordStatus 추가
+ *                    OneToMany 필드를 불러올 때 순서 정하기
+ *                    > @OrderBy 사용
  */
 @Entity
 @Getter
@@ -54,6 +56,7 @@ public class Recommendation extends BaseDateColumnEntity {
     private List<RecommendationPicture> recommendationPictureList = new ArrayList<>();
 
     @OneToMany(mappedBy = "recommendation")
+    @OrderBy(value = "recommendationReply_num DESC")
     private List<RecommendationReply> recommendationReplyList = new ArrayList<>(); // 댓글 모음
 
     // ** setter ** //

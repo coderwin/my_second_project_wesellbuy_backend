@@ -251,7 +251,7 @@ public class OrderItemRepositoryTest {
         testResult(cond13, pageablePage1Size10, iaCount / 2 + iaCount2 );
         testResult(cond14, pageablePage1Size10, iaCount + iaCount2 );
         // 조건 2
-        testResult(cond21, pageablePage0Size100, iaCount / 1);
+        testResult(cond21, pageablePage0Size100, iaCount);
         testResult(cond22, pageablePage0Size100, iaCount / 2);
         testResult(cond23, pageablePage0Size100, 0);
         testResult(cond24, pageablePage0Size100, iaCount2 / 2);

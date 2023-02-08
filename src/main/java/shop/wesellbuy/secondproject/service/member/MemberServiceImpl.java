@@ -55,8 +55,6 @@ public class MemberServiceImpl implements MemberService {
      * updated by writer :
      * update :
      * description : 회원 가입
-     *
-     * @return
      */
     @Override
     @Transactional

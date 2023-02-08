@@ -20,12 +20,15 @@ import java.util.List;
  * 회원 정보
  * writer : 이호진
  * init : 2023.01.14
- * updated by writer :
- * update :
+ * updated by writer : 이호진
+ * update : 2023.02.08
  * description : 회원 정보를 정의한다.
  *
  * comment : selfPicture의 생명주기를 다시 생각해보기(about create and update)
  *           joinColumn 위치 생각해보기(member or self_picture)
+ *
+ * update : OneToMany 필드를 불러올 때 순서 정하기
+ *          > @OrderBy 사용
  */
 @Entity
 @Getter
@@ -64,12 +67,15 @@ public class Member extends BaseDateColumnEntity {
     private List<Recommendation> recommendationList = new ArrayList<>(); // 회원 등록 추천합니다 모음
 
     @OneToMany(mappedBy = "member")
+    @OrderBy(value = "customerServiceReply_num DESC")
     private List<CustomerServiceReply> customerServiceReplyList = new ArrayList<>(); // 고객지원 댓글 모음
 
     @OneToMany(mappedBy = "member")
+    @OrderBy(value = "itemReply_num DESC")
     private List<ItemReply> ItemReplyList = new ArrayList<>(); // 상품 댓글 모음
 
     @OneToMany(mappedBy = "member")
+    @OrderBy(value = "recommendationReply_num DESC")
     private List<RecommendationReply> recommendationReplyList = new ArrayList<>(); // 추천합니다 댓글 모음
 
     protected Member() {

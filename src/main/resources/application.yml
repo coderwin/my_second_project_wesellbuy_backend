@@ -45,7 +45,10 @@ spring:
     max-request-size: 10MB # 멀티팔트 요청 하나에 업로드한 파일 총 사이즈
 
     enabled: true # 멀티파트 데이터 처리 설정(true/ false)
-  
+
+  # swagger 스프링부트 2.6버전이상에서 사용하기
+  mvc.pathmatch.matching-strategy: ant_path_matcher
+
 logging.level:
   org.hibernate:
     SQL: debug # logger를 통해 하이버네이트 실행 sql 확인
