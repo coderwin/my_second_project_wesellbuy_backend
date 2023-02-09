@@ -75,10 +75,10 @@ public class CustomerServiceServiceTest {
         MockMultipartFile file = new MockMultipartFile("image1", originFileName, contentType, fileInputStream);
 
         // 회원 정보 생성
-        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "a1","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
-        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a", "b1","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
-        MemberOriginForm memberOriginForm3 = new MemberOriginForm("a", "c1","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
-        MemberOriginForm memberOriginForm4 = new MemberOriginForm("a", "d1","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "a1", "123","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a", "b1", "123","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm3 = new MemberOriginForm("a", "c1", "123","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm4 = new MemberOriginForm("a", "d1", "123","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
         int memberNum = ms.join(memberOriginForm);
         int memberNum2 = ms.join(memberOriginForm2);
         int memberNum3 = ms.join(memberOriginForm3);

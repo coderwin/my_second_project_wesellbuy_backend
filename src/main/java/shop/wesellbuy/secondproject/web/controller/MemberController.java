@@ -1,27 +1,29 @@
 package shop.wesellbuy.secondproject.web.controller;
 
 import io.swagger.annotations.ApiOperation;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import shop.wesellbuy.secondproject.repository.member.MemberSearchCond;
 import shop.wesellbuy.secondproject.repository.member.MemberSearchIdCond;
 import shop.wesellbuy.secondproject.repository.member.MemberSearchPwdCond;
+import shop.wesellbuy.secondproject.service.member.FileStoreOfSelfPicture;
 import shop.wesellbuy.secondproject.service.member.MemberService;
 import shop.wesellbuy.secondproject.util.CookieManager;
 import shop.wesellbuy.secondproject.util.SessionConst;
-import shop.wesellbuy.secondproject.util.ValidationOfPattern;
 import shop.wesellbuy.secondproject.web.member.MemberDetailForm;
 import shop.wesellbuy.secondproject.web.member.MemberOriginForm;
 import shop.wesellbuy.secondproject.web.member.MemberUpdateForm;
@@ -31,9 +33,8 @@ import shop.wesellbuy.secondproject.web.member.login.LoginSearchIdResultForm;
 import shop.wesellbuy.secondproject.web.member.login.LoginSearchPwdResultForm;
 import shop.wesellbuy.secondproject.web.resultBox.Result;
 
-import javax.naming.Binding;
 import java.io.IOException;
-import java.util.List;
+import java.net.MalformedURLException;
 
 /**
  * Member Contoller
@@ -50,20 +51,31 @@ import java.util.List;
 public class MemberController {
     
     private final MemberService memberService;
+    private final FileStoreOfSelfPicture fileStoreOfSelfPicture;
 
     /**
      * writer : 이호진
      * init : 2023.02.08
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.02.09
      * description : 회원 가입
+     *
+     * update : 파일과 json 데이터 함께 받아오기
      */
     @PostMapping
     @ApiOperation(value = "회원 정보 등록")
-    public ResponseEntity<Result<String>> join(@RequestBody @Validated MemberOriginForm memberOriginForm,
-                               BindingResult bindingResult) throws IOException {
+    public ResponseEntity<Result<String>> join(@RequestPart @Validated MemberOriginForm memberOriginForm,
+                                               @RequestPart(required = false) MultipartFile file,
+                                               BindingResult bindingResult) throws IOException {
+
+        log.info("file : {}", file);
+        log.info("memberOriginForm : {}", memberOriginForm);
+
+        // 파일 dto에 넣기
+        memberOriginForm.setFile(file);
         // 데이터 검증하기
         memberOriginForm.validateJoinValues(bindingResult);
+
         if(bindingResult.hasErrors()) {
             log.info("member join error : {}", bindingResult);
         }
@@ -156,6 +168,21 @@ public class MemberController {
         Result<MemberDetailForm> result = new Result<>(form);
 
         return result;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.09
+     * updated by writer :
+     * update :
+     * description : 회원 이미지 파일 불러오기
+     */
+    @GetMapping("/images/{savedFileName}")
+    @ApiOperation("회원 이미지 파일 불러오기")
+    public Resource showImage(@PathVariable String savedFileName) throws MalformedURLException {
+        log.info("showImage -> savedFileName : {}", savedFileName);
+        // 파일이 저장되어있는 root 불러오기
+        return new UrlResource("file:" + fileStoreOfSelfPicture.getFullPath(savedFileName));
     }
 
     //   ------------------------------methods using for admin start --------------------------------
@@ -297,7 +324,8 @@ public class MemberController {
         // ResponseEntity body 생성
         Result<String> body = new Result<>(successMsg);
 
-        return new ResponseEntity<>(body, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(body);
     }
 
     //   ------------------------------methods using at join end --------------------------------

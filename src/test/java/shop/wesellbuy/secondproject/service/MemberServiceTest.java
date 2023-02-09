@@ -78,13 +78,13 @@ public class MemberServiceTest {
         MockMultipartFile file2 = new MockMultipartFile("image12", originFileName2, contentType2, fileInputStream2);
 
         // 회원 가입
-        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "a1","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
-        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a2", "a2","123", "a2@a1.a1", "01012341234", "021231234", "eu", "s", "h", "123", "12345", file2);
-        MemberOriginForm memberOriginForm3 = new MemberOriginForm("a3", "a3","123", "a3@a1.a1", "01012341234", "021231234", "korea", "d", "h", "123", "12345", null);
-        MemberOriginForm memberOriginForm4 = new MemberOriginForm("a4", "a4","123", "a4@a1.a1", "01012341234", "021231234", "eu", "s", "h", "123", "12345", file);
-        MemberOriginForm memberOriginForm5 = new MemberOriginForm("a5", "a5","123", "a5@a1.a1", "01012341234", "021231234", "korea", "d", "h", "123", "12345", file);
-        MemberOriginForm memberOriginForm6 = new MemberOriginForm("a6", "a6","123", "a6@a1.a1", "01012341234", "021231234", "us", "s", "h", "123", "12345", file2);
-        MemberOriginForm memberOriginForm7 = new MemberOriginForm("a7", "a7","123", "a7@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
+        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "a1","123", "123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a2", "a2","123", "123", "a2@a1.a1", "01012341234", "021231234", "eu", "s", "h", "123", "12345", file2);
+        MemberOriginForm memberOriginForm3 = new MemberOriginForm("a3", "a3","123", "123", "a3@a1.a1", "01012341234", "021231234", "korea", "d", "h", "123", "12345", null);
+        MemberOriginForm memberOriginForm4 = new MemberOriginForm("a4", "a4","123", "123", "a4@a1.a1", "01012341234", "021231234", "eu", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm5 = new MemberOriginForm("a5", "a5","123", "123", "a5@a1.a1", "01012341234", "021231234", "korea", "d", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm6 = new MemberOriginForm("a6", "a6","123", "123", "a6@a1.a1", "01012341234", "021231234", "us", "s", "h", "123", "12345", file2);
+        MemberOriginForm memberOriginForm7 = new MemberOriginForm("a7", "a7","123", "123", "a7@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
 
         int memberNum = memberService.join(memberOriginForm);
         memberService.join(memberOriginForm2);
@@ -156,7 +156,7 @@ public class MemberServiceTest {
 
         MockMultipartFile file = new MockMultipartFile("image1", originFileName, contentType, fileInputStream);
         // MemberOriginForm 생성
-        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "ab1","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "ab1", "123","123", "a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
 
         // when
         // 회원 가입
@@ -189,7 +189,7 @@ public class MemberServiceTest {
         MockMultipartFile file = new MockMultipartFile("image1", originFileName, contentType, fileInputStream);
         MockMultipartFile file2 = new MockMultipartFile("image2", originFileName, contentType, fileInputStream2);
         // MemberOriginForm 생성
-        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "b2", "123","a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm = new MemberOriginForm("a", "b2", "123", "123","a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
 
         // 회원 가입
         memberService.join(memberOriginForm);
@@ -197,7 +197,7 @@ public class MemberServiceTest {
         // when
         // then
         // 아이디 같은 회원 가입
-        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a", "b2", "123","a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file2);
+        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a", "b2", "123", "123","a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file2);
         assertThrows(ExistingIdException.class, () -> memberService.join(memberOriginForm2));
     }
 
@@ -219,11 +219,11 @@ public class MemberServiceTest {
         MockMultipartFile file = new MockMultipartFile("image1", originFileName, contentType, fileInputStream);
         // 회원 가입
         // 첨부파일 있을 때
-        MemberOriginForm memberOriginForm = new MemberOriginForm("a2", "b2", "123","a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
+        MemberOriginForm memberOriginForm = new MemberOriginForm("a2", "b2", "123", "123","a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", file);
         int memberNum = memberService.join(memberOriginForm);
 
         // 첨부파일 없을 때
-        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a2", "b3", "123","a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
+        MemberOriginForm memberOriginForm2 = new MemberOriginForm("a2", "b3", "123", "123","a1@a1.a1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
         int memberNum2 = memberService.join(memberOriginForm2);
 
         // when
@@ -428,10 +428,10 @@ public class MemberServiceTest {
     public void 로그인_가능여부_확인() throws IOException {
         // given
         // 회원 등록
-        MemberOriginForm memberOriginForm = new MemberOriginForm("abc", "bcd","35678", "ab1@ab1.ab1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
+        MemberOriginForm memberOriginForm = new MemberOriginForm("abc", "bcd", "35678", "35678","ab1@ab1.ab1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
         int joinMemberNum = memberService.join(memberOriginForm);
 
-        MemberOriginForm memberOriginForm2 = new MemberOriginForm("abc", "bcd12","35678", "ab1@ab1.ab1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
+        MemberOriginForm memberOriginForm2 = new MemberOriginForm("abc", "bcd12", "35678", "35678", "ab1@ab1.ab1", "01012341234", "021231234", "korea", "s", "h", "123", "12345", null);
         int withdrawalMemberNum = memberService.join(memberOriginForm2);
 
         log.info("회원가입 완료!!!!!");

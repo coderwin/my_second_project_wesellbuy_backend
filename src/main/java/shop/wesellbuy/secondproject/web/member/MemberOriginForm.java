@@ -1,10 +1,11 @@
 package shop.wesellbuy.secondproject.web.member;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,9 +26,11 @@ import shop.wesellbuy.secondproject.util.ValidationOfPattern;
  */
 @Getter @Setter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class MemberOriginForm {
 
-    @Pattern(regexp = "\"^[가-힣|a-zA-Z]+$\"")
+    @Pattern(regexp = "^[가-힣|a-zA-Z]+$")
     private String name; // 이름
     @Pattern(regexp = "^[ㄱ-ㅎㅏ-ㅣ가-힣\\w]{1,21}$")
     private String id; // 아이디
@@ -35,7 +38,7 @@ public class MemberOriginForm {
     private String pwd; // 비밀번호
 
     private String pwdConfirm; // 비밀번호 확인
-    @Pattern(regexp = "        String patternEmail = \"^\\w+@[a-zA-Z\\d]+\\.[a-zA-Z\\d]+(\\.[a-zA-Z\\d]+)?$")
+    @Pattern(regexp = "^\\w+@[a-zA-Z\\d]+\\.[a-zA-Z\\d]+(\\.[a-zA-Z\\d]+)?$")
     private String email; // 이메일
     @Pattern(regexp = "^01(0|[6-9])\\d{4}\\d{4}$")
     private String selfPhone; // 휴대전화(필수)
@@ -54,20 +57,8 @@ public class MemberOriginForm {
     private MultipartFile file; // 회원 이미지
 
     // 생성자
-    public MemberOriginForm(String name, String id, String pwd, String email, String selfPhone, String homePhone, String country, String city, String street, String detail, String zipcode, MultipartFile file) {
-        this.name = name;
-        this.id = id;
-        this.pwd = pwd;
-        this.email = email;
-        this.selfPhone = selfPhone;
-        this.homePhone = homePhone;
-        this.country = country;
-        this.city = city;
-        this.street = street;
-        this.detail = detail;
-        this.zipcode = zipcode;
-        this.file = file;
-    }
+
+
 
 
     // ** 비즈니스 로직 ** //
@@ -129,7 +120,9 @@ public class MemberOriginForm {
 
         // 파일 확장자 조사
         String patternFile = ".*(?<=\\.(jpg|JPG|png|PNG|jpeg|JPEG|gif|GIF))";
-        ValidationOfPattern.validateValues(patternFile, this.getFile().getOriginalFilename(), bindingResult, "file", "falied", null);
+        if(getFile() != null) {
+            ValidationOfPattern.validateValues(patternFile, this.getFile().getOriginalFilename(), bindingResult, "file", "failed", null);
+        }
     }
 
 

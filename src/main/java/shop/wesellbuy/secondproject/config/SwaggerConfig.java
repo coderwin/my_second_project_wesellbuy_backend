@@ -10,7 +10,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@Configuration
+//@Configuration
 @EnableSwagger2
 public class SwaggerConfig {
 
@@ -28,7 +28,7 @@ public class SwaggerConfig {
     // 어떤 api인지 설명하기
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("wesellbuy API")
+                .title("wesellbuy Rest API")
                 .version("1.0.0")
                 .description("wesellbuy의 swagger API 입니다.")
                 .build();
