@@ -30,17 +30,26 @@ import shop.wesellbuy.secondproject.util.ValidationOfPattern;
 @ToString
 public class MemberOriginForm {
 
-    @Pattern(regexp = "^[가-힣|a-zA-Z]+$")
+    @NotBlank(message = "필수 입력입니다.")
+    @Pattern(regexp = "^[가-힣|a-zA-Z]+$", message = "한글 또는 영어만 사용 가능합니다.")
     private String name; // 이름
-    @Pattern(regexp = "^[ㄱ-ㅎㅏ-ㅣ가-힣\\w]{1,21}$")
+    @NotBlank(message = "필수 입력입니다.")
+    @Pattern(regexp = "^[ㄱ-ㅎㅏ-ㅣ가-힣\\w]{1,21}$", message = "한글, 영어, 숫자만 가능합니다.")
     private String id; // 아이디
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[?<>~!@#$%^&*_+-])[a-z\\d?<>~!@#$%^&*_+-]{8,21}$")
+    @NotBlank(message = "필수 입력입니다.")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[?<>~!@#$%^&*_+-])[a-z\\d?<>~!@#$%^&*_+-]{8,21}$",
+        message = "영소문자, 숫자, 특수기호 포함 8~21자리를 입력하셔야 합니다."
+    )
     private String pwd; // 비밀번호
-
+    @NotBlank(message = "필수 입력입니다.")
     private String pwdConfirm; // 비밀번호 확인
-    @Pattern(regexp = "^\\w+@[a-zA-Z\\d]+\\.[a-zA-Z\\d]+(\\.[a-zA-Z\\d]+)?$")
+    @NotBlank(message = "필수 입력입니다.")
+    @Pattern(regexp = "^\\w+@[a-zA-Z\\d]+\\.[a-zA-Z\\d]+(\\.[a-zA-Z\\d]+)?$",
+            message = "이메일 형식에 맞지 않습니다."
+    )
     private String email; // 이메일
-    @Pattern(regexp = "^01(0|[6-9])\\d{4}\\d{4}$")
+    @NotBlank(message = "필수 입력입니다.")
+    @Pattern(regexp = "^01(0|[6-9])\\d{4}\\d{4}$", message="\'-\'없이 숫자로만 입력해주세요.")
     private String selfPhone; // 휴대전화(필수)
     private String homePhone; // 집전화(선택)
     @NotBlank(message = "국적을 선택해주세요")
@@ -84,44 +93,20 @@ public class MemberOriginForm {
      * description : 회원 가입 value 입력 오류 검사
      */
     public void validateJoinValues(BindingResult bindingResult) {
-        // 아이디 오류
-        String patternId = "^[ㄱ-ㅎㅏ-ㅣ가-힣\\w]{1,21}$";
-        ValidationOfPattern.validateValues(patternId, this.getId(), bindingResult, "id", "failed", null);
-
-        // 비밀번호 오류
-        String patternPwd = "^(?=.*[a-z])(?=.*\\d)(?=.*[?<>~!@#$%^&*_+-])[a-z\\d?<>~!@#$%^&*_+-]{8,21}$";
-        ValidationOfPattern.validateValues(patternPwd, this.getPwd(), bindingResult, "pwd", "failed", null);
 
         // 비밀번호 확인 오류
         String pwd = this.getPwd();
         String pwdConfirm = this.getPwdConfirm();
         if(StringUtils.hasText(pwd) && StringUtils.hasText(pwdConfirm)) {
             if(!pwd.equals(pwdConfirm)) {
-                bindingResult.rejectValue("pwdConfirm", "failed", null);
+                bindingResult.rejectValue("pwdConfirm", "failed", "비밀번호가 일치하지 않습니다.");
             }
         }
-
-        // 이름 오류
-        String patternName = "^[가-힣|a-zA-Z]+$";
-        ValidationOfPattern.validateValues(patternName, this.getName(), bindingResult, "memberName", "failed", null);
-
-        // 이메일 오류
-        String patternEmail = "^\\w+@[a-zA-Z\\d]+\\.[a-zA-Z\\d]+(\\.[a-zA-Z\\d]+)?$";
-        ValidationOfPattern.validateValues(patternEmail, this.getEmail(), bindingResult, "memberEmail", "failed", null);
-
-        // 휴대전화 오류
-        String patternSelfPhone = "^01(0|[6-9])\\d{4}\\d{4}$";
-        ValidationOfPattern.validateValues(patternSelfPhone, this.getSelfPhone(), bindingResult, "selfPhone", "failed", null);
-
-        // 선택 사항으로 만들기
-        // 집전화 오류
-//        String patternPhone2 = "^0(2|[3-6][1-5])\\d{3,4}\\d{4}$";
-//        ValidationOfPattern.validateValues(patternPhone2, this.getPhone2(), bindingResult, "phone2", "failed", null);
 
         // 파일 확장자 조사
         String patternFile = ".*(?<=\\.(jpg|JPG|png|PNG|jpeg|JPEG|gif|GIF))";
         if(getFile() != null) {
-            ValidationOfPattern.validateValues(patternFile, this.getFile().getOriginalFilename(), bindingResult, "file", "failed", null);
+            ValidationOfPattern.validateValues(patternFile, this.getFile().getOriginalFilename(), bindingResult, "file", "failed", "jpg, jpeg, png, gif 파일만 가능합니다.");
         }
     }
 

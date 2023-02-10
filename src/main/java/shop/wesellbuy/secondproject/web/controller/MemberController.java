@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -15,8 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import shop.wesellbuy.secondproject.exception.ValidatedErrorMsg;
+import shop.wesellbuy.secondproject.exception.ValidatedErrorsMsg;
 import shop.wesellbuy.secondproject.repository.member.MemberSearchCond;
 import shop.wesellbuy.secondproject.repository.member.MemberSearchIdCond;
 import shop.wesellbuy.secondproject.repository.member.MemberSearchPwdCond;
@@ -34,7 +38,12 @@ import shop.wesellbuy.secondproject.web.member.login.LoginSearchPwdResultForm;
 import shop.wesellbuy.secondproject.web.resultBox.Result;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Member Contoller
@@ -57,15 +66,16 @@ public class MemberController {
      * writer : 이호진
      * init : 2023.02.08
      * updated by writer : 이호진
-     * update : 2023.02.09
+     * update : 2023.02.10
      * description : 회원 가입
      *
      * update : 파일과 json 데이터 함께 받아오기
+     *          > 검증 처리 추가
      */
     @PostMapping
     @ApiOperation(value = "회원 정보 등록")
-    public ResponseEntity<Result<String>> join(@RequestPart @Validated MemberOriginForm memberOriginForm,
-                                               @RequestPart(required = false) MultipartFile file,
+    public ResponseEntity<?> join(@RequestPart("data") @Validated MemberOriginForm memberOriginForm,
+                                               @RequestPart(name = "file", required = false) MultipartFile file,
                                                BindingResult bindingResult) throws IOException {
 
         log.info("file : {}", file);
@@ -73,11 +83,13 @@ public class MemberController {
 
         // 파일 dto에 넣기
         memberOriginForm.setFile(file);
-        // 데이터 검증하기
+        // 데이터 검증하기(bindingResult)
         memberOriginForm.validateJoinValues(bindingResult);
-
+        // bindResult에 에러 있는지 확인
         if(bindingResult.hasErrors()) {
             log.info("member join error : {}", bindingResult);
+
+            return makeValidatedErrorsContents(bindingResult);
         }
         /// 검증 통과
         // 회원 등록
@@ -87,6 +99,27 @@ public class MemberController {
         Result<String> body = new Result(successMsg);
 
         return new ResponseEntity(body, HttpStatus.CREATED);
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.10
+     * updated by writer :
+     * update :
+     * description : BindingResult에 의해 만들어진 error들을
+     *               클라이언트에게 알려주기
+     *
+     * comment : bindingResult는 RestControllerAdvice에서 처리 못할까?
+     */
+    private ResponseEntity<ValidatedErrorsMsg<List<ValidatedErrorMsg>>> makeValidatedErrorsContents(BindingResult bindingResult) {
+        // bindingResult에 들어있는 에러 정보 담기
+        List<ValidatedErrorMsg> errors = bindingResult.getFieldErrors().stream()
+                .map(fe -> ValidatedErrorMsg.create(fe.getField(), fe.getDefaultMessage()))
+                .collect(toList());
+        // ValidatatedErrorsMsg 만들기
+        ValidatedErrorsMsg<List<ValidatedErrorMsg>> result = new ValidatedErrorsMsg<>(errors);
+        // 클라이언트에게 보내주기
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
     /**
