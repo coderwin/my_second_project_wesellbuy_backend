@@ -1,6 +1,9 @@
 package shop.wesellbuy.secondproject.controller.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletException;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import shop.wesellbuy.secondproject.exception.member.ExistingIdException;
 import shop.wesellbuy.secondproject.service.member.MemberService;
 import shop.wesellbuy.secondproject.web.controller.MemberController;
 import shop.wesellbuy.secondproject.web.member.MemberOriginForm;
@@ -28,6 +32,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -35,9 +40,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * MemberController 단위 테스트
+ *
+ * comment - 예외를 테스트하고 싶을 때
+ *           -> Controller 내부에서 발생하는 예외로 인해 ServletException으로 나타나는 예외를
+ *           -> Controller에서 일어나는 예외로 확인할 수는 없을까?
  */
 //@WebMvcTest(MemberController.class)
 @ExtendWith(MockitoExtension.class)
+@Slf4j
 public class MemberControllerUnitTest {
 
     @InjectMocks // 가짜 객체 주입
@@ -133,10 +143,112 @@ public class MemberControllerUnitTest {
                 .andDo(MockMvcResultHandlers.print());
     }
 
-    @DisplayName("회원 가입 실패")
+    @DisplayName("회원 가입 실패V1_이미 존재하는 아이디")
     @Test
-    public void 회원_가입_실패() {
+    public void 회원_가입_실패_이미_존재하는_아이디() throws Exception {
+        // given
+        // 회원 가입1
+        String fileName = "testFile1"; // 파일명
+        String contentType = "jpg"; // 파일 확장자/ 파일타입
+        String originFileName = fileName + "." + contentType;
+        String filePath = "src/test/resources/testImages/" + fileName + "." + contentType;
+        FileInputStream fileInputStream = new FileInputStream(filePath); // 첨부파일 읽어오기
 
+        MockMultipartFile file = new MockMultipartFile("file", originFileName, contentType, fileInputStream);
+
+        // == MemberOriginForm 만들기 그것을 json String으로 만들기
+        MemberOriginForm memberOriginForm = new MemberOriginForm(
+                "랄라",
+                "number1",
+                "asd123!@#",
+                "asd123!@#",
+                "number@naver2.com2",
+                "01012341234",
+                "021231234",
+                "korea",
+                "bu",
+                "dong",
+                "apart",
+                "12345",
+                file
+        );
+        // 회원1 저장
+        memberService.join(memberOriginForm);
+        // 아이디 중복 예외를 던진다.
+        doThrow(new ExistingIdException("이미 사용중인 아이디")).when(memberService).join(any(MemberOriginForm.class));
+
+        // 아이디 중복 회원
+        String fileName2 = "testFile1"; // 파일명
+        String contentType2 = "jpg"; // 파일 확장자/ 파일타입
+        String originFileName2 = fileName2 + "." + contentType2;
+        String filePath2 = "src/test/resources/testImages/" + fileName2 + "." + contentType2;
+        FileInputStream fileInputStream2 = new FileInputStream(filePath); // 첨부파일 읽어오기
+
+        MockMultipartFile file2 = new MockMultipartFile("file", originFileName2, contentType2, fileInputStream2);
+
+        // == MemberOriginForm 만들기 그것을 json String으로 만들기
+        MemberOriginForm memberOriginForm2 = new MemberOriginForm(
+                "랄라",
+                "number1",
+                "asd123!@#",
+                "asd123!@#",
+                "number@naver2.com2",
+                "01012341234",
+                "021231234",
+                "korea",
+                "bu",
+                "dong",
+                "apart",
+                "12345",
+                null
+        );
+        // json string으로 만들기
+        String body = new ObjectMapper().writeValueAsString(memberOriginForm2);
+        log.info("jsonbody : {}", body);
+        // inputStream으로 만들기
+        byte[] strJsonBody = body.getBytes(StandardCharsets.UTF_8);
+        // multipartFile 생성하기
+        MockMultipartFile jsonBody = new MockMultipartFile(
+                "data",
+                "",
+                "application/json",
+                strJsonBody
+        );
+        // when // then
+        // ExistingIdException에 의해 ServletException 발생
+        Assertions.assertThrows(ServletException.class, () -> {
+            mockMvc.perform(
+                    multipart("/members")
+                            .file(file2)
+                            .file(jsonBody)
+                            .contentType(MediaType.MULTIPART_FORM_DATA)
+                            .accept(MediaType.APPLICATION_JSON)
+            );
+        });
+//        ResultActions resultActions = mockMvc.perform(
+//                multipart("/members")
+//                        .file(file2)
+//                        .file(jsonBody)
+//                        .contentType(MediaType.MULTIPART_FORM_DATA)
+//                        .accept(MediaType.APPLICATION_JSON)
+//        );
+//
+//        // then
+//        resultActions.andExpect(status().isBadRequest())
+//                .andExpect(jsonPath("code").value("Bad Reqeust"))
+//                .andExpect(jsonPath("errMsg").value("이미 사용중인 아이디"))
+//                .andExpect(jsonPath("$.errMsg").value("이미 사용중인 아이디"))
+//                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @DisplayName("회원가입 검증 예외 발생")
+    @Test
+    public void 회원가입_검증_예외_발생() {
+        // given
+
+        // when
+
+        // then
     }
 
 
