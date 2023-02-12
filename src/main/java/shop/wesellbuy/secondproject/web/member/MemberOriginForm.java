@@ -110,5 +110,14 @@ public class MemberOriginForm {
         }
     }
 
-
+    /**
+     * writer : 이호진
+     * init : 2023.02.12
+     * updated by writer :
+     * update :
+     * description : 파일을 넣기
+     */
+    public void addFile(MultipartFile file) {
+        this.file = file;
+    }
 }

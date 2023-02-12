@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiOperation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -12,14 +11,11 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import shop.wesellbuy.secondproject.exception.ValidatedErrorMsg;
 import shop.wesellbuy.secondproject.exception.ValidatedErrorsMsg;
 import shop.wesellbuy.secondproject.repository.member.MemberSearchCond;
 import shop.wesellbuy.secondproject.repository.member.MemberSearchIdCond;
@@ -38,10 +34,8 @@ import shop.wesellbuy.secondproject.web.member.login.LoginSearchPwdResultForm;
 import shop.wesellbuy.secondproject.web.resultBox.Result;
 
 import java.io.IOException;
-import java.net.BindException;
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -82,14 +76,14 @@ public class MemberController {
         log.info("memberOriginForm : {}", memberOriginForm);
 
         // 파일 dto에 넣기
-        memberOriginForm.setFile(file);
+        memberOriginForm.addFile(file);
         // 데이터 검증하기(bindingResult)
         memberOriginForm.validateJoinValues(bindingResult);
         // bindResult에 에러 있는지 확인
         if(bindingResult.hasErrors()) {
             log.info("member join error : {}", bindingResult);
-
-            return makeValidatedErrorsContents(bindingResult);
+            // BindingResult에 의해 만들어진 error들을 클라이언트에게 알려주기
+            return ValidatedErrorsMsg.makeValidatedErrorsContents(bindingResult);
         }
         /// 검증 통과
         // 회원 등록
@@ -101,42 +95,55 @@ public class MemberController {
         return new ResponseEntity(body, HttpStatus.CREATED);
     }
 
-    /**
-     * writer : 이호진
-     * init : 2023.02.10
-     * updated by writer :
-     * update :
-     * description : BindingResult에 의해 만들어진 error들을
-     *               클라이언트에게 알려주기
-     *
-     * comment : bindingResult는 RestControllerAdvice에서 처리 못할까?
-     */
-    private ResponseEntity<ValidatedErrorsMsg<List<ValidatedErrorMsg>>> makeValidatedErrorsContents(BindingResult bindingResult) {
-        // bindingResult에 들어있는 에러 정보 담기
-        List<ValidatedErrorMsg> errors = bindingResult.getFieldErrors().stream()
-                .map(fe -> ValidatedErrorMsg.create(fe.getField(), fe.getDefaultMessage()))
-                .collect(toList());
-        // ValidatatedErrorsMsg 만들기
-        ValidatedErrorsMsg<List<ValidatedErrorMsg>> result = new ValidatedErrorsMsg<>(errors);
-        // 클라이언트에게 보내주기
-        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-    }
+//    /**
+//     * writer : 이호진
+//     * init : 2023.02.10
+//     * updated by writer :
+//     * update :
+//     * description : BindingResult에 의해 만들어진 error들을
+//     *               클라이언트에게 알려주기
+//     *
+//     * comment : bindingResult는 RestControllerAdvice에서 처리 못할까?
+//     */
+//    private ResponseEntity<ValidatedErrorsMsg<List<ValidatedErrorMsg>>> makeValidatedErrorsContents(BindingResult bindingResult) {
+//        // bindingResult에 들어있는 에러 정보 담기
+//        List<ValidatedErrorMsg> errors = bindingResult.getFieldErrors().stream()
+//                .map(fe -> ValidatedErrorMsg.create(fe.getField(), fe.getDefaultMessage()))
+//                .collect(toList());
+//        // ValidatatedErrorsMsg 만들기
+//        ValidatedErrorsMsg<List<ValidatedErrorMsg>> result = new ValidatedErrorsMsg<>(errors);
+//        // 클라이언트에게 보내주기
+//        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+//    }
 
     /**
      * writer : 이호진
      * init : 2023.02.08
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.02.12
      * description : 회원 정보 수정
+     *
+     * update : > @RequestBody를 @RequestPart로 수정
+     *          > file 파라미터를 추가
+     *          > ValidatedErrorsMsg.makeValidatedErrorsContents 추가
      */
     @PutMapping("/{num}")
     @ApiOperation(value = "회원 정보 수정")
-    public ResponseEntity<Result<String>> update(
+    public ResponseEntity<?> update(
             @PathVariable Integer num,
-            @RequestBody @Validated MemberUpdateForm memberUpdateForm,
+            @RequestPart("data") @Validated MemberUpdateForm memberUpdateForm,
+            @RequestPart(value = "file", required = false) MultipartFile file,
             BindingResult bindingResult) throws IOException {
+        // file을 dto에 넣기
+        memberUpdateForm.addFile(file);
         // 데이터 검증
-        memberUpdateForm.validateJoinValues(bindingResult);
+        memberUpdateForm.validateUpdateValues(bindingResult);
+        // bindingResult에 에러있는지 확인하기
+        if(bindingResult.hasErrors()) {
+            log.info("member update error : {}", bindingResult);
+
+            return ValidatedErrorsMsg.makeValidatedErrorsContents(bindingResult);
+        }
         /// 검증 통과
         // 수정하기
         memberService.update(memberUpdateForm, num);
@@ -150,18 +157,21 @@ public class MemberController {
     /**
      * writer : 이호진
      * init : 2023.02.08
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.02.12
      * description : 회원 탈퇴
+     *
+     * update : @PathVariable 추가
      */
     @DeleteMapping("/{num}")
     @ApiOperation("회원 탈퇴")
-    public ResponseEntity<Result<String>> withdrawal(int num, HttpServletRequest request) {
+    public ResponseEntity<Result<String>> withdrawal(@PathVariable int num, HttpServletRequest request) {
         // 회원 탈퇴
         memberService.withdrawal(num);
         // 로그아웃 하기(session의 데이터 지우기)
         turnOffLogin(request);
         // responseEntity body 생성
+        log.info("회원탈퇴 성공 -> member num : {}", num);
         String successMsg = "회원 탈퇴 완료";
         Result<String> body = new Result<>(successMsg);
 
@@ -250,16 +260,19 @@ public class MemberController {
     /**
      * writer : 이호진
      * init : 2023.02.08
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.02.12
      * description : 로그인 처리하기
      *               > id, pwd, rememberId(Boolean) 데이터 받기
+     *
+     * update : form.getRememberId() != false 삭제
      */
     @GetMapping("/login")
     @ApiOperation("로그인 처리")
     public ResponseEntity login(@RequestBody LoginMemberForm form,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
+        log.info("LoginMemberForm : {}", form);
         // 로그인 처리하기
         LoginMemberSessionForm sessionForm = memberService.login(form);
         /// 로그인 성공
@@ -269,7 +282,7 @@ public class MemberController {
         session.setAttribute(SessionConst.LOGIN_MEMBER, sessionForm);
 
         /// 아이디 기억 체크
-        if(form.getRememberId() != null || form.getRememberId() == true) {
+        if(form.getRememberId() == true) {
             // 쿠키 생성
             int maxAge = 86400; // 쿠키 24시간 유지
             CookieManager.makeCookie(CookieManager.REMEMBER_ID, form.getId(), response, maxAge);
@@ -316,6 +329,7 @@ public class MemberController {
     @GetMapping("/find/id")
     @ApiOperation("회원 아이디 찾기")
     public Result<LoginSearchIdResultForm> searchForIds(@RequestBody MemberSearchIdCond memberSearchIdCond) {
+        log.info("memberSearchIdCond : {}", memberSearchIdCond);
         // 아이디(들) 찾기
         LoginSearchIdResultForm form = memberService.searchForIds(memberSearchIdCond);
         // 아이디 찾기 성공

@@ -86,10 +86,10 @@ public class CustomerServiceServiceImpl implements CustomerServiceService{
     @Override
     public CustomerServiceDetailForm watchDetail(int num) {
         // 모두 가져오기
-        CustomerService findCstomerService = customerServiceJpaRepository.findDetailInfoById(num).orElseThrow();
+        CustomerService findCustomerService = customerServiceJpaRepository.findDetailInfoById(num).orElseThrow();
         // 댓글도 넣어주기(form 만들어서)
         CustomerServiceDetailForm customerServiceDetailForm =
-                CustomerServiceDetailForm.createCustomerServiceDetailForm(findCstomerService);
+                CustomerServiceDetailForm.createCustomerServiceDetailForm(findCustomerService);
 
         return customerServiceDetailForm;
     }

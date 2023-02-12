@@ -7,6 +7,7 @@ import shop.wesellbuy.secondproject.domain.reply.ReplyStatus;
 import shop.wesellbuy.secondproject.web.reply.ReplyDetailForm;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,9 +17,11 @@ import static java.util.stream.Collectors.toList;
  * 고객지원글 상세보기 dto
  * writer : 이호진
  * init : 2023.01.28
- * updated by writer :
- * update :
+ * updated by writer : 이호진
+ * update : 2023.02.12
  * description : 고객지원글 상세정보를 담아둔다.
+ *
+ * update : 댓글이 없을 때 if() 조건 추가
  */
 @Getter @Setter
 public class CustomerServiceDetailForm {
@@ -28,7 +31,7 @@ public class CustomerServiceDetailForm {
     private String content; // 신고 내용
     private String memberId; // 회원 아이디
     private LocalDateTime createDate; // 작성 날짜
-    private List<ReplyDetailForm> replyList; // 댓글 모음
+    private List<ReplyDetailForm> replyList = new ArrayList<>(); // 댓글 모음
 
     // ** 생성 메서드 ** //
     public static CustomerServiceDetailForm createCustomerServiceDetailForm(CustomerService customerService) {
@@ -45,8 +48,8 @@ public class CustomerServiceDetailForm {
                 customerService.getCustomerServiceReplyList().stream()
                         .filter(r -> r.getStatus().equals(ReplyStatus.R))
                         .map(r -> ReplyDetailForm.createReplyDetailForm(r))
-                        .collect(toList())
-        );
+                        .collect(toList()));
+
 
         return customerServiceDetailForm;
     }

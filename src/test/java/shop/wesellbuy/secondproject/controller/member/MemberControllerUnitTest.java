@@ -3,7 +3,7 @@ package shop.wesellbuy.secondproject.controller.member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -215,16 +216,32 @@ public class MemberControllerUnitTest {
                 strJsonBody
         );
         // when // then
+        // test V1
         // ExistingIdException에 의해 ServletException 발생
-        Assertions.assertThrows(ServletException.class, () -> {
-            mockMvc.perform(
-                    multipart("/members")
-                            .file(file2)
-                            .file(jsonBody)
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .accept(MediaType.APPLICATION_JSON)
-            );
-        });
+//        Assertions.assertThrows(ServletException.class, () -> {
+//            mockMvc.perform(
+//                    multipart("/members")
+//                            .file(file2)
+//                            .file(jsonBody)
+//                            .contentType(MediaType.MULTIPART_FORM_DATA)
+//                            .accept(MediaType.APPLICATION_JSON)
+//            );
+//        });
+        // test V2
+        org.assertj.core.api.Assertions.assertThatThrownBy(
+                        () -> {
+                            mockMvc.perform(
+                                    multipart("/members")
+                                            .file(file2)
+                                            .file(jsonBody)
+                                            .contentType(MediaType.MULTIPART_FORM_DATA)
+                                            .accept(MediaType.APPLICATION_JSON)
+                            );
+                        }
+                )
+                .hasCause(new ExistingIdException("이미 사용중인 아이디"));
+
+//        // test V3 - perform() 수행 중 예외가 발생해 이까지 도달하지 못함
 //        ResultActions resultActions = mockMvc.perform(
 //                multipart("/members")
 //                        .file(file2)
@@ -233,7 +250,26 @@ public class MemberControllerUnitTest {
 //                        .accept(MediaType.APPLICATION_JSON)
 //        );
 //
+//        // assert로 예외를 검사한다.
+//        resultActions.andExpect(status().is4xxClientError())
+//                .andExpect(
+//                        (result) -> {
+//                            assertTrue(result.getResolvedException().getClass().isAssignableFrom(ExistingIdException.class));
+//                        }
+//                );
+
+//        // test V4
+//        ResultActions resultActions = mockMvc.perform(
+//                multipart("/members")
+//                        .file(file2)
+//                        .file(jsonBody)
+//                        .contentType(MediaType.MULTIPART_FORM_DATA)
+//                        .accept(MediaType.APPLICATION_JSON)
+//        );
+
+//
 //        // then
+//        // test V4 - perform() 수행 중 예외가 발생해 이까지 도달하지 못함
 //        resultActions.andExpect(status().isBadRequest())
 //                .andExpect(jsonPath("code").value("Bad Reqeust"))
 //                .andExpect(jsonPath("errMsg").value("이미 사용중인 아이디"))

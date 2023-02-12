@@ -18,6 +18,11 @@ public class LocalDateParser {
 
     private LocalDate searchDate;
 
+
+    /**
+     * comment : 원하는 type의 dateType을 localdateTime으로 바꿀 수 있다.
+     *           -> if 조건으로 해결 가능하다.
+     */
     public LocalDateParser(String currentDate) {
         String dateType = "yyyy-MM-dd"; // 날짜 type
         this.searchDate = LocalDate.parse(currentDate, DateTimeFormatter.ofPattern(dateType));

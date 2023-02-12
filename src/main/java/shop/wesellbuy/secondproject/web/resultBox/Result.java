@@ -18,7 +18,9 @@ import lombok.ToString;
 public class Result <T> {
 
     private final T data;
+    private int boardNum; // 게시글 번호 보내주기
 
-
-
+    public Result(T data) {
+        this.data = data;
+    }
 }

@@ -51,7 +51,6 @@ public class FileStoreOfRecommendationPicture {
     public List<RecommendationPicture> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
         // 파일 담을 list 생성
         List<RecommendationPicture> storeFileResult = new ArrayList<>();
-
         // list에 담기
         for(MultipartFile multipartFile : multipartFiles) {
             if(!multipartFile.isEmpty()) {

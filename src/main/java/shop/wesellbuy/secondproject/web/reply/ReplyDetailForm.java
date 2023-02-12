@@ -50,6 +50,7 @@ public class ReplyDetailForm {
      * CustomerServiceDetailForm -> Reply에 사용
      */
     public static ReplyDetailForm createReplyDetailForm(CustomerServiceReply reply) {
+
         ReplyDetailForm replyDetailForm = new ReplyDetailForm(
                 reply.getNum(),
                 reply.getContent(),
