@@ -1,11 +1,10 @@
 package shop.wesellbuy.secondproject.web.item;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Positive;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import shop.wesellbuy.secondproject.domain.item.ItemPicture;
 
@@ -17,25 +16,27 @@ import java.util.List;
  * writer : 이호진
  * init : 2023.02.02
  * updated by writer : 이호진
- * update : 2023.02.12
+ * update : 2023.02.13
  * description : 클라이언트에게서 받은 상품 정보를 담아둔다.
  *
  * update : @NoArgsConstructor 추가
  *          @NotBlank, @Pattern 추가
  *          files 필드 추가
+ *          @Pattern(Integer type) 삭제 -> @Positive 추가
  */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class ItemOriginalForm {
 
     @NotBlank(message = "필수 입력입니다.")
     private String name; // 상품명
-    @NotBlank(message = "필수 입력입니다.")
-    @Pattern(regexp = "^\\d+$", message = "숫자만 입력 가능합니다.")
+//    @NotNull(message = "필수 입력입니다.")
+    @Positive(message = "양수만 입력 가능합니다.")
     private Integer stock; // 제고 수량
-    @NotBlank(message = "필수 입력입니다.")
-    @Pattern(regexp = "^\\d+$", message = "숫자만 입력 가능합니다.")
+//    @NotNull(message = "필수 입력입니다.")
+    @Positive(message = "양수만 입력 가능합니다.")
     private Integer price; // 가격
     @NotBlank(message = "필수 입력입니다.")
     private String content; // 설명

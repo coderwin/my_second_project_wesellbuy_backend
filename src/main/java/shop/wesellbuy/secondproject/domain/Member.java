@@ -67,15 +67,15 @@ public class Member extends BaseDateColumnEntity {
     private List<Recommendation> recommendationList = new ArrayList<>(); // 회원 등록 추천합니다 모음
 
     @OneToMany(mappedBy = "member")
-    @OrderBy(value = "customerServiceReply_num DESC")
+    @OrderBy(value = "num DESC")
     private List<CustomerServiceReply> customerServiceReplyList = new ArrayList<>(); // 고객지원 댓글 모음
 
     @OneToMany(mappedBy = "member")
-    @OrderBy(value = "itemReply_num DESC")
+    @OrderBy(value = "num DESC")
     private List<ItemReply> ItemReplyList = new ArrayList<>(); // 상품 댓글 모음
 
     @OneToMany(mappedBy = "member")
-    @OrderBy(value = "recommendationReply_num DESC")
+    @OrderBy(value = "num DESC")
     private List<RecommendationReply> recommendationReplyList = new ArrayList<>(); // 추천합니다 댓글 모음
 
     protected Member() {

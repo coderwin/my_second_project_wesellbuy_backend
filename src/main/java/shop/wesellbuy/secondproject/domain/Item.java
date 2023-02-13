@@ -20,7 +20,7 @@ import java.util.List;
  * writer : 이호진
  * init : 2023.01.14
  * updated by writer : 이호진
- * update : 2023.02.08
+ * update : 2023.02.12
  * description : 회원이 입력한 상품 정보를 정의한다.
  *
  * comment : '할인률'도 생각해보자
@@ -31,6 +31,7 @@ import java.util.List;
  *
  *          OneToMany 필드를 불러올 때 순서 정하기
  *          > @OrderBy 사용
+ *          > @OrderBy value 수정 : itemReply_num -> num : entity field값을 사용한다
  */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -62,7 +63,7 @@ public class Item extends BaseDateColumnEntity {
     private Member member; // 등록 회원
 
     @OneToMany(mappedBy = "item")
-    @OrderBy(value = "itemReply_num DESC")
+    @OrderBy(value = "num DESC")
     private List<ItemReply> itemReplyList = new ArrayList<>(); // 댓글 모음
 
     @OneToMany(mappedBy = "item")

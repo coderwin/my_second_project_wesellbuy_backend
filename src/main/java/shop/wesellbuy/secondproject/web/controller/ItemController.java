@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import shop.wesellbuy.secondproject.exception.ValidatedErrorsMsg;
@@ -55,11 +56,9 @@ public class ItemController {
     @PostMapping
     @ApiOperation(value = "상품 등록")
     public ResponseEntity<?> save(@SessionAttribute(SessionConst.LOGIN_MEMBER) LoginMemberSessionForm sessionForm,
-                                  @RequestPart("data") ItemOriginalForm form,
-                                  @RequestPart("files") List<MultipartFile> files,
+                                  @RequestPart("data") @Validated ItemOriginalForm form,
+                                  @RequestPart(name = "files", required = false) List<MultipartFile> files,
                                   BindingResult bindingResult) throws IOException {
-        log.info("ItemOriginalFrom form : {}", form);
-        log.info("files : {}", files);
 
         // 데이터 검증하기
         if(files != null) {
@@ -80,7 +79,7 @@ public class ItemController {
         }
         // bindingResult에 에러 있는지 확인
         if(bindingResult.hasErrors()) {
-            log.info("recommendation save error : {}", bindingResult);
+            log.info("item save error : {}", bindingResult);
 
             return ValidatedErrorsMsg.makeValidatedErrorsContents(bindingResult);
         }
@@ -103,11 +102,10 @@ public class ItemController {
      */
     @PutMapping("/{num}")
     @ApiOperation("상품 수정")
-    public ResponseEntity<?> update(@RequestPart("data") ItemUpdateForm form,
-                       @RequestPart("files") List<MultipartFile> files,
-                       BindingResult bindingResult,
-                       @PathVariable int num
-                       ) throws IOException {
+    public ResponseEntity<?> update(@RequestPart("data") @Validated ItemUpdateForm form,
+                                    @RequestPart(name = "files", required = false) List<MultipartFile> files,
+                                    BindingResult bindingResult,
+                                    @PathVariable int num) throws IOException {
 
         // 데이터 검증하기
         if(files != null) {
@@ -191,7 +189,7 @@ public class ItemController {
      * description : 상품 이미지 삭제
      */
     @DeleteMapping("/{itemNum}/pictures/{pictureNum}")
-    @ApiOperation("value = 상품 이미지 삭제")
+    @ApiOperation(value = "상품 이미지 삭제")
     public ResponseEntity<ResultForItem<String>> deletePicture(@PathVariable int itemNum, @PathVariable int pictureNum) {
         // 이미지 삭제
         itemService.deletePicture(itemNum, pictureNum);
@@ -212,7 +210,7 @@ public class ItemController {
      *               -> 좋아요수가 높은 순으로
      */
     @GetMapping("/rank/v1")
-    @ApiOperation("상품 순위 목록")
+    @ApiOperation("상품 순위 목록 V1")
     public Result<List<ItemRankForm>> selectRankV1() {
         // 상품 순위 불러오기
         List<ItemRankForm> formList = itemService.selectRank();
@@ -231,7 +229,7 @@ public class ItemController {
      *               -> 좋아요수가 높은 순으로
      */
     @GetMapping("/rank/v2")
-    @ApiOperation("상품 순위 목록")
+    @ApiOperation("상품 순위 목록 V2")
     public Result<List<ItemRankForm>> selectRankV2() {
         // 상품 순위 불러오기
         List<ItemRankForm> formList = itemService.selectRankV2();

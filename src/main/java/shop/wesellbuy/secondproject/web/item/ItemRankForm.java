@@ -6,6 +6,8 @@ import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.common.PictureStatus;
 import shop.wesellbuy.secondproject.domain.item.ItemPicture;
 
+import java.util.ArrayList;
+
 /**
  * 상품 순위 상세보기 dto
  * writer : 이호진

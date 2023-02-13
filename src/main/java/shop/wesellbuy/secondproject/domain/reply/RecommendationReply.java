@@ -1,5 +1,6 @@
 package shop.wesellbuy.secondproject.domain.reply;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import shop.wesellbuy.secondproject.domain.CustomerService;

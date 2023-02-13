@@ -9,14 +9,14 @@ import lombok.Getter;
  * init : 2023.02.10
  * updated by writer :
  * update :
- * description : @Validated filed error 정보 담기
+ * description : @Validated field error 정보 담기
  *                                (field, message)
  */
 @Getter
 @AllArgsConstructor
 public class ValidatedErrorMsg {
 
-    private String filed; // error가 난 filed
+    private String field; // error가 난 field
     private String errMsg; // 검증 오류 메시지
 
     // ** 생성 메서드** //

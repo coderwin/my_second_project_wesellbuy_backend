@@ -3,10 +3,8 @@ package shop.wesellbuy.secondproject.domain.item;
 import jakarta.persistence.*;
 import lombok.Getter;
 import shop.wesellbuy.secondproject.domain.Item;
-import shop.wesellbuy.secondproject.domain.Member;
 import shop.wesellbuy.secondproject.domain.common.BaseDateColumnEntity;
 import shop.wesellbuy.secondproject.domain.common.PictureStatus;
-import shop.wesellbuy.secondproject.domain.recommendation.RecommendationPicture;
 
 /**
  * 상품 board 이미지 entity
