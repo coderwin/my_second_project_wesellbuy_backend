@@ -1,6 +1,5 @@
 package shop.wesellbuy.secondproject.service.likes;
 
-import org.springframework.transaction.annotation.Transactional;
 import shop.wesellbuy.secondproject.web.likes.ItemLikesListForm;
 
 import java.util.List;
@@ -41,4 +40,14 @@ public interface ItemLikesService {
      * description : 모든 상품 좋아요 불러오기 by memberNum
      */
     List<ItemLikesListForm> selectList(int memberNum);
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.13
+     * updated by writer :
+     * update :
+     * description : 로그인한 회원의 모든 상품 좋아요 불러오기 by memberNum
+     *               > 좋아요 색깔 표시할지 말지 결정
+     */
+    List<Integer> selectListForItemList(int memberNum);
 }

@@ -1,8 +1,6 @@
 package shop.wesellbuy.secondproject.service.likes;
 
-import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,6 @@ import shop.wesellbuy.secondproject.domain.item.Book;
 import shop.wesellbuy.secondproject.domain.item.Furniture;
 import shop.wesellbuy.secondproject.domain.item.HomeAppliances;
 import shop.wesellbuy.secondproject.domain.item.ItemPicture;
-import shop.wesellbuy.secondproject.domain.likes.ItemLikes;
 import shop.wesellbuy.secondproject.domain.member.SelfPicture;
 import shop.wesellbuy.secondproject.repository.item.ItemJpaRepository;
 import shop.wesellbuy.secondproject.repository.member.MemberJpaRepository;
@@ -120,6 +117,32 @@ public class ItemLikesServiceTest {
         // then
         assertThat(itemLikesListByMembmer.size()).isEqualTo(2);
         assertThat(itemLikesListByMembmer2.size()).isEqualTo(1);
+    }
+
+    /**
+     * 회원이 좋아요 클릭한 모든 상품 좋아요 불러오기 확인
+     *
+     * comment : 2/13 ~
+     *           > 아직 test 안 해봄
+     */
+    @Test
+//    @Rollback(value = false)
+    public void 회원의_모든_상품_좋아요_불러오기_확인() {
+        // given
+        // 상품좋아요 저장
+        int itemNum1 = itemLikesService.save(item.getNum(), member.getNum());
+        int itemNum2 = itemLikesService.save(item.getNum(), member2.getNum());
+        int itemNum3 = itemLikesService.save(item2.getNum(), member.getNum());
+
+        // when
+        // item 좋아요 불러오기
+        List<Integer> itemLikesListByMember = itemLikesService.selectListForItemList(member.getNum());
+        // item2 좋아요 불러오기
+        List<Integer> itemLikesListByMember2 = itemLikesService.selectListForItemList(member2.getNum());
+
+        // then
+        assertThat(itemLikesListByMember.size()).isEqualTo(2);
+        assertThat(itemLikesListByMember2.size()).isEqualTo(1);
     }
 
     /**

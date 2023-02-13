@@ -33,6 +33,7 @@ public class ItemLikesServiceImpl implements ItemLikesService{
     private final ItemLikesJpaRepository itemLikesJpaRepository;
     private final ItemJpaRepository itemJpaRepository;
     private final MemberJpaRepository memberJpaRepository;
+
     /**
      * writer : 이호진
      * init : 2023.02.01
@@ -77,6 +78,9 @@ public class ItemLikesServiceImpl implements ItemLikesService{
      * updated by writer :
      * update :
      * description : 모든 상품 좋아요 불러오기 by memberNum
+     *               > 좋아요 개수 알 수 있다.
+     *               > 의도하지 않은 로직
+     *                    >(2/13 지금 봤을 때 필요없는 메서드 같아서 사용 안함)
      */
     @Override
     public List<ItemLikesListForm> selectList(int memberNum) {
@@ -84,6 +88,25 @@ public class ItemLikesServiceImpl implements ItemLikesService{
         List<ItemLikes> itemLikesList = itemLikesJpaRepository.findAllInfoById(memberNum);
         List<ItemLikesListForm> result = itemLikesList.stream()
                 .map(l -> ItemLikesListForm.create(l.getNum()))
+                .collect(toList());
+
+        return result;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.13
+     * updated by writer :
+     * update :
+     * description : 로그인한 회원의 모든 상품 좋아요 불러오기 by memberNum
+     *               > 좋아요 색깔 표시할지 말지 결정
+     */
+    @Override
+    public List<Integer> selectListForItemList(int memberNum) {
+        // 모든 좋아요 불러오기
+        List<ItemLikes> itemLikesList = itemLikesJpaRepository.findAllInfoById(memberNum);
+        List<Integer> result = itemLikesList.stream()
+                .map(l -> l.getItem().getNum())
                 .collect(toList());
 
         return result;
