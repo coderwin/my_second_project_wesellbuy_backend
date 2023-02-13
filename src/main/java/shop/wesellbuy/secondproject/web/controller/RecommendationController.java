@@ -77,7 +77,7 @@ public class RecommendationController {
                     }
                 }
             }
-        // files null 처리하기
+        // files 빈 List로 처리하기
         } else {
             files = new ArrayList<>();
         }
@@ -125,8 +125,9 @@ public class RecommendationController {
     @PutMapping("/{num}")
     @ApiOperation(value = "추천합니다 게시글 수정")
     public ResponseEntity<?> update(@RequestPart("data") @Validated RecommendationUpdateForm form,
-                       @RequestPart(value = "files", required = false) List<MultipartFile> files,
-                       BindingResult bindingResult) throws IOException {
+                                    @RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                    BindingResult bindingResult,
+                                    @PathVariable int num) throws IOException {
         log.info("files : {}", files);
         log.info("RecommendationForm form : {}", form);
 
@@ -154,6 +155,8 @@ public class RecommendationController {
             return ValidatedErrorsMsg.makeValidatedErrorsContents(bindingResult);
         }
         /// 검증 통과
+        // form에 num 담기
+        form.addNum(num);
         // 수정하기
         recommendationService.update(form, files);
         // 수정 완료
@@ -227,7 +230,7 @@ public class RecommendationController {
 
     /**
      * writer : 이호진
-     * init : 2023.02.09
+     * init : 2023.02.12
      * updated by writer :
      * update :
      * description : 추천합니다글 이미지 파일 불러오기
@@ -247,8 +250,11 @@ public class RecommendationController {
      * updated by writer :
      * update :
      * description : 추천합니다글 모두 불러오기
+     *               > 검색 데이터 itemName, sellerId, memberId, createDate를 받고
+     *               > 페이징 데이터 size, page를 받는다.
      *               -> status 사용
      *               -> admin이 사용한다.
+     *
      */
     @GetMapping("/admin")
     @ApiOperation("추천합니다 게시글 목록 관리자용")

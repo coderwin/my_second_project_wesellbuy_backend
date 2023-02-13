@@ -14,11 +14,12 @@ import java.util.List;
  * writer : 이호진
  * init : 2023.01.28
  * updated by writer : 이호진
- * update : 2023.02.12
+ * update : 2023.02.13
  * description : 클라이언트가 보내온 추천합니다글 수정 정보를 담아둔다.
  *
  * update : > files 필드 추가
  *          > 생성자 추가(files 뺀)
+ *          > addNum(Integer num) 추가
  */
 @Getter
 @AllArgsConstructor
@@ -41,5 +42,17 @@ public class RecommendationUpdateForm {
         this.itemName = itemName;
         this.sellerId = sellerId;
         this.content = content;
+    }
+
+    // ** 비즈니스 메서드 ** //
+    /**
+     * writer : 이호진
+     * init : 2023.02.13
+     * updated by writer :
+     * update :
+     * description : num 담기
+     */
+    public void addNum(Integer num) {
+        this.num = num;
     }
 }

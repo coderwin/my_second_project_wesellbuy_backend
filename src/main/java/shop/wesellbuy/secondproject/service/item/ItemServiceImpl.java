@@ -357,7 +357,7 @@ public class ItemServiceImpl implements ItemService {
      * init : 2023.02.02
      * updated by writer : 이호진
      * update : 2023.02.01
-     * description : 추천합니다글 모두 불러오기
+     * description : 상품 모두 불러오기
      *               -> status 상태(D)는 출력 안 한다.
      */
     @Override

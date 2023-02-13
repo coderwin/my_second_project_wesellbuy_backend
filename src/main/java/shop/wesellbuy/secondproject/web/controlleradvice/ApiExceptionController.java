@@ -12,6 +12,7 @@ import shop.wesellbuy.secondproject.exception.ErrorResultMsg;
 import shop.wesellbuy.secondproject.exception.ValidatedErrorMsg;
 import shop.wesellbuy.secondproject.exception.ValidatedErrorsMsg;
 import shop.wesellbuy.secondproject.exception.common.NotExistingIdException;
+import shop.wesellbuy.secondproject.exception.item.NotExistingItemTypeException;
 import shop.wesellbuy.secondproject.exception.member.ExistingIdException;
 import shop.wesellbuy.secondproject.exception.member.login.NotExistingInfoException;
 import shop.wesellbuy.secondproject.exception.member.login.WithdrawalMemberException;
@@ -182,9 +183,31 @@ public class ApiExceptionController {
         return result;
     }
 
+    ///////// recommendations 예외 처리 끝
 
 
-    ///////// customerservices 예외 처리 끝
+    ///////// Item 예외 처리 시작
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.13
+     * updated by writer :
+     * update :
+     * description : 상품 저장 예외 처리
+     *               > 상품 종류가 없을 때
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotExistingItemTypeException.class)
+    public ErrorResultMsg NotExistingItemTypeEx(NotExistingItemTypeException e) {
+        log.error("exception appears : ", e);
+
+        // 에러 메시지 전달하기
+        ErrorResultMsg result = new ErrorResultMsg("bad request", e.getMessage());
+
+        return result;
+    }
+
+    ///////// Item 예외 처리 끝
 
 
 
