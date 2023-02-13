@@ -18,6 +18,7 @@ import shop.wesellbuy.secondproject.web.customerservice.CustomerServiceForm;
 import shop.wesellbuy.secondproject.web.customerservice.CustomerServiceListForm;
 import shop.wesellbuy.secondproject.web.member.login.LoginMemberSessionForm;
 import shop.wesellbuy.secondproject.web.resultBox.Result;
+import shop.wesellbuy.secondproject.web.resultBox.ResultV2;
 
 /**
  * CustomerService Contoller
@@ -56,8 +57,8 @@ public class CustomerServiceController {
         int boardNum = customerServiceService.save(memberNum, form);
         // 저장 성공
         String successMsg = "등록 완료";
-        // Result 생성
-        Result<String> body = new Result<>(successMsg, boardNum);
+        // ResultV2 생성
+        ResultV2<String> body = new ResultV2<>(successMsg, boardNum);
 
         return new ResponseEntity<>(body ,HttpStatus.OK);
     }

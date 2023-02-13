@@ -104,6 +104,7 @@ public class MemberController {
 //     *               클라이언트에게 알려주기
 //     *
 //     * comment : bindingResult는 RestControllerAdvice에서 처리 못할까?
+//     *           >  ValidatedErrorsMsg class에 새로 생성
 //     */
 //    private ResponseEntity<ValidatedErrorsMsg<List<ValidatedErrorMsg>>> makeValidatedErrorsContents(BindingResult bindingResult) {
 //        // bindingResult에 들어있는 에러 정보 담기

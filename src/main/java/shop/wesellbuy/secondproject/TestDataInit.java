@@ -23,7 +23,7 @@ import shop.wesellbuy.secondproject.web.member.MemberForm;
  * comment : class 생성없이 EntityManager를 사용하면 왜 Transaction에 걸릴까? EntityManager가 왜 생성안 될까?
  */
 @Profile("local")
-@Component
+//@Component
 @RequiredArgsConstructor
 @Slf4j
 public class TestDataInit {

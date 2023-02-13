@@ -22,6 +22,7 @@ import shop.wesellbuy.secondproject.util.ValidationOfPattern;
 import shop.wesellbuy.secondproject.web.member.login.LoginMemberSessionForm;
 import shop.wesellbuy.secondproject.web.recommendation.*;
 import shop.wesellbuy.secondproject.web.resultBox.Result;
+import shop.wesellbuy.secondproject.web.resultBox.ResultV2;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -58,7 +59,7 @@ public class RecommendationController {
     public ResponseEntity<?> save(@RequestPart("data") @Validated RecommendationForm form,
                      @RequestPart(name = "files", required = false) List<MultipartFile> files,
                      BindingResult bindingResult,
-                     @SessionAttribute(name = SessionConst.LOGIN_MEMBER)LoginMemberSessionForm sessionForm
+                     @SessionAttribute(name = SessionConst.LOGIN_MEMBER) LoginMemberSessionForm sessionForm
                      ) throws IOException {
         log.info("files : {}", files);
         log.info("RecommendationForm form : {}", form);
@@ -91,7 +92,7 @@ public class RecommendationController {
         int num = recommendationService.save(form, files, sessionForm.getNum());
         // code 201 보내기
         String successMsg = "게시글 등록 성공";
-        Result<String> body = new Result(successMsg, num);
+        ResultV2<String> body = new ResultV2(successMsg, num);
 
         return new ResponseEntity(body, HttpStatus.CREATED);
     }
@@ -158,7 +159,7 @@ public class RecommendationController {
         // 수정 완료
         String successMsg = "수정 완료";
         // responseEntity body 생성
-        Result<String> body = new Result<>(successMsg, form.getNum());
+        ResultV2<String> body = new ResultV2<>(successMsg, form.getNum());
 
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
@@ -192,13 +193,13 @@ public class RecommendationController {
      */
     @DeleteMapping("/{num1}/pictures/{num2}")
     @ApiOperation("추천합니다 게시글 이미지 삭제")
-    public ResponseEntity<Result<String>> deletePicture(@PathVariable("num1") int boardNum, @PathVariable("num2") int pictureNum) {
+    public ResponseEntity<ResultV2<String>> deletePicture(@PathVariable("num1") int boardNum, @PathVariable("num2") int pictureNum) {
         // 이미지 삭제
         recommendationService.deletePicture(boardNum, pictureNum);
         // responseEntity body 생성
         log.info("추천합니다글 이미지 삭제 성공 -> recommendation picture num : {}", pictureNum);
         String successMsg = "삭제 완료";
-        Result<String> body = new Result<>(successMsg, boardNum);
+        ResultV2<String> body = new ResultV2<>(successMsg, boardNum);
 
         return new ResponseEntity<>(body, HttpStatus.OK);
     }

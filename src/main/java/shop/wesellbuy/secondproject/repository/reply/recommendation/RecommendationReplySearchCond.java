@@ -1,18 +1,23 @@
 package shop.wesellbuy.secondproject.repository.reply.recommendation;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * RecommendationReply findAll for condition dto
  * writer : 이호진
  * init : 2023.01.17
- * updated by writer :
- * update :
+ * updated by writer : 이호진
+ * update : 2023.02.13
  * description : RecommendationReply finaAll에 사용되는 where 절의 조건 데이터 모음
+ *
+ * update : @NoArgsConstructor 추가
  */
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RecommendationReplySearchCond {
 
     private String memberId; // 작성자 id

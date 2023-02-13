@@ -1,9 +1,6 @@
 package shop.wesellbuy.secondproject.web.reply;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * board 댓글 dto
@@ -16,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class ReplyForm {
     private String content; // 내용
 }
