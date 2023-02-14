@@ -21,7 +21,7 @@ import shop.wesellbuy.secondproject.domain.order.OrderStatus;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItemSearchCond {
 
-    private int sellerNum;// 판매자 번호
+    private Integer sellerNum;// 판매자 번호
     private String orderId; // 주문자 아이디
     private String orderStatus; // 주문 상태
     private String deliveryStatus; // 배달 상태

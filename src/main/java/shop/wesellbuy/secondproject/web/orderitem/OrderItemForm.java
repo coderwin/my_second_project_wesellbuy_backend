@@ -1,10 +1,7 @@
 package shop.wesellbuy.secondproject.web.orderitem;
 
 import jakarta.validation.constraints.Positive;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 주문상품 dto
@@ -21,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class OrderItemForm {
 
     @Positive(message = "주문 수량이 맞지 않습니다")

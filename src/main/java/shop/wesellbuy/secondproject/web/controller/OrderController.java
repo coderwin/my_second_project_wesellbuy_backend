@@ -14,16 +14,11 @@ import shop.wesellbuy.secondproject.repository.orderitem.OrderItemSearchCond;
 import shop.wesellbuy.secondproject.service.order.OrderService;
 import shop.wesellbuy.secondproject.util.SessionConst;
 import shop.wesellbuy.secondproject.web.member.login.LoginMemberSessionForm;
-import shop.wesellbuy.secondproject.web.order.OrderDetailForm;
-import shop.wesellbuy.secondproject.web.order.OrderListForm;
-import shop.wesellbuy.secondproject.web.order.OrderListFormForAdmin;
-import shop.wesellbuy.secondproject.web.order.OrderPaidMoneyForm;
-import shop.wesellbuy.secondproject.web.orderitem.OrderItemForm;
+import shop.wesellbuy.secondproject.web.order.*;
 import shop.wesellbuy.secondproject.web.orderitem.OrderItemListForm;
 import shop.wesellbuy.secondproject.web.resultBox.Result;
 import shop.wesellbuy.secondproject.web.resultBox.ResultForOrder;
 
-import java.util.List;
 
 /**
  * Order Contoller
@@ -52,12 +47,13 @@ public class OrderController {
      */
     @PostMapping
     @ApiOperation(value = "주문 등록")
-    public ResponseEntity<ResultForOrder<String>> save(@RequestBody @Validated List<OrderItemForm> form,
-                                                       @RequestBody @Validated OrderPaidMoneyForm paidMoneyForm,
+    public ResponseEntity<ResultForOrder<String>> save(@RequestBody @Validated OrderDataForm form,
                                                        @SessionAttribute(SessionConst.LOGIN_MEMBER)LoginMemberSessionForm sessionForm) {
+        log.info("form : {}", form.getData());
+        log.info("paidMoney : {}", form.getPaidMoney());
         /// 검증 통과
         // 주문 등록
-        int orderNum = orderService.save(form, paidMoneyForm.getPaidMoney(), sessionForm.getNum());
+        int orderNum = orderService.save(form.getData(), sessionForm.getNum(), form.getPaidMoney());
         // code 201 보내기
         String successMsg = "주문 완료";
         ResultForOrder<String> body = new ResultForOrder<>(successMsg, orderNum);
@@ -71,6 +67,8 @@ public class OrderController {
      * updated by writer :
      * update :
      * description : 주문 취소
+     *
+     * comment : 주문 취소면 -> 배송 상태도 '배송종료'[O(OVER)]로 바꾸는 것 생각해보기
      */
     @DeleteMapping("/{num}")
     @ApiOperation(value = "주문 취소")
@@ -93,7 +91,7 @@ public class OrderController {
      * description : 주문 상세보기
      */
     @GetMapping("/{num}")
-    @ApiOperation(value = "주문 취소")
+    @ApiOperation(value = "주문 상세보기")
     public Result<OrderDetailForm> watchDetail(@PathVariable int num) {
         // 주문 상세보기 불러오기
         OrderDetailForm form = orderService.watchDetail(num);
@@ -141,7 +139,7 @@ public class OrderController {
     @ApiOperation("주문 배송상태 변경 판매자용")
     public ResponseEntity<Result<String>> changeDeliveryStatusForSeller(@PathVariable int num) {
         // 주문 배송상태 변경하기
-        changeDeliveryStatusForSeller(num);
+        orderService.changeDeliveryStatusForSeller(num);
         // 변경 완료
         String successMsg = "배송상태 변경 완료";
         // responseEntity body 생성
@@ -162,8 +160,8 @@ public class OrderController {
     @GetMapping("/seller")
     @ApiOperation(value = "주문 목록 판매자용")
     public Result<Page<OrderItemListForm>> selectOrderItemList(OrderItemSearchCond cond,
-                                    Pageable pageable,
-                                    @SessionAttribute(SessionConst.LOGIN_MEMBER) LoginMemberSessionForm sessionForm) {
+                                                               Pageable pageable,
+                                                               @SessionAttribute(SessionConst.LOGIN_MEMBER) LoginMemberSessionForm sessionForm) {
         // 판매된 상품 불러오기
         Page<OrderItemListForm> pageForm = orderService.selectOrderItemList(cond, pageable, sessionForm.getNum());
         // Result 생성하기
