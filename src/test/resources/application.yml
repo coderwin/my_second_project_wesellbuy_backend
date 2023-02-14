@@ -5,7 +5,7 @@ spring:
     active: test
 
   datasource:
-    url: jdbc:h2:tcp://localhost/~/wesellbuy
+    url: jdbc:h2:tcp://localhost/~/wesellbuy/test
     username:
     password:
     driver-class-name: org.h2.Driver

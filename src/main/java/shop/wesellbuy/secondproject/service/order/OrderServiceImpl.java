@@ -108,6 +108,8 @@ public class OrderServiceImpl implements OrderService {
      *
      * comment : controller에서 array를 받을 때
      *           > paidMoney : 주문자가 지불한 가격
+     *           > controller에서 사용 안함(2/14)
+     *
      */
     @Override
     @Transactional
@@ -263,7 +265,7 @@ public class OrderServiceImpl implements OrderService {
 
 //    -------------------------methods using for deliver end ----------------------------------
 
-//    -------------------------methods using for admin start----------------------------------
+//    -------------------------methods using for admin, deliver start----------------------------------
     /**
      * writer : 이호진
      * init : 2023.02.04
@@ -271,7 +273,7 @@ public class OrderServiceImpl implements OrderService {
      * update :
      * description : 회원이 주문한 주문 모두 불러오기 + by 회원(주문자)아이디
      *               -> for admin
-     *               -> for delivery
+     *               -> for deliver
      */
     @Override
     public Page<OrderListFormForAdmin> selectListForAdmin(OrderSearchCond cond, Pageable pageable) {
@@ -282,6 +284,6 @@ public class OrderServiceImpl implements OrderService {
 
         return result;
     }
-//    -------------------------methods using for admin end ----------------------------------
+//    -------------------------methods using for admin, deliver end ----------------------------------
 
 }

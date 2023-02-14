@@ -29,6 +29,7 @@ import shop.wesellbuy.secondproject.repository.member.MemberJpaRepository;
 import shop.wesellbuy.secondproject.repository.reply.item.ItemReplyJpaRepository;
 import shop.wesellbuy.secondproject.service.item.ItemService;
 import shop.wesellbuy.secondproject.service.reply.item.ItemReplyService;
+import shop.wesellbuy.secondproject.web.controller.ItemController;
 import shop.wesellbuy.secondproject.web.item.*;
 import shop.wesellbuy.secondproject.web.member.MemberForm;
 import shop.wesellbuy.secondproject.web.reply.ReplyForm;
@@ -905,36 +906,48 @@ public class ItemServiceTest {
      * -> fetchJoin 사용?
      */
     @Test
-    @Rollback(value = false)
+//    @Rollback(value = false)
     public void 순위_정하기_item삭제_일어났을_때_확인_fetchJoin_사용_확인() {
         // given
         // 10개의 상품 생성
-        List<ItemPicture> itemPictureList = new ArrayList<>();
-        itemPictureList.add(ItemPicture.createItemPicture("a", "a"));
-        itemPictureList.add(ItemPicture.createItemPicture("a1", "a2"));
+        List<ItemPicture> itemPictureList1 = new ArrayList<>();
+        itemPictureList1.add(ItemPicture.createItemPicture("a", "a"));
+        itemPictureList1.add(ItemPicture.createItemPicture("a1", "a2"));
 
-        FurnitureForm furnitureForm1 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList, "hansem");
+        List<ItemPicture> itemPictureList2 = new ArrayList<>();
+        itemPictureList2.add(ItemPicture.createItemPicture("a", "a"));
+        itemPictureList2.add(ItemPicture.createItemPicture("a1", "a2"));
+
+        List<ItemPicture> itemPictureList3 = new ArrayList<>();
+        itemPictureList3.add(ItemPicture.createItemPicture("a", "a"));
+        itemPictureList3.add(ItemPicture.createItemPicture("a1", "a2"));
+
+        List<ItemPicture> itemPictureList4 = new ArrayList<>();
+        itemPictureList4.add(ItemPicture.createItemPicture("a", "a"));
+        itemPictureList4.add(ItemPicture.createItemPicture("a1", "a2"));
+
+        FurnitureForm furnitureForm1 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList1, "hansem");
         Item item1 = Furniture.createFurniture(furnitureForm1, member);
-        FurnitureForm furnitureForm2 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList, "hansem");
+        FurnitureForm furnitureForm2 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList2, "hansem");
         Item item2 = Furniture.createFurniture(furnitureForm2, member2);
-        FurnitureForm furnitureForm3 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList, "hansem");
+        FurnitureForm furnitureForm3 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", new ArrayList<>(), "hansem");
         Item item3 = Furniture.createFurniture(furnitureForm3, member);
-        FurnitureForm furnitureForm4 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList, "hansem");
+        FurnitureForm furnitureForm4 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList3, "hansem");
         Item item4 = Furniture.createFurniture(furnitureForm4, member2);
-        FurnitureForm furnitureForm5 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList, "hansem");
+        FurnitureForm furnitureForm5 = new FurnitureForm(10, 2000, "책상", "잘 만들어졌어요~", new ArrayList<>(), "hansem");
         Item item5 = Furniture.createFurniture(furnitureForm5, member);
 
-        HomeAppliancesForm haForm1 = new HomeAppliancesForm(20, 2000, "냉장고", "잘 만들어졌어요~", itemPictureList, "samsug");
+        HomeAppliancesForm haForm1 = new HomeAppliancesForm(20, 2000, "냉장고", "잘 만들어졌어요~", new ArrayList<>(), "samsug");
         Item item6 = HomeAppliances.createHomeAppliances(haForm1, member);
-        HomeAppliancesForm haForm2 = new HomeAppliancesForm(20, 2000, "냉장고", "잘 만들어졌어요~", itemPictureList, "samsug");
+        HomeAppliancesForm haForm2 = new HomeAppliancesForm(20, 2000, "냉장고", "잘 만들어졌어요~", itemPictureList4, "samsug");
         Item item7 = HomeAppliances.createHomeAppliances(haForm2, member3);
-        HomeAppliancesForm haForm3 = new HomeAppliancesForm(20, 2000, "냉장고", "잘 만들어졌어요~", itemPictureList, "samsug");
+        HomeAppliancesForm haForm3 = new HomeAppliancesForm(20, 2000, "냉장고", "잘 만들어졌어요~", new ArrayList<>(), "samsug");
         Item item8 = HomeAppliances.createHomeAppliances(haForm3, member3);
 
-        BookForm bForm = new BookForm(5, 2000, "책1", "잘 만들어졌어요~", itemPictureList, "곰돌이푸", "곰돌이출판사");
+        BookForm bForm = new BookForm(5, 2000, "책1", "잘 만들어졌어요~", new ArrayList<>(), "곰돌이푸", "곰돌이출판사");
         Item item9 = Book.createBook(bForm, member);
 
-        ItemForm iForm = new ItemForm(10, 2000, "책상", "잘 만들어졌어요~", itemPictureList);
+        ItemForm iForm = new ItemForm(10, 2000, "책상", "잘 만들어졌어요~", new ArrayList<>());
         Item item10 = Item.createItem(iForm, member);
 
         itemJpaRepository.save(item1);
@@ -993,8 +1006,9 @@ public class ItemServiceTest {
         assertThat(rankList.get(8).getRank()).isEqualTo(9);
         // list 개수 알아보기
         assertThat(rankList.size()).isEqualTo(9);
-
     }
+
+
 
 
 }

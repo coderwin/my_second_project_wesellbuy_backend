@@ -23,9 +23,11 @@ import static shop.wesellbuy.secondproject.domain.QMember.member;
  * ItemJpaRepositoryCustom 구현
  * writer : 이호진
  * init : 2023.01.19
- * updated by writer :
- * update :
+ * updated by writer : 이호진
+ * update : 2023.02.14
  * description : ItemJpaRepository 구현 모음 + 최적화 사용(fetch)
+ *
+ * update : itemNameEq() -> itemNameLike() 변경
  */
 @RequiredArgsConstructor
 @Slf4j
@@ -54,7 +56,7 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
                 .join(item.member, member).fetchJoin()
                 .where(
                         itemIdEq(itemSearchCond.getMemberId()),
-                        itemNameEq(itemSearchCond.getName()),
+                        itemNameLike(itemSearchCond.getName()),
                         itemCreateDateBetween(itemSearchCond.getCreateDate()),
                         itemDtypeEq(itemSearchCond.getDtype()),
                         item.status.eq(ItemStatus.R)
@@ -70,7 +72,7 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
                 .from(item)
                 .where(
                         itemIdEq(itemSearchCond.getMemberId()),
-                        itemNameEq(itemSearchCond.getName()),
+                        itemNameLike(itemSearchCond.getName()),
                         itemCreateDateBetween(itemSearchCond.getCreateDate()),
                         itemDtypeEq(itemSearchCond.getDtype()),
                         item.status.eq(ItemStatus.R)
@@ -127,6 +129,17 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
      */
     private BooleanExpression itemNameEq(String name) {
         return StringUtils.hasText(name) ? item.name.eq(name) : null;
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.02.14
+     * updated by writer :
+     * update :
+     * description : 상품 정보 검색 조건 Like by 상품이름
+     */
+    private BooleanExpression itemNameLike(String name) {
+        return StringUtils.hasText(name) ? item.name.like( "%" + name + "%") : null;
     }
 
     /**
@@ -216,7 +229,7 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
                 .join(item.member, member).fetchJoin()
                 .where(
                         itemIdEq(itemSearchCond.getMemberId()),
-                        itemNameEq(itemSearchCond.getName()),
+                        itemNameLike(itemSearchCond.getName()),
                         itemCreateDateBetween(itemSearchCond.getCreateDate()),
                         itemDtypeEq(itemSearchCond.getDtype())
                 )
@@ -231,7 +244,7 @@ public class ItemJpaRepositoryImpl implements ItemJpaRepositoryCustom{
                 .from(item)
                 .where(
                         itemIdEq(itemSearchCond.getMemberId()),
-                        itemNameEq(itemSearchCond.getName()),
+                        itemNameLike(itemSearchCond.getName()),
                         itemCreateDateBetween(itemSearchCond.getCreateDate()),
                         itemDtypeEq(itemSearchCond.getDtype())
                 )

@@ -12,10 +12,12 @@ import java.util.ArrayList;
  * 상품 순위 상세보기 dto
  * writer : 이호진
  * init : 2023.02.02
- * updated by writer :
- * update :
+ * updated by writer : 이호진
+ * update : 2023.02.14
  * description : 서버로부터 받은 상품 순위 정보를 담아둔다.
  *               by 좋아요수
+ *
+ * update : ItemPicture -> ItemPictureForm으로 교체
  */
 @Getter
 public class ItemRankForm {
@@ -26,20 +28,22 @@ public class ItemRankForm {
     private Integer hits; // 조회수
     private Long likes; // 좋아요수
     private Integer rank; // 순위
-    private ItemPicture picture; // 이미지 한장만
+    private ItemPictureForm pictureForm; // 이미지 한장만
 
     // 있어야 하는지 생각해 볼 것들
     private String memberId; // 상품 등록 회원(판매자) 아이디
 
     // ** 생성자 ** //
 
-    public ItemRankForm(Integer num, String name, Integer price, Integer hits, Long likes, ItemPicture picture, String memberId) {
+
+    public ItemRankForm(Integer num, String name, Integer price, Integer hits, Long likes, ItemPictureForm pictureForm, String memberId) {
         this.num = num;
         this.name = name;
         this.price = price;
         this.hits = hits;
         this.likes = likes;
-        this.picture = picture;
+        this.rank = rank;
+        this.pictureForm = pictureForm;
         this.memberId = memberId;
     }
 
@@ -55,6 +59,7 @@ public class ItemRankForm {
                 item.getItemPictureList().stream()
                         .filter(p -> p.getStatus().equals(PictureStatus.R))
                         .findFirst()
+                        .map(p -> ItemPictureForm.create(p))
                         .orElse(null),
                 item.getMember().getId()
         );
@@ -80,6 +85,7 @@ public class ItemRankForm {
                 item.getItemPictureList().stream()
                         .filter(p -> p.getStatus().equals(PictureStatus.R))
                         .findFirst()
+                        .map(p -> ItemPictureForm.create(p))
                         .orElse(null),
                 member.getId()
         );

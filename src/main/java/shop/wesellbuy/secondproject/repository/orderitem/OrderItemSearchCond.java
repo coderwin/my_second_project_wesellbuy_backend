@@ -1,19 +1,24 @@
 package shop.wesellbuy.secondproject.repository.orderitem;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import shop.wesellbuy.secondproject.domain.order.OrderStatus;
 
 /**
  *  OrderItem findAll for condition dto
  * writer : 이호진
  * init : 2023.01.19
- * updated by writer :
- * update :
+ * updated by writer : 이호진
+ * update : 2023.02.14
  * description :  OrderItem finaAll에 사용되는 where 절의 조건 데이터 모음
+ *
+ * update : @NoArgsConstructor 추가
  */
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItemSearchCond {
 
     private int sellerNum;// 판매자 번호
