@@ -14,11 +14,12 @@ import shop.wesellbuy.secondproject.util.ValidationOfPattern;
  * writer : 이호진
  * init : 2023.01.26
  * updated by writer : 이호진
- * update : 2023.02.08
+ * update : 2023.03.02
  * description : 클라이언트가 보내온 회원 정보를 담아둔다.
  *
  * update : - 비밀번호 확인 추가
  *          - 생성자 추가
+ *          - 필요없는 @NotBlank 주석 처리
  *
  */
 @Getter @Setter
@@ -27,25 +28,25 @@ import shop.wesellbuy.secondproject.util.ValidationOfPattern;
 @ToString
 public class MemberOriginForm {
 
-    @NotBlank(message = "필수 입력입니다.")
+//    @NotBlank(message = "필수 입력입니다.")
     @Pattern(regexp = "^[가-힣|a-zA-Z]+$", message = "한글 또는 영어만 사용 가능합니다.")
     private String name; // 이름
-    @NotBlank(message = "필수 입력입니다.")
+//    @NotBlank(message = "필수 입력입니다.")
     @Pattern(regexp = "^[ㄱ-ㅎㅏ-ㅣ가-힣\\w]{1,21}$", message = "한글, 영어, 숫자만 가능합니다.")
     private String id; // 아이디
-    @NotBlank(message = "필수 입력입니다.")
+//    @NotBlank(message = "필수 입력입니다.")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[?<>~!@#$%^&*_+-])[a-z\\d?<>~!@#$%^&*_+-]{8,21}$",
         message = "영소문자, 숫자, 특수기호 포함 8~21자리를 입력하셔야 합니다."
     )
     private String pwd; // 비밀번호
-    @NotBlank(message = "필수 입력입니다.")
+//    @NotBlank(message = "필수 입력입니다.")
     private String pwdConfirm; // 비밀번호 확인
-    @NotBlank(message = "필수 입력입니다.")
+//    @NotBlank(message = "필수 입력입니다.")
     @Pattern(regexp = "^\\w+@[a-zA-Z\\d]+\\.[a-zA-Z\\d]+(\\.[a-zA-Z\\d]+)?$",
             message = "이메일 형식에 맞지 않습니다."
     )
     private String email; // 이메일
-    @NotBlank(message = "필수 입력입니다.")
+//    @NotBlank(message = "필수 입력입니다.")
     @Pattern(regexp = "^01(0|[6-9])\\d{4}\\d{4}$", message="\'-\'없이 숫자로만 입력해주세요.")
     private String selfPhone; // 휴대전화(필수)
     private String homePhone; // 집전화(선택)
