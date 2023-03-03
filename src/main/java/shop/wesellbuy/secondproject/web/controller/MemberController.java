@@ -262,11 +262,12 @@ public class MemberController {
      * writer : 이호진
      * init : 2023.02.08
      * updated by writer : 이호진
-     * update : 2023.02.12
+     * update : 2023.03.03
      * description : 로그인 처리하기
      *               > id, pwd, rememberId(Boolean) 데이터 받기
      *
-     * update : form.getRememberId() != false 삭제
+     * update : > form.getRememberId() != false 삭제
+     *          > GetMapping에서 PostMapping으로 변경
      */
     @GetMapping("/login")
     @ApiOperation("로그인 처리")
@@ -300,14 +301,16 @@ public class MemberController {
     /**
      * writer : 이호진
      * init : 2023.02.08
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.03.03
      * description : 로그아웃 처리
      *
      * commnent : logout은 서버에서 처리해야할까?
      *           > 프론트쪽에서 처리하면 안 되나?
+     *
+     * update : GetMapping에서 PostMapping으로 변경
      */
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     @ApiOperation("로그아웃 처리")
     public ResponseEntity<Result<String>> logout(HttpServletRequest request) {
         // sesssion 삭제하기
