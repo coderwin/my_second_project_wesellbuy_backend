@@ -262,14 +262,15 @@ public class MemberController {
      * writer : 이호진
      * init : 2023.02.08
      * updated by writer : 이호진
-     * update : 2023.03.03
+     * update : 2023.03.04
      * description : 로그인 처리하기
      *               > id, pwd, rememberId(Boolean) 데이터 받기
      *
      * update : > form.getRememberId() != false 삭제
      *          > GetMapping에서 PostMapping으로 변경
+     *          > sessionForm 데이터 view로 전달
      */
-    @GetMapping("/login")
+    @PostMapping("/login")
     @ApiOperation("로그인 처리")
     public ResponseEntity login(@RequestBody LoginMemberForm form,
                                 HttpServletRequest request,
@@ -294,8 +295,11 @@ public class MemberController {
             // 쿠키 만료
             CookieManager.expireCookie(CookieManager.REMEMBER_ID, response);
         }
+        // sessionForm 데이터를 보내주기
+        // responseEntity body 생성
+        Result<LoginMemberSessionForm> body = new Result(sessionForm);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(body, HttpStatus.OK);
     }
 
     /**
