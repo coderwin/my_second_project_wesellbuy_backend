@@ -41,7 +41,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
-                        "/members/login", "/*/images/{savedFileName}", "/members", "/orders", "/error", "/members/id/**"
+                        "/members/login", "/*/images/{savedFileName}", "/members", "/orders", "/error", "/members/id/**",
+                        "/members/logout", "/members/find/**"
                 );
 
 //        // Cors 처리 인터셉터 등록

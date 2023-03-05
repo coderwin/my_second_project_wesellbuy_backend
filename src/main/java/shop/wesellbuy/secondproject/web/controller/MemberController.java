@@ -330,13 +330,15 @@ public class MemberController {
     /**
      * writer : 이호진
      * init : 2023.02.08
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.03.05
      * description : 회원 아이디 찾기
+     *
+     * update : @RequestBody 삭제
      */
     @GetMapping("/find/id")
     @ApiOperation("회원 아이디 찾기")
-    public Result<LoginSearchIdResultForm> searchForIds(@RequestBody MemberSearchIdCond memberSearchIdCond) {
+    public Result<LoginSearchIdResultForm> searchForIds(MemberSearchIdCond memberSearchIdCond) {
         log.info("memberSearchIdCond : {}", memberSearchIdCond);
         // 아이디(들) 찾기
         LoginSearchIdResultForm form = memberService.searchForIds(memberSearchIdCond);
@@ -347,13 +349,15 @@ public class MemberController {
     /**
      * writer : 이호진
      * init : 2023.02.08
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.03.05
      * description : 회원 비밀번호 찾기
+     *
+     * update : @RequestBody 삭제
      */
     @GetMapping("/find/pwd")
     @ApiOperation("회원 비밀번호 찾기")
-    public Result<LoginSearchPwdResultForm> searchForIds(@RequestBody MemberSearchPwdCond memberSearchPwdCond) {
+    public Result<LoginSearchPwdResultForm> searchForIds(MemberSearchPwdCond memberSearchPwdCond) {
         // 아이디(들) 찾기
         LoginSearchPwdResultForm form = memberService.searchForPwd(memberSearchPwdCond);
         // 아이디 찾기 성공
