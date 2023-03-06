@@ -171,9 +171,11 @@ public class Member extends BaseDateColumnEntity {
     /**
      * writer : 이호진
      * init : 2023.01.26
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.03.06
      * description : 회원 정보 수정
+     *
+     * update : > 'updateSelfPicture이 null이 아니면 실행하기' 수정
      */
     public void updateMember(MemberUpdateForm memberUpdateForm, SelfPicture updateSelfPicture) {
         addPwd(memberUpdateForm.getPwd());
@@ -184,6 +186,9 @@ public class Member extends BaseDateColumnEntity {
         addAddress(
                 Address.createAddress(memberUpdateForm.getCountry(), memberUpdateForm.getCity(), memberUpdateForm.getStreet(), memberUpdateForm.getDetail(), memberUpdateForm.getZipcode())
         );
-        addSelfPicture(updateSelfPicture);
+        // updateSelfPicture이 null이 아니면 실행하기
+        if(updateSelfPicture != null) {
+            addSelfPicture(updateSelfPicture);
+        }
     }
 }

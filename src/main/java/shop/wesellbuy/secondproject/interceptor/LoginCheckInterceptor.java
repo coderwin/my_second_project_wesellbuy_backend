@@ -44,7 +44,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         log.info("인증체크 인터셉터 실행중... {}", requestURI);
         // session 불러오기
         HttpSession session = request.getSession(false);
-
+        log.info("session : {}", session);
         // session 존재유무 확인
         // + session에 key가 LOGIN_MEMBER 존재유무 확인
         if(session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null) {

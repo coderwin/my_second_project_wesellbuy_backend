@@ -65,6 +65,11 @@ directory:
   recommendationPicture.dir: "C:/my_project_2/upload/images/recommendation" # 추천합니다글 이미지
   itemPicture.dir: C:/my_project_2/upload/images/item # 상품 이미지
 
+server:
+  servlet.session:
+#    timeout: 1800 # 세션 시간 설정(1800 = 30분)
+#    tracking-mode: cookie # 쿠키 URL 전달 방식 끄고/키기
+
 # 서비스 환경
 ---
 #spring:

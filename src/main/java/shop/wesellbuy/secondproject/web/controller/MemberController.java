@@ -121,19 +121,20 @@ public class MemberController {
      * writer : 이호진
      * init : 2023.02.08
      * updated by writer : 이호진
-     * update : 2023.02.12
+     * update : 2023.03.06
      * description : 회원 정보 수정
      *
      * update : > @RequestBody를 @RequestPart로 수정
      *          > file 파라미터를 추가
      *          > ValidatedErrorsMsg.makeValidatedErrorsContents 추가
+     *          > requestPart의 value를 name으로 수정
      */
     @PutMapping("/{num}")
     @ApiOperation(value = "회원 정보 수정")
     public ResponseEntity<?> update(
             @PathVariable Integer num,
             @RequestPart("data") @Validated MemberUpdateForm memberUpdateForm,
-            @RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart(name = "file", required = false) MultipartFile file,
             BindingResult bindingResult) throws IOException {
         // file을 dto에 넣기
         memberUpdateForm.addFile(file);
@@ -159,7 +160,7 @@ public class MemberController {
      * writer : 이호진
      * init : 2023.02.08
      * updated by writer : 이호진
-     * update : 2023.02.12
+     * update : 2023.03.06
      * description : 회원 탈퇴
      *
      * update : @PathVariable 추가
@@ -202,6 +203,7 @@ public class MemberController {
      * updated by writer :
      * update :
      * description : 회원 정보 상세보기
+     *               > num으로 회원정보를 불러오면 쉽게 정보가 유출되지 않을까
      */
     @GetMapping("/{num}")
     @ApiOperation("회원 정보 상세보기")

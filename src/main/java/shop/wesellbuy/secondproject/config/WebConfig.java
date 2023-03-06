@@ -54,14 +54,22 @@ public class WebConfig implements WebMvcConfigurer {
     /**
      * writer : 이호진
      * init : 2023.03.02
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.03.06
      * description : Access-Control-Allow-Origin 문제 해결위한 설정
+     *
+     * update : CORS 정책과 session 확인을 위해
+     *          > allowedOrigins 추가
+     *          > allowCredentials 추가
+     *          > allowedOriginPatterns 추가
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedMethods(ALLOWED_METHOD_NAMES.split(","));
+                .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
+//                .allowedOrigins("*")
+                .allowedOriginPatterns("*")
+                .allowCredentials(true);
 //                .maxAge(3600); // 3600초 동안 preflight 결과를 캐시에 저장
     }
 }
