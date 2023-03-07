@@ -16,13 +16,14 @@ import java.util.List;
  * writer : 이호진
  * init : 2023.02.02
  * updated by writer : 이호진
- * update : 2023.02.13
+ * update : 2023.03.07
  * description : 클라이언트에게서 받은 상품 정보를 담아둔다.
  *
  * update : @NoArgsConstructor 추가
  *          @NotBlank, @Pattern 추가
  *          files 필드 추가
  *          @Pattern(Integer type) 삭제 -> @Positive 추가
+ *          > type field의 @NotBlank 삭제
  */
 @Getter
 @AllArgsConstructor
@@ -40,7 +41,6 @@ public class ItemOriginalForm {
     private Integer price; // 가격
     @NotBlank(message = "필수 입력입니다.")
     private String content; // 설명
-    @NotBlank(message = "필수 입력입니다.")
     @Pattern(regexp = "^B|HA|F|ITEM$", message = "책, 가구, 가전제품, 기타만 선택 가능합니다.")
     private String type; // 상풍종류 설정
     private List<ItemPicture> itemPictureList = new ArrayList<>(); // 상품 이미지 모음

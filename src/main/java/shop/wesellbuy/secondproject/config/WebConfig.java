@@ -34,16 +34,21 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-
         // 로그인 인증 인터셉터 등록
+        // 이것이 필요 있는지 생각해보기
+            // 필요하다 -> member의 정보는 get으로 얻으면 안 된다.
         // 순서 현재 1번
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
                         "/members/login", "/*/images/{savedFileName}", "/members", "/orders", "/error", "/members/id/**",
-                        "/members/logout", "/members/find/**"
+                        "/members/logout", "/members/find/**", "/items/{num}"
                 );
+        // Http Method Check 인터셉터 등록
+        registry.addInterceptor(new HttpCheckInterceptor())
+                .order(2)
+                .addPathPatterns("/items/{num}");
 
 //        // Cors 처리 인터셉터 등록
 //        registry.addInterceptor(new CrosCheckInterceptor())

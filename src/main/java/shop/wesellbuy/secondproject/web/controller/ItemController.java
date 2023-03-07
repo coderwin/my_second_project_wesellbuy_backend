@@ -59,7 +59,6 @@ public class ItemController {
                                   @RequestPart("data") @Validated ItemOriginalForm form,
                                   @RequestPart(name = "files", required = false) List<MultipartFile> files,
                                   BindingResult bindingResult) throws IOException {
-
         // 데이터 검증하기
         if(files != null) {
             for(MultipartFile file : files) {
