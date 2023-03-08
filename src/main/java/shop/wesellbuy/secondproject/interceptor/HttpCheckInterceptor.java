@@ -42,7 +42,7 @@ public class HttpCheckInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession(false);
         // 로그인한 사용자 LoginSessionForm 있는지 확인
         // 있으면 통과
-        if(session.getAttribute(SessionConst.LOGIN_MEMBER) != null) {
+        if(session != null && session.getAttribute(SessionConst.LOGIN_MEMBER) != null) {
             return true;
         }
         // 로그인한 사용자가 아닌 경우
