@@ -24,7 +24,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RecommendationUpdateForm {
+public class    RecommendationUpdateForm {
 
     private Integer num; // 게시글 번호
     @NotBlank(message = "비어있을 수 없습니다")

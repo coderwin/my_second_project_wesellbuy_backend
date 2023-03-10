@@ -31,7 +31,7 @@ public class RecommendationForm {
     @NotBlank(message = "비어있을 수 없습니다.")
     private String itemName; // 추천받은 상품 이름
     @NotBlank(message = "비어있을 수 없습니다.")
-    private String sellerId; // 추천받은 판매자 이름
+    private String sellerId; // 추천받은 판매자 아이디
     @NotBlank(message = "비어있을 수 없습니다.")
     private String content; // 추천 이유
     private List<RecommendationPicture> recommendationPictureList;
