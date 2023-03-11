@@ -118,12 +118,14 @@ public class OrderItemJpaRepositoryImpl implements OrderItemJpaRepositoryCustom 
     /**
      * writer : 이호진
      * init : 2023.02.04
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.03.11
      * description : 주문상품 정보 검색 조건 eq by 배달 상태
      *
      * comment : 상태가 다른 값이면 null 말고 처리방법 없을까?
      *           -> null이라 모든 값이 나온다.
+     *
+     * update : O(OVER) 배달취소 상태 추가
      */
     private BooleanExpression orderDeliveryStatusEq(String deliveryStatus) {
         if(StringUtils.hasText(deliveryStatus)) {
@@ -139,6 +141,9 @@ public class OrderItemJpaRepositoryImpl implements OrderItemJpaRepositoryCustom 
             } else if("C".equalsIgnoreCase(deliveryStatus)) {
 //                return orderItem.order.delivery.status.eq(DeliveryStatus.C);
                 return order.delivery.status.eq(DeliveryStatus.C);
+                // 배달취소 상태
+            } else if("O".equalsIgnoreCase(deliveryStatus)) {
+                return order.delivery.status.eq(DeliveryStatus.O);
             }
         }
         return null;

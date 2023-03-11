@@ -59,12 +59,14 @@ public class Delivery {
     /**
      * writer : 이호진
      * init : 2023.02.04
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.03.11
      * description : 주문취소 일어났을 때,
      *               -> 배달 상태에 따라 주문 취소 가능 판별
      *
      * comment : order에 있어야할까? delivery에 있어야할까?
+     *
+     * update : 주문이 취소가 되면 배달상태를 O(OVER) 배달취소로 바꾸기
      */
     public void cancel() {
         if(status.equals(DeliveryStatus.T)) {
@@ -74,6 +76,8 @@ public class Delivery {
             String errMsg = "배송완료로 취소 불가";
             throw new NotCancelOrderException(errMsg);
         }
+        // 취소 완료
+        this.status = DeliveryStatus.O;
     }
 
     /**
