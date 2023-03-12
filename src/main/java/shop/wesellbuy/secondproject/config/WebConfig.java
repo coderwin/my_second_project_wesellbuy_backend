@@ -5,9 +5,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import shop.wesellbuy.secondproject.interceptor.CrosCheckInterceptor;
-import shop.wesellbuy.secondproject.interceptor.HttpCheckInterceptor;
-import shop.wesellbuy.secondproject.interceptor.LoginCheckInterceptor;
+import shop.wesellbuy.secondproject.interceptor.*;
 
 import java.util.List;
 
@@ -49,11 +47,24 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new HttpCheckInterceptor())
                 .order(2)
                 .addPathPatterns("/items/{num}");
+        // 배달원 인증 인터셉터 등록
+        registry.addInterceptor(new DeliverCheckInterceptor())
+                .order(3)
+                .addPathPatterns(
+                        "/orders/deliver", "/orders/{num}/delivery/deliver"
+                );
+        // 관리자 인증 인터셉터 등록
+        registry.addInterceptor(new AdminCheckInterceptor())
+                .order(4)
+                .addPathPatterns(
+                        "/orders/admin"
+                );
 
 //        // Cors 처리 인터셉터 등록
 //        registry.addInterceptor(new CrosCheckInterceptor())
 //                .order(2)
 //                .addPathPatterns("/**");
+
     }
 
     /**

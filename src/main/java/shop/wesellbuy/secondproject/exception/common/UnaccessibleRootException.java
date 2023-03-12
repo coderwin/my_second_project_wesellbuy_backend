@@ -6,7 +6,8 @@ package shop.wesellbuy.secondproject.exception.common;
  * init : 2023.02.14
  * updated by writer :
  * update :
- * description : 로그인 상태 검사 중(in 인터셉터) 비회원인 경우 발생
+ * description : > 로그인 상태 검사 중(in 인터셉터) 비회원인 경우 발생
+ *               > 배달원용 데이터 접근 검사 중(in 인터셉터) 배달원 아이디 아닐 경우 발생
  */
 public class UnaccessibleRootException extends RuntimeException {
 

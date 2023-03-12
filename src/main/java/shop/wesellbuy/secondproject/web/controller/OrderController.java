@@ -201,6 +201,27 @@ public class OrderController {
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
+    /**
+     * writer : 이호진
+     * init : 2023.03.14
+     * updated by writer :
+     * update :
+     * description : 회원이 주문한 주문 모두 불러오기 + by 회원(주문자)아이디
+     *               > 검색 데이터 memberId(주문 회원 아이디), createDate(주문 날짜), orderStatus(주문 상태 -> O, C), deliveryStatus(배달 상태 -> R, T, C)를 받고
+     *               > 페이징 데이터 size, page를 받는다.
+     *               -> for deliver
+     */
+    @GetMapping("/deliver")
+    @ApiOperation(value = "주문 목록 배달원용")
+    public Result<Page<OrderListFormForAdmin>> selectListForDeliver(OrderSearchCond cond, Pageable pageable) {
+        // 주문 목록 불러오기
+        Page<OrderListFormForAdmin> pageForm = orderService.selectListForAdmin(cond, pageable);
+        // Result 생성하기
+        Result<Page<OrderListFormForAdmin>> result = new Result(pageForm);
+
+        return result;
+    }
+
     //    -------------------------methods using for deliver end ----------------------------------
 
     //    -------------------------methods using for admin, deliver start----------------------------------
@@ -214,10 +235,11 @@ public class OrderController {
      *               > 검색 데이터 memberId(주문 회원 아이디), createDate(주문 날짜), orderStatus(주문 상태 -> O, C), deliveryStatus(배달 상태 -> R, T, C)를 받고
      *               > 페이징 데이터 size, page를 받는다.
      *               -> for admin
-     *               -> for deliver
+     *
+     * update : -> ApiOperation value에 배달원용 삭제
      */
     @GetMapping("/admin")
-    @ApiOperation(value = "주문 목록 관리자용/배달원용")
+    @ApiOperation(value = "주문 목록 관리자용")
     public Result<Page<OrderListFormForAdmin>> selectListForAdmin(OrderSearchCond cond, Pageable pageable) {
         // 주문 목록 불러오기
         Page<OrderListFormForAdmin> pageForm = orderService.selectListForAdmin(cond, pageable);
