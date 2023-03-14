@@ -288,7 +288,7 @@ public class ItemController {
      *               -> admin이 사용한다.
      */
     @GetMapping("/admin")
-    @ApiOperation("추천합니다 게시글 목록 관리자용")
+    @ApiOperation("상품 목록 관리자용")
     public Result<Page<ItemListFormForAdmin>> selectListForAdmin(ItemSearchCond cond, Pageable pageable) {
         // 상품 불러오기
         Page<ItemListFormForAdmin> pageForm = itemService.selectListForAdmin(cond, pageable);

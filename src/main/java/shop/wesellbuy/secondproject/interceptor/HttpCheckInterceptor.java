@@ -37,6 +37,11 @@ public class HttpCheckInterceptor implements HandlerInterceptor {
         // 클라이언트 요청 httpMethod 불러오기
         String httpMethod = request.getMethod();
 
+        // preflight는 OPTIONS임을 이용해 OPTIONS 모두 허용하기
+        if(HttpMethod.OPTIONS.matches(request.getMethod())) {
+            return true;
+        }
+
         // 로그인한 사용자인 경우
             // 모든 httpMethod 통과 가능
         HttpSession session = request.getSession(false);

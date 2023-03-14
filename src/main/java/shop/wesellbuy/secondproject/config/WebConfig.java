@@ -40,13 +40,18 @@ public class WebConfig implements WebMvcConfigurer {
                 .order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
-                        "/members/login", "/*/images/{savedFileName}", "/members", "/orders", "/error", "/members/id/**",
-                        "/members/logout", "/members/find/**", "/items/{num}"
+                        "/*/images/{savedFileName}", "/error",
+                        "/members","/members/login", "/members/logout", "/members/find/**", "/members/id/**",
+                        "/items", "/items/{num}", "/items/rank/v1",
+                        "/orders",
+                        "/recommendations"
                 );
         // Http Method Check 인터셉터 등록
         registry.addInterceptor(new HttpCheckInterceptor())
                 .order(2)
-                .addPathPatterns("/items/{num}");
+                .addPathPatterns(
+                        "/items/{num}"
+                );
         // 배달원 인증 인터셉터 등록
         registry.addInterceptor(new DeliverCheckInterceptor())
                 .order(3)
