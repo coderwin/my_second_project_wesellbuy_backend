@@ -5,14 +5,17 @@ import shop.wesellbuy.secondproject.domain.Item;
 import shop.wesellbuy.secondproject.domain.likes.ItemLikes;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * ItemLikes Repository by using queryDsl
  * writer : 이호진
  * init : 2023.01.19
- * updated by writer :
- * update :
+ * updated by writer : 이호진
+ * update : 2023.03.14
  * description : querydsl이용한 ItemLikesJpaRepository 모음
+ *
+ * update : findByItemNumAndMemberNum 추가
  */
 public interface ItemLikesJpaRepositoryCustom {
 
@@ -25,6 +28,15 @@ public interface ItemLikesJpaRepositoryCustom {
      *               ...ById == ...ByNum
      */
     List<ItemLikes> findAllInfoById(int memberNum);
+
+    /**
+     * writer : 이호진
+     * init : 2023.03.14
+     * updated by writer :
+     * update :
+     * description : 상품 좋아요 찾기 by itemNum and memberNum
+     */
+    Optional<ItemLikes> findByItemNumAndMemberNum(int itemNum, int memberNum);
 
     /**
      * writer : 이호진

@@ -17,9 +17,11 @@ import java.util.List;
  * ItemLikes Controller
  * writer : 이호진
  * init : 2023.02.13
- * updated by writer :
- * update :
+ * updated by writer : 이호진
+ * update : 2023.03.14
  * description : ItemLikes RestController 메소드 모음
+ *
+ * update : delete 추가(파라미터 itemNum + sessionForm)
  */
 @RestController
 @RequestMapping("/items")
@@ -41,23 +43,40 @@ public class ItemLikesController {
     public ResponseEntity save(@SessionAttribute(SessionConst.LOGIN_MEMBER) LoginMemberSessionForm sessionForm,
                                @PathVariable int itemNum) {
         // 좋아요 등록
-        itemLikesService.save(itemNum, sessionForm.getNum());
+        int likesNum = itemLikesService.save(itemNum, sessionForm.getNum());
         // code 201 보내기
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+//    /**
+//     * writer : 이호진
+//     * init : 2023.02.13
+//     * updated by writer :
+//     * update :
+//     * description : 상품 좋아요 삭제
+//     */
+//    @DeleteMapping("/{itemNum}/likes/{num}")
+//    @ApiOperation(value = "좋아요 삭제")
+//    public ResponseEntity delete(@PathVariable int num) {
+//        // 좋아요 삭제
+//        itemLikesService.delete(num);
+//        // responseEntity 생성
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
+
     /**
      * writer : 이호진
-     * init : 2023.02.13
+     * init : 2023.03.14
      * updated by writer :
      * update :
      * description : 상품 좋아요 삭제
      */
-    @DeleteMapping("/likes/{num}")
+    @DeleteMapping("/{itemNum}/likes")
     @ApiOperation(value = "좋아요 삭제")
-    public ResponseEntity delete(@PathVariable int num) {
+    public ResponseEntity delete(@PathVariable int itemNum,
+                                 @SessionAttribute(SessionConst.LOGIN_MEMBER) LoginMemberSessionForm sessionForm) {
         // 좋아요 삭제
-        itemLikesService.delete(num);
+        itemLikesService.delete(itemNum, sessionForm.getNum());
         // responseEntity 생성
         return new ResponseEntity<>(HttpStatus.OK);
     }

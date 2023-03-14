@@ -20,9 +20,11 @@ import static java.util.stream.Collectors.toList;
  * ItemLikes Service 구현 클래스
  * writer : 이호진
  * init : 2023.02.01
- * updated by writer :
- * update :
+ * updated by writer : 이호진
+ * update : 2023.03.14
  * description : ItemLikes Service 구현 메소드 모음
+ *
+ * update : 상품 좋아요 삭제 by itemNum and memberNum 추가
  */
 @Service
 @Transactional(readOnly = true)
@@ -56,18 +58,34 @@ public class ItemLikesServiceImpl implements ItemLikesService{
         return itemLikes.getNum();
     }
 
+//    /**
+//     * writer : 이호진
+//     * init : 2023.02.01
+//     * updated by writer :
+//     * update :
+//     * description : 상품 좋아요 삭제
+//     */
+//    @Override
+//    @Transactional
+//    public void delete(int num) {
+//        // 좋아요 불러오기
+//        ItemLikes findItemLikes = itemLikesJpaRepository.findById(num).orElseThrow();
+//        // 좋아요 삭제하기
+//        itemLikesJpaRepository.delete(findItemLikes);
+//    }
+
     /**
      * writer : 이호진
-     * init : 2023.02.01
+     * init : 2023.03.14
      * updated by writer :
      * update :
-     * description : 상품 좋아요 삭제
+     * description : 상품 좋아요 삭제 by itemNum and memberNum
      */
     @Override
     @Transactional
-    public void delete(int num) {
+    public void delete(int itemNum, int memberNum) {
         // 좋아요 불러오기
-        ItemLikes findItemLikes = itemLikesJpaRepository.findById(num).orElseThrow();
+        ItemLikes findItemLikes = itemLikesJpaRepository.findByItemNumAndMemberNum(itemNum, memberNum).orElseThrow();
         // 좋아요 삭제하기
         itemLikesJpaRepository.delete(findItemLikes);
     }

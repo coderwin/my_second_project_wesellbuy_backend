@@ -175,11 +175,12 @@ public class ItemServiceImpl implements ItemService {
     /**
      * writer : 이호진
      * init : 2023.02.02
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.03.14
      * description : 상품 상세보기
      */
     @Override
+    @Transactional
     public ItemDetailForm watchDetail(int num) {
         // 조회수 1 증가 시킨다.
         updateHits(num);

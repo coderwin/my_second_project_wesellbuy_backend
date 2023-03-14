@@ -12,6 +12,7 @@ import shop.wesellbuy.secondproject.domain.item.ItemStatus;
 import shop.wesellbuy.secondproject.domain.likes.ItemLikes;
 
 import java.util.List;
+import java.util.Optional;
 
 import static shop.wesellbuy.secondproject.domain.QItem.item;
 import static shop.wesellbuy.secondproject.domain.QMember.member;
@@ -21,11 +22,13 @@ import static shop.wesellbuy.secondproject.domain.likes.QItemLikes.itemLikes;
  * ItemLikesJpaRepositoryCustom 구현
  * writer : 이호진
  * init : 2023.01.19
- * updated by writer :
- * update :
+ * updated by writer : 2023.03.14
+ * update : 이호진
  * description : ItemLikesJpaRepository 구현 모음 + 최적화 사용(fetch)
  *
  * comment : item 좋아요 많은 1,2,3 어떻게 출력할지 고민
+ *
+ * update : update : findByItemNumAndMemberNum 추가
  */
 @RequiredArgsConstructor
 @Slf4j
@@ -54,6 +57,27 @@ public class ItemLikesJpaRepositoryImpl implements ItemLikesJpaRepositoryCustom,
                 .join(itemLikes.item, item).fetchJoin()
                 .where(itemLikes.member.num.eq(memberNum))
                 .fetch();
+    }
+
+    /**
+     * writer : 이호진
+     * init : 2023.03.14
+     * updated by writer :
+     * update :
+     * description : 상품 좋아요 찾기 by itemNum and memberNum
+     */
+    @Override
+    public Optional<ItemLikes> findByItemNumAndMemberNum(int itemNum, int memberNum) {
+
+        ItemLikes findItemLikes = query
+                .selectFrom(itemLikes)
+                .where(
+                        itemLikes.item.num.eq(itemNum),
+                        itemLikes.member.num.eq(memberNum)
+                )
+                .fetchOne();
+
+        return Optional.ofNullable(findItemLikes);
     }
 
     /**

@@ -8,9 +8,11 @@ import java.util.List;
  * ItemLikes Service
  * writer : 이호진
  * init : 2023.02.01
- * updated by writer :
- * update :
+ * updated by writer : 이호진
+ * update : 2023.03.14
  * description : ItemLikes Service 메소드 모음
+ *
+ * update : 상품 좋아요 삭제 by itemNum and memberNum 추가
  */
 public interface ItemLikesService {
 
@@ -23,14 +25,23 @@ public interface ItemLikesService {
      */
     int save(int itemNum, int memberNum);
 
+//    /**
+//     * writer : 이호진
+//     * init : 2023.02.01
+//     * updated by writer :
+//     * update :
+//     * description : 상품 좋아요 삭제
+//     */
+//    void delete(int num);
+
     /**
      * writer : 이호진
-     * init : 2023.02.01
+     * init : 2023.03.14
      * updated by writer :
      * update :
-     * description : 상품 좋아요 삭제
+     * description : 상품 좋아요 삭제 by itemNum and memberNum
      */
-    void delete(int num);
+    void delete(int itemNum, int MemberNum);
 
     /**
      * writer : 이호진
