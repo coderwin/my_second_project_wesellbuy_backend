@@ -40,11 +40,11 @@ public class DeliverCheckInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         log.info("DeliverCheckInterceptor preHandle URI : {}", requestURI);
 
-//        // preflight는 OPTIONS임을 이용해 options 모두 허용하기 -> 아직 사용 안 함
-//        // 처음 요청이 오는 프록시 요청
-//        if(HttpMethod.OPTIONS.matches(request.getMethod())) {
-//            return true;
-//        }
+        // preflight는 OPTIONS임을 이용해 options 모두 허용하기 -> 사용해야 함
+        // 처음 요청이 오는 프록시 요청
+        if(HttpMethod.OPTIONS.matches(request.getMethod())) {
+            return true;
+        }
         // preflight 요청 pass 후 진짜 요청 check
 
         // session 불러오기
@@ -53,7 +53,7 @@ public class DeliverCheckInterceptor implements HandlerInterceptor {
         LoginMemberSessionForm sessionForm = (LoginMemberSessionForm)session.getAttribute(SessionConst.LOGIN_MEMBER);
         String memberId = sessionForm.getId();
         // deliver로 시작하는 아이디를 가졌는지 확인한다.
-        String pattern = "^deliver\\w+$";
+        String pattern = "^deliver[\\w]*$";
         boolean result = memberId.matches(pattern);
         // deliver이라는 아이디로 시작하면 통과
         if(result == true) {

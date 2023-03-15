@@ -44,13 +44,13 @@ public class WebConfig implements WebMvcConfigurer {
                         "/members","/members/login", "/members/logout", "/members/find/**", "/members/id/**",
                         "/items", "/items/{num}", "/items/rank/v1",
                         "/orders",
-                        "/recommendations"
+                        "/recommendations", "/recommendations/{num}"
                 );
         // Http Method Check 인터셉터 등록
         registry.addInterceptor(new HttpCheckInterceptor())
                 .order(2)
                 .addPathPatterns(
-                        "/items/{num}"
+                        "/items/{num}", "/recommendations/{num}"
                 );
         // 배달원 인증 인터셉터 등록
         registry.addInterceptor(new DeliverCheckInterceptor())

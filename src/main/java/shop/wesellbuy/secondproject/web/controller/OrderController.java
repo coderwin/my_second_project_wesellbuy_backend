@@ -162,6 +162,7 @@ public class OrderController {
     public Result<Page<OrderItemListForm>> selectOrderItemList(OrderItemSearchCond cond,
                                                                Pageable pageable,
                                                                @SessionAttribute(SessionConst.LOGIN_MEMBER) LoginMemberSessionForm sessionForm) {
+        log.info("cond : {}", cond);
         // 판매된 상품 불러오기
         Page<OrderItemListForm> pageForm = orderService.selectOrderItemList(cond, pageable, sessionForm.getNum());
         // Result 생성하기
