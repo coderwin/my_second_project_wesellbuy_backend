@@ -258,8 +258,8 @@ public class ItemServiceImpl implements ItemService {
     /**
      * writer : 이호진
      * init : 2023.02.02
-     * updated by writer :
-     * update :
+     * updated by writer : 이호진
+     * update : 2023.03.16
      * description : 상품 순위 불러오기
      *               -> 좋아요수가 높은 순으로
      *
@@ -269,6 +269,9 @@ public class ItemServiceImpl implements ItemService {
      *
      *           -> itemLikes에서 fetch join 사용 못하는 것 말고는 문제 없음
      *              -> itemLikes만 fetchjoin을 왜 사용 못하지?
+     *                  -> foreign key만 있어서 그런 것 같다.
+     *
+     * update : 순위 입력시 rankList에 값이 있을 때만 입력한다.
      */
     @Override
     public List<ItemRankForm> selectRank() {
@@ -279,8 +282,9 @@ public class ItemServiceImpl implements ItemService {
                 .map(i -> ItemRankForm.create(i))
                 .collect(toList());
         // 순위 입력하기(결정하기)
-        inputRank(rankList);
-
+        if(rankList.size() != 0) {
+            inputRank(rankList);
+        }
         return rankList;
     }
 
