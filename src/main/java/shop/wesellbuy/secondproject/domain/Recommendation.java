@@ -42,11 +42,15 @@ public class Recommendation extends BaseDateColumnEntity {
     @Id @GeneratedValue
     @Column(name = "recommendation_num")
     private Integer num;
+    @Column(length = 200)
     private String itemName; // 추천받은 상품 이름
+    @Column(length = 50)
     private String sellerId; // 추천받은 판매자 이름
+    @Column(length = 10000)
     private String content; // 추천 이유
     @ColumnDefault("0")
     private Integer hits; // 조회수
+    @Column(length = 5)
     @Enumerated(EnumType.STRING)
     private BoardStatus status; // 게시판 등록 상태
 

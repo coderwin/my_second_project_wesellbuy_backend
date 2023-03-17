@@ -37,15 +37,20 @@ public class Member extends BaseDateColumnEntity {
     @Id @GeneratedValue
     @Column(name = "member_num")
     private Integer num; // 회원가입 번호
+    @Column(length = 50)
     private String id; // 아이디
+    @Column(length = 21)
     private String pwd; // 비밀번호
+    @Column(length = 50)
     private String name; // 이름
+    @Column(length = 50)
     private String email; // 이메일
 
     @Embedded
     private Phone phones; // 휴대전화 + 집전화
     @Embedded
     private Address address; // 주소
+    @Column(length = 5)
     @Enumerated(value = EnumType.STRING)
     private MemberStatus status; // 상태가 탈퇴면 lastModifiedDate의 시간이 탈퇴 날짜이다.
 

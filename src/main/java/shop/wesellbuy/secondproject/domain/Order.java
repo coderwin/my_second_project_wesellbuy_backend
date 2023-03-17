@@ -30,6 +30,7 @@ public class Order extends BaseDateColumnEntity {
     @Id @GeneratedValue
     @Column(name = "order_num")
     private Integer num; // 주문 번호
+    @Column(length = 5)
     @Enumerated(value = EnumType.STRING)
     private OrderStatus status; // 주문 상태[주문 상태(ORDER)인지, 주문 취소 상태(CANCEL)]
 

@@ -1,5 +1,6 @@
 package shop.wesellbuy.secondproject.domain.member;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,10 +21,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
 
+    @Column(length = 10)
     private String country; // 나라 이름
+    @Column(length = 50)
     private String city; // 지역 이름
+    @Column(length = 50)
     private String street; // 동
+    @Column(length = 50)
     private String detail; // 상세주소
+    @Column(length = 50)
     private String zipcode; // 우편보호
 
     // ** setter ** //

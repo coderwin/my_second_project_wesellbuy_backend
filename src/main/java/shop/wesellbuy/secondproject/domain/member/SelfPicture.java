@@ -20,7 +20,9 @@ public class SelfPicture extends BaseDateColumnEntity {
     @Id @GeneratedValue
     @Column(name = "selfPicture_id")
     private Integer num; // 이미지 번호
+    @Column(length = 300)
     private String originalFileName; // 원본 파일 이름
+    @Column(length = 300)
     private String storedFileName; // DB에 저장된 파일 이름
 
     // cascade => 그림 수정시에도 member가 persist 되어야한다.

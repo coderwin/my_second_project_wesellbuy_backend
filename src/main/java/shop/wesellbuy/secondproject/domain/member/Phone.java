@@ -1,5 +1,6 @@
 package shop.wesellbuy.secondproject.domain.member;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Phone {
 
+    @Column(length = 13)
     private String selfPhone; // 휴대전화(필수)
+    @Column(length = 13)
     private String homePhone; // 집전화(선택)
 
 

@@ -45,10 +45,13 @@ public class Item extends BaseDateColumnEntity {
     private Integer num; // 상품 번호
     private Integer stock; // 제고 수량
     private Integer price; // 가격
+    @Column(length = 200)
     private String name; // 상품명
+    @Column(length = 10000)
     private String content; // 설명
     @ColumnDefault("0")
     private Integer hits; // 조회수
+    @Column(length = 5)
     @Enumerated(value = EnumType.STRING)
     private ItemStatus status; // 상품 등록 상태(REGISTER/DELETE)
 

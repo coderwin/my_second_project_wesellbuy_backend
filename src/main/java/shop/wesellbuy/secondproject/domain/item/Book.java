@@ -1,5 +1,6 @@
 package shop.wesellbuy.secondproject.domain.item;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -16,7 +17,9 @@ import shop.wesellbuy.secondproject.web.item.ItemUpdateForm;
 @Slf4j
 public class Book extends Item {
 
+    @Column(length = 200)
     private String author; // 저자
+    @Column(length = 200)
     private String publisher; // 출판사
 
     // ** setter ** //

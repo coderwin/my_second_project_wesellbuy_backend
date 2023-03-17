@@ -1,5 +1,6 @@
 package shop.wesellbuy.secondproject.domain.item;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -15,6 +16,7 @@ import shop.wesellbuy.secondproject.web.item.ItemUpdateForm;
 @Getter
 public class Furniture extends Item {
 
+    @Column(length = 200)
     private String company;// 제조회사 이름
 
     // ** setter ** //

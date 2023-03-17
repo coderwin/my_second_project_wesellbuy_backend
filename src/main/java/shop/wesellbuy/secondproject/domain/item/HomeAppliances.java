@@ -1,5 +1,6 @@
 package shop.wesellbuy.secondproject.domain.item;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import shop.wesellbuy.secondproject.web.item.ItemUpdateForm;
 @Getter
 public class HomeAppliances extends Item {
 
+    @Column(length = 200)
     private String company;// 제조회사 이름
 
     // ** setter ** //

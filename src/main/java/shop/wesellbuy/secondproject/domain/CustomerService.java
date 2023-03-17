@@ -33,7 +33,9 @@ public class CustomerService extends BaseDateColumnEntity {
     @Id @GeneratedValue
     @Column(name = "customerService_num")
     private Integer num;
+    @Column(length = 50)
     private String reportedId; // 신고된 회원 아이디
+    @Column(length = 10000)
     private String content; // 신고 내용
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -24,8 +24,11 @@ public class ItemPicture extends BaseDateColumnEntity {
     @GeneratedValue
     @Column(name = "itemPicture_id")
     private Integer num; // 이미지 번호
+    @Column(length = 300)
     private String originalFileName; // 원본 파일 이름
+    @Column(length = 300)
     private String storedFileName; // DB에 저장된 파일 이름
+    @Column(length = 5)
     @Enumerated(EnumType.STRING)
     private PictureStatus status; // 이미지 상태
     @ManyToOne(fetch = FetchType.LAZY)

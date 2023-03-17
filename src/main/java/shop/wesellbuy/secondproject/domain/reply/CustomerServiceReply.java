@@ -24,7 +24,9 @@ public class CustomerServiceReply extends BaseDateColumnEntity {
     @Id @GeneratedValue
     @Column(name = "customerServiceReply_num")
     private Integer num; // 댓글 번호
+    @Column(length = 10000)
     private String content; // 내용
+    @Column(length = 5)
     @Enumerated(value = EnumType.STRING)
     private ReplyStatus status; // 게시판 댓글 상태[REGISTER/DELETE]
 

@@ -24,6 +24,7 @@ public class Delivery {
     @Id @GeneratedValue
     @Column(name = "delivery_num")
     private Integer num; // 배달
+    @Column(length = 5)
     @Enumerated(value = EnumType.STRING)
     private DeliveryStatus status; // 배달 상태(배송준비중(R), 배송중(T), 배송완료(C))
     private Address address; // 배달 주소 === 회원 주소
