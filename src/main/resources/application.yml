@@ -28,7 +28,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
 #        show_sql: true # System.out sql 실힝
@@ -87,7 +87,6 @@ spring:
 
   datasource:
   # mysql
-    # local url
     url: jdbc:mysql://localhost:3306/wesellbuy?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username:
     password:
