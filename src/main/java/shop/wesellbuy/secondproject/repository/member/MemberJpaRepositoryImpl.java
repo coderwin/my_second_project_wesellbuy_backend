@@ -165,10 +165,11 @@ public class MemberJpaRepositoryImpl implements MemberJpaRepositoryCustom{
      * writer : 이호진
      * init : 2023.01.16
      * updated by writer : 이호진
-     * update : 2023.02.12
+     * update : 2023.03.29
      * description : 전체 회원정보 찾기 + paging 구현 admin에서 사용
      *
-     * update : selfPicture를 join 추가
+     * update : > selfPicture를 join 추가
+     *          > leftjoin으로 변경
      */
     @Override
     public Page<Member> findAllInfo(MemberSearchCond memberSearchCond, Pageable pageable) {
@@ -177,7 +178,7 @@ public class MemberJpaRepositoryImpl implements MemberJpaRepositoryCustom{
         List<Member> result = query
                 .select(member)
                 .from(member)
-                .join(member.selfPicture, selfPicture).fetchJoin()
+                .leftJoin(member.selfPicture, selfPicture).fetchJoin()
                 .where(memberIdLike(memberSearchCond.getId()),
                         memberCountryLike(memberSearchCond.getCountry()),
                         memberCityLike(memberSearchCond.getCity()),

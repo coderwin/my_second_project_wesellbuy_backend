@@ -21,10 +21,10 @@ spring:
 #    driver-class-name: org.h2.Driver
 
     # mysql
-#    url: jdbc:mysql://localhost:3306/wesellbuy?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-#    username:
-#    password:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wesellbuy?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -56,15 +56,15 @@ logging.level:
 
 # 파일 업로드 경로 설정
 # local
-#file:
-#  selfPicture.dir: "C:/my_project_2/upload/images/member/" # 회원 이미지
-#  recommendationPicture.dir: "C:/my_project_2/upload/images/recommendation/" # 추천합니다글 이미지
-#  itemPicture.dir: C:/my_project_2/upload/images/item/ # 상품 이미지
-##폴더 생성 경로
-#directory:
-#  selfPicture.dir: "C:/my_project_2/upload/images/member" # 회원 이미지
-#  recommendationPicture.dir: "C:/my_project_2/upload/images/recommendation" # 추천합니다글 이미지
-#  itemPicture.dir: C:/my_project_2/upload/images/item # 상품 이미지
+file:
+  selfPicture.dir: "C:/my_project_2/upload/images/member/" # 회원 이미지
+  recommendationPicture.dir: "C:/my_project_2/upload/images/recommendation/" # 추천합니다글 이미지
+  itemPicture.dir: C:/my_project_2/upload/images/item/ # 상품 이미지
+#폴더 생성 경로
+directory:
+  selfPicture.dir: "C:/my_project_2/upload/images/member" # 회원 이미지
+  recommendationPicture.dir: "C:/my_project_2/upload/images/recommendation" # 추천합니다글 이미지
+  itemPicture.dir: C:/my_project_2/upload/images/item # 상품 이미지
 
 server:
   servlet.session:
@@ -88,20 +88,20 @@ spring:
 
   datasource:
   # mysql
-    url: jdbc:mysql://15.164.119.184:3306/wesellbuy?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-    username:
-    password:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    # 배포 url
+#    # 배포 url
+#    url: jdbc:mysql://localhost:3306/wesellbuy?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+#    username:
+#    password:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
 
 # 파일 업로드 경로 설정
-# service
-file:
-  selfPicture.dir: /home/ec2-user/my_project_2/upload/images/member/ # 회원 이미지
-  recommendationPicture.dir: /home/ec2-user/my_project_2/upload/images/recommendation/ # 추천합니다글 이미지
-  itemPicture.dir: /home/ec2-user/my_project_2/upload/images/item/ # 상품 이미지
-#폴더 생성 경로
-directory:
-  selfPicture.dir: /home/ec2-user/my_project_2/upload/images/member # 회원 이미지
-  recommendationPicture.dir: /home/ec2-user/my_project_2/upload/images/recommendation # 추천합니다글 이미지
-  itemPicture.dir: /home/ec2-user/my_project_2/upload/images/item # 상품 이미지
+## service
+#file:
+#  selfPicture.dir: /home/ec2-user/my_project_2/upload/images/member/ # 회원 이미지
+#  recommendationPicture.dir: /home/ec2-user/my_project_2/upload/images/recommendation/ # 추천합니다글 이미지
+#  itemPicture.dir: /home/ec2-user/my_project_2/upload/images/item/ # 상품 이미지
+##폴더 생성 경로
+#directory:
+#  selfPicture.dir: /home/ec2-user/my_project_2/upload/images/member # 회원 이미지
+#  recommendationPicture.dir: /home/ec2-user/my_project_2/upload/images/recommendation # 추천합니다글 이미지
+#  itemPicture.dir: /home/ec2-user/my_project_2/upload/images/item # 상품 이미지

@@ -25,11 +25,12 @@ public class AdminCheckInterceptor implements HandlerInterceptor {
      * writer : 이호진
      * init : 2023.03.12
      * updated by writer : 이호진
-     * update :
+     * update : 2023.03.30
      * description : > 관리자 인증 체크
      *               > 관리자용 아이디를 사용하는 사용자인지 체크
      *
-     * update: cros처리 중 preflight 처리 추가 => 지금은 보류(구현 안 함)
+     * update: > cros처리 중 preflight 처리 추가
+     *         > pattern 수정
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -51,7 +52,7 @@ public class AdminCheckInterceptor implements HandlerInterceptor {
         LoginMemberSessionForm sessionForm = (LoginMemberSessionForm)session.getAttribute(SessionConst.LOGIN_MEMBER);
         String memberId = sessionForm.getId();
         // deliver로 시작하는 아이디를 가졌는지 확인한다.
-        String pattern = "^admin\\w*$";
+        String pattern = "^admin[\\w]*$";
         boolean result = memberId.matches(pattern);
         // admin이라는 아이디로 시작하면 통과
         if(result == true) {
